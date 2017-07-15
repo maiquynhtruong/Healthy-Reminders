@@ -5,12 +5,13 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 public class WaterReminderIntentService extends IntentService {
-    public WaterReminderIntentService(String name) {
-        super(name);
+    public WaterReminderIntentService() {
+        super("WaterReminderIntentService");
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        // do background work
+        String action = intent.getAction();
+        ReminderTask.executeTask(this, action);
     }
 }
