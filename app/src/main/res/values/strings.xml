@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Heathy Reminders</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings for MainActivity -->
+    <string name="water_increment_content_desc">Press to record drinking water</string>
+
+    <string name="default_water_count">0</string>
+    <string name="default_charge_notification_count">Hydrate while charging reminder sent 0 times</string>
+</resources>
