@@ -1,5 +1,6 @@
 package com.example.maiquynhtruong.heathyreminders;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +24,8 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     TextView mWaterCountDisplay;
     TextView mChargingCountDisplay;
-    TextView mChargingImageView;
+    ImageView mChargingImageView;
+    ImageButton mWaterIncrement;
     SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +46,44 @@ public class MainActivity extends AppCompatActivity
         setUpNavigationDrawer();
 
         mWaterCountDisplay = (TextView) findViewById(R.id.tv_water_count);
+        mChargingCountDisplay = (TextView) findViewById(R.id.tv_charging_reminder_count);
+        mChargingImageView = (ImageView) findViewById(R.id.iv_power_increment);
+        mWaterIncrement = (ImageButton) findViewById(R.id.ib_water_increment);
+
+        /* Set up original values in UI */
+        updateWaterCount();
+        updateChargingReminderCount();
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
+
+        mWaterIncrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                incrementWater(view);
+            }
+        });
     }
 
+    /* Updates the TextView to display the new water count from SharedPreferences */
+    public void updateWaterCount() {
+        int currentCount = PreferenceUtils.getWaterCount(this);
+        mWaterCountDisplay.setText(currentCount + "");
+    }
+    /* Updates the TextView to display the new charging reminder count from SharedPreferences*/
+    public void updateChargingReminderCount() {
+
+    }
+    public void incrementWater(View view) {
+        Intent incrementWaterCountIntent = new Intent(this, WaterReminderIntentService.class);
+        incrementWaterCountIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
+        startService(incrementWaterCountIntent);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -122,8 +158,5 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
-    }
 }
