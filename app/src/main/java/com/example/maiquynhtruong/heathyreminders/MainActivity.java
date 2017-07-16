@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -56,13 +57,6 @@ public class MainActivity extends AppCompatActivity
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
-
-        mWaterIncrement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                incrementWater(view);
-            }
-        });
     }
 
     /* Updates the TextView to display the new water count from SharedPreferences */
@@ -72,7 +66,8 @@ public class MainActivity extends AppCompatActivity
     }
     /* Updates the TextView to display the new charging reminder count from SharedPreferences*/
     public void updateChargingReminderCount() {
-
+        int currentCount = PreferenceUtils.getChargingReminderCount(this);
+        mChargingCountDisplay.setText(currentCount + "");
     }
     public void incrementWater(View view) {
         Intent incrementWaterCountIntent = new Intent(this, WaterReminderIntentService.class);
@@ -82,7 +77,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
+        if (s.equals(PreferenceUtils.KEY_WATER_COUNT)) {
+            updateWaterCount();
+        }
+        if (s.equals(PreferenceUtils.KEY_CHARGING_REMINDER_COUNT)) {
+            updateChargingReminderCount();
+        }
     }
     @Override
     protected void onDestroy() {

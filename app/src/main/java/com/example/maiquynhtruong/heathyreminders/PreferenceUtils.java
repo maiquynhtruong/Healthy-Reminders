@@ -3,11 +3,6 @@ package com.example.maiquynhtruong.heathyreminders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.TextView;
-
-/**
- * Created by maiquynhtruong on 7/14/17.
- */
 
 public class PreferenceUtils {
     public static final String KEY_WATER_COUNT = "water-count";
