@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity
         int currentCount = PreferenceUtils.getChargingReminderCount(this);
         mChargingCountDisplay.setText(currentCount + "");
     }
+
+    public void showNotification(View view) {
+        NotificationUtils.reminderUserBecauseCharging(this);
+    }
     public void incrementWater(View view) {
         Intent incrementWaterCountIntent = new Intent(this, WaterReminderIntentService.class);
         incrementWaterCountIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
