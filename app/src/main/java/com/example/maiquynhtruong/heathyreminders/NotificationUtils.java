@@ -16,6 +16,11 @@ public class NotificationUtils {
     public static final int DRINKING_REMINDER_NOTIFICATION = 1234;
     public static final int DRINKING_WATER_PENDING_INTENT = 4321;
 
+    public static void clearAllNotifications(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+    }
+
     public static void reminderUserBecauseCharging(Context context) {
         Notification.Builder builder = new Notification.Builder(context)
                 .setColor(context.getResources().getColor(R.color.colorPrimary))
@@ -23,6 +28,7 @@ public class NotificationUtils {
                 .setLargeIcon(largeIcon(context))
                 .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
                 .setContentText(context.getString(R.string.charging_reminder_notification_body))
+                .setStyle(new Notification.BigTextStyle().bigText(context.getString(R.string.charging_reminder_notification_body)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
                 .setAutoCancel(true);
@@ -32,6 +38,12 @@ public class NotificationUtils {
         }
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(DRINKING_REMINDER_NOTIFICATION, builder.build());
+    }
+
+    public static Notification.Action ignoreReminderAction(Context context) {
+        Intent ignoreIntent = new Intent(context, WaterReminderIntentService.class);
+        ignoreIntent.setAction(ReminderTask.ACTION_DISMISS_NOTIFICATION);
+        PendingIntent pendingIntent = PendingIntent.getActivities()
     }
 
     public static PendingIntent contentIntent(Context context) {
