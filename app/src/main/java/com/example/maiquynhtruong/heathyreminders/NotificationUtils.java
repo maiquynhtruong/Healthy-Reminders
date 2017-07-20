@@ -11,9 +11,11 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 public class NotificationUtils {
     public static final int DRINKING_REMINDER_NOTIFICATION = 1234;
+    public static final int WATER_REMINDER_PENDING_INTENT_ID = 1111;
     public static final int DRINKING_WATER_PENDING_INTENT = 4321;
     public static final int IGNORE_WATER_PENDING_INTENT = 3412;
 
@@ -23,28 +25,40 @@ public class NotificationUtils {
     }
 
     public static void reminderUserBecauseCharging(Context context) {
-        Notification.Builder builder = new Notification.Builder(context)
-                .setColor(context.getResources().getColor(R.color.colorPrimary))
-                .setSmallIcon(R.drawable.ic_local_drink_black_24px)
-                .setLargeIcon(largeIcon(context))
-                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
-                .setContentText(context.getString(R.string.charging_reminder_notification_body))
-                .setStyle(new Notification.BigTextStyle().bigText(context.getString(R.string.charging_reminder_notification_body)))
-                .setDefaults(Notification.DEFAULT_VIBRATE)
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+//                .setColor(context.getResources().getColor(R.color.colorPrimary))
+//                .setSmallIcon(R.drawable.ic_local_drink_black_24px)
+//                .setLargeIcon(largeIcon(context))
+//                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
+//                .setContentText(context.getString(R.string.charging_reminder_notification_body))
+//                .setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.charging_reminder_notification_body)))
+//                .setDefaults(Notification.DEFAULT_VIBRATE)
+//                .setContentIntent(contentIntent(context))
+//                .setAutoCancel(true)
+//                .addAction(ignoreReminderAction(context))
+//                .addAction(drinkWaterAction(context));
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentIntent(contentIntent(context))
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
+                .setSmallIcon(R.drawable.ic_local_drink_black_24px)
+                .setContentText(context.getString(R.string.charging_reminder_notification_body))
+                .addAction(ignoreReminderAction(context))
+                .addAction(drinkWaterAction(context));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             builder.setPriority(Notification.PRIORITY_HIGH);
         }
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(DRINKING_REMINDER_NOTIFICATION, builder.build());
+        Toast.makeText(context, "Showing notificaiton", Toast.LENGTH_LONG).show();
+        manager.notify(WATER_REMINDER_PENDING_INTENT_ID, builder.build());
     }
 
     public static NotificationCompat.Action ignoreReminderAction(Context context) {
         Intent ignoreIntent = new Intent(context, WaterReminderIntentService.class);
         ignoreIntent.setAction(ReminderTask.ACTION_DISMISS_NOTIFICATION);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, DRINKING_WATER_PENDING_INTENT, ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, IGNORE_WATER_PENDING_INTENT, ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px,
                 "No, I won't", pendingIntent);
         return action;
@@ -52,8 +66,8 @@ public class NotificationUtils {
 
     public static NotificationCompat.Action drinkWaterAction(Context context) {
         Intent incrementWaterIntent = new Intent(context, WaterReminderIntentService.class);
-        incrementWaterIntent.setAction(ReminderTask.ACTION_DISMISS_NOTIFICATION);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, IGNORE_WATER_PENDING_INTENT, incrementWaterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        incrementWaterIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, DRINKING_WATER_PENDING_INTENT, incrementWaterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_local_drink_black_24px,
                 "Drank water", pendingIntent);
         return action;
@@ -61,7 +75,7 @@ public class NotificationUtils {
 
     public static PendingIntent contentIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, DRINKING_WATER_PENDING_INTENT,
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, WATER_REMINDER_PENDING_INTENT_ID,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }

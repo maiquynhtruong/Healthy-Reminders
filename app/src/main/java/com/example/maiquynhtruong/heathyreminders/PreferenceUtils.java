@@ -8,6 +8,7 @@ public class PreferenceUtils {
     public static final String KEY_WATER_COUNT = "water-count";
     public static final String KEY_CHARGING_REMINDER_COUNT = "charging-reminder-count";
     public static final int DEFAULT_COUNT = 0;
+
     public static void incrementWaterCount(Context context) {
         int currentWater = getWaterCount(context);
         PreferenceUtils.setWaterCount(context, ++currentWater);
