@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 public class NotificationUtils {
     public static final int DRINKING_REMINDER_NOTIFICATION = 1234;
     public static final int DRINKING_WATER_PENDING_INTENT = 4321;
+    public static final int IGNORE_WATER_PENDING_INTENT = 3412;
 
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -40,10 +41,22 @@ public class NotificationUtils {
         manager.notify(DRINKING_REMINDER_NOTIFICATION, builder.build());
     }
 
-    public static Notification.Action ignoreReminderAction(Context context) {
+    public static NotificationCompat.Action ignoreReminderAction(Context context) {
         Intent ignoreIntent = new Intent(context, WaterReminderIntentService.class);
         ignoreIntent.setAction(ReminderTask.ACTION_DISMISS_NOTIFICATION);
-        PendingIntent pendingIntent = PendingIntent.getActivities()
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, DRINKING_WATER_PENDING_INTENT, ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px,
+                "No, I won't", pendingIntent);
+        return action;
+    }
+
+    public static NotificationCompat.Action drinkWaterAction(Context context) {
+        Intent incrementWaterIntent = new Intent(context, WaterReminderIntentService.class);
+        incrementWaterIntent.setAction(ReminderTask.ACTION_DISMISS_NOTIFICATION);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, IGNORE_WATER_PENDING_INTENT, incrementWaterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_local_drink_black_24px,
+                "Drank water", pendingIntent);
+        return action;
     }
 
     public static PendingIntent contentIntent(Context context) {
