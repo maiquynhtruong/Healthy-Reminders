@@ -25,25 +25,16 @@ public class NotificationUtils {
     }
 
     public static void reminderUserBecauseCharging(Context context) {
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-//                .setColor(context.getResources().getColor(R.color.colorPrimary))
-//                .setSmallIcon(R.drawable.ic_local_drink_black_24px)
-//                .setLargeIcon(largeIcon(context))
-//                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
-//                .setContentText(context.getString(R.string.charging_reminder_notification_body))
-//                .setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.charging_reminder_notification_body)))
-//                .setDefaults(Notification.DEFAULT_VIBRATE)
-//                .setContentIntent(contentIntent(context))
-//                .setAutoCancel(true)
-//                .addAction(ignoreReminderAction(context))
-//                .addAction(drinkWaterAction(context));
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setColor(context.getResources().getColor(R.color.colorPrimary))
+                .setSmallIcon(R.drawable.ic_local_drink_black_24px)
+                .setLargeIcon(largeIcon(context))
+                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
+                .setContentText(context.getString(R.string.charging_reminder_notification_body))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.charging_reminder_notification_body)))
+                .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
                 .setAutoCancel(true)
-                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
-                .setSmallIcon(R.drawable.ic_local_drink_black_24px)
-                .setContentText(context.getString(R.string.charging_reminder_notification_body))
                 .addAction(ignoreReminderAction(context))
                 .addAction(drinkWaterAction(context));
 
