@@ -42,7 +42,6 @@ public class NotificationUtils {
             builder.setPriority(Notification.PRIORITY_HIGH);
         }
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Toast.makeText(context, "Showing notificaiton", Toast.LENGTH_LONG).show();
         manager.notify(WATER_REMINDER_PENDING_INTENT_ID, builder.build());
     }
 
