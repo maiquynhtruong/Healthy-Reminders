@@ -17,7 +17,6 @@ public class WaterReminderFirebaseJobService extends JobService {
          mBackgroundTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
-                Toast.makeText(getBaseContext(), "Firing job now", Toast.LENGTH_LONG).show();
                 ReminderTask.executeTask(WaterReminderFirebaseJobService.this, ReminderTask.ACTION_REMIND_CHARGING);
                 return null;
             }

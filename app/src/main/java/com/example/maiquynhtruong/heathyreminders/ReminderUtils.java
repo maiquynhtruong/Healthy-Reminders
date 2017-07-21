@@ -1,6 +1,7 @@
 package com.example.maiquynhtruong.heathyreminders;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Driver;
@@ -18,10 +19,11 @@ public class ReminderUtils {
     public static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
 
     private static final String REMINDER_JOB_TAG = "hydration-reminder-tag";
-    private static boolean sInitialized; // check if job has started
+    private static boolean sInitialized = false; // check if job has started
 
     synchronized public static void scheduleChargingReminder(final Context context) {
         if (sInitialized) return;
+        Toast.makeText(context, "Job hasn't started. Staring now", Toast.LENGTH_LONG).show();
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
         Job constraintReminderJob = dispatcher.newJobBuilder()
