@@ -1,6 +1,7 @@
 package com.example.maiquynhtruong.heathyreminders;
 
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
@@ -16,6 +17,7 @@ public class WaterReminderFirebaseJobService extends JobService {
          mBackgroundTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
+                Toast.makeText(getBaseContext(), "Firing job now", Toast.LENGTH_LONG).show();
                 ReminderTask.executeTask(WaterReminderFirebaseJobService.this, ReminderTask.ACTION_REMIND_CHARGING);
                 return null;
             }

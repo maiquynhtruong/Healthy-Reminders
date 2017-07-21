@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
         updateWaterCount();
         updateChargingReminderCount();
 
+        ReminderUtils.scheduleChargingReminder(this);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
     }
