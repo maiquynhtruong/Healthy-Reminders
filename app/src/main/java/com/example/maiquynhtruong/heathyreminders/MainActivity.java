@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -74,6 +76,17 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, filter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+            boolean isCharging = batteryManager.isCharging();
+            showCharging(isCharging);
+        } else {
+            IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus = this.registerReceiver(null, intentFilter);
+            int status = Integer.parseInt(BatteryManager.EXTRA_STATUS);
+            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
+            showCharging(isCharging);
+        }
     }
 
     @Override
@@ -98,7 +111,7 @@ public class MainActivity extends AppCompatActivity
         if (isCharging) {
             charger.setImageResource(R.drawable.ic_power_pink_80px);
         } else {
-            charger.setImageResource(R.drawable.ic_local_drink_grey_120px);
+            charger.setImageResource(R.drawable.ic_power_grey_80px);
         }
     }
 
