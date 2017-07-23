@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(receiver, filter);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
             boolean isCharging = batteryManager.isCharging();
@@ -83,10 +83,12 @@ public class MainActivity extends AppCompatActivity
         } else {
             IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
             Intent batteryStatus = this.registerReceiver(null, intentFilter);
-            int status = Integer.parseInt(BatteryManager.EXTRA_STATUS);
+            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
             boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
             showCharging(isCharging);
         }
+        // for future state changes, we still need the receiver
+        registerReceiver(receiver, filter);
     }
 
     @Override
