@@ -1,6 +1,9 @@
 package com.example.maiquynhtruong.heathyreminders;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity
     ImageView mChargingImageView;
     ImageButton mWaterIncrement;
     SharedPreferences preferences;
+    IntentFilter filter;
+    ChargingBroadcastReceiver receiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,22 @@ public class MainActivity extends AppCompatActivity
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
+
+        filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 
     /* Updates the TextView to display the new water count from SharedPreferences */
@@ -70,6 +91,15 @@ public class MainActivity extends AppCompatActivity
     public void updateChargingReminderCount() {
         int currentCount = PreferenceUtils.getChargingReminderCount(this);
         mChargingCountDisplay.setText(currentCount + "");
+    }
+
+    public void showCharging(boolean isCharging) {
+        ImageView charger = (ImageView) findViewById(R.id.iv_power_increment);
+        if (isCharging) {
+            charger.setImageResource(R.drawable.ic_power_pink_80px);
+        } else {
+            charger.setImageResource(R.drawable.ic_local_drink_grey_120px);
+        }
     }
 
     public void incrementWater(View view) {
@@ -161,5 +191,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
+    private class ChargingBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            boolean isCharging = action.equals(Intent.ACTION_POWER_CONNECTED);
+            showCharging(isCharging);
+        }
+    }
 }

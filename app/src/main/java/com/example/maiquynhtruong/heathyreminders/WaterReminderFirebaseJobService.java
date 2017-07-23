@@ -6,10 +6,6 @@ import android.widget.Toast;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
-/**
- * Created by maiquynhtruong on 7/19/17.
- */
-
 public class WaterReminderFirebaseJobService extends JobService {
     AsyncTask mBackgroundTask;
     @Override
