@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.example.maiquynhtruong.heathyreminders.Utilities;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -10,8 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
+
+import com.example.maiquynhtruong.heathyreminders.MainActivity;
+import com.example.maiquynhtruong.heathyreminders.R;
+import com.example.maiquynhtruong.heathyreminders.ReminderTask;
+import com.example.maiquynhtruong.heathyreminders.Services.WaterReminderIntentService;
 
 public class NotificationUtils {
     public static final int DRINKING_REMINDER_NOTIFICATION = 1234;

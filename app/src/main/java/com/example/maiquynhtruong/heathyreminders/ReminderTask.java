@@ -1,7 +1,9 @@
 package com.example.maiquynhtruong.heathyreminders;
 
-import android.app.Notification;
 import android.content.Context;
+
+import com.example.maiquynhtruong.heathyreminders.Utilities.NotificationUtils;
+import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 
 /**
  * Created by maiquynhtruong on 7/14/17.

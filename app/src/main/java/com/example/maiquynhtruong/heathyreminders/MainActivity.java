@@ -23,7 +23,10 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.maiquynhtruong.heathyreminders.Services.WaterReminderIntentService;
+import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
+import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {

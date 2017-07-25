@@ -1,8 +1,10 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.example.maiquynhtruong.heathyreminders.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+
+import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 
 public class WaterReminderIntentService extends IntentService {
     public WaterReminderIntentService() {

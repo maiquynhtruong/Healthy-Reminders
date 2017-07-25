@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.example.maiquynhtruong.heathyreminders.Utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
