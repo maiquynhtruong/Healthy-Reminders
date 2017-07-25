@@ -20,7 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/fragment_recommendation" />
+    <include layout="@layout/activity_recommendation" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
