@@ -23,7 +23,7 @@
     <Button
         android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:background="@android:color/background_material_light"
+        android:background="#ffffff"
         tools:text="Occurence"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
