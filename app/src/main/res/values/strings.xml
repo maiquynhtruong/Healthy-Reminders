@@ -6,8 +6,8 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- Strings for MainActivity -->
-    <string name="instructions">Press the glass of water after you\'ve hydrated.</string>
+    <!-- Strings for water reminder -->
+    <string name="water_instructions">Press the glass of water after you\'ve hydrated.</string>
     <string name="water_increment_content_desc">Press to record drinking water</string>
     <string name="charging_plug_content_desc">charging plug image</string>
 
@@ -16,4 +16,20 @@
 
     <string name="charging_reminder_notification_title">Device Charging - Where\'s that water?</string>
     <string name="charging_reminder_notification_body">There\'s never a better time to drink water than when you know your phone is charging. Drink up!</string>
+
+    <array name="recommended_activities">
+        <item name="meditation">Meditation</item>
+        <item name="eating_fruits">Eating fruits</item>
+        <item name="walking">Walking</item>
+        <item name="lookng_faraway">Looking far away</item>
+        <item name="drink_water">Drinking water</item>
+    </array>
+
+    <!-- General instructions -->
+    <string name="instructions">Press the image to show you have completed the reminder</string>
+    <string name="default_count">0</string>
+    <string name="reminder_notification_title">It\'s about time to remind yourself</string>
+    <string name="reminder_notification_body">There\'s never a better to do it</string>
+    <string name="reminder_finished">OK, I\'m done</string>
+    <string name="reminder_postponed">Delay for now</string>
 </resources>
