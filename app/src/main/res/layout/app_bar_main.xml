@@ -7,9 +7,11 @@
     tools:context="com.example.maiquynhtruong.heathyreminders.MainActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -19,8 +21,12 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+    <include
+        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        layout="@layout/welcome" />
 
-    <include layout="@layout/activity_recommendation" />
+    <!--<include layout="@layout/activity_recommendation" />-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -28,6 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_add"
+         />
+    <!--app:srcCompat="@android:drawable/ic_input_add"-->
 
 </android.support.design.widget.CoordinatorLayout>
