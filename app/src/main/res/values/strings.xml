@@ -21,8 +21,12 @@
         <item name="meditation">Meditation</item>
         <item name="eating_fruits">Eating fruits</item>
         <item name="walking">Walking</item>
-        <item name="lookng_faraway">Looking far away</item>
+        <item name="looking_faraway">Looking far away</item>
         <item name="drink_water">Drinking water</item>
+        <item name="take_medicine">Take medicine</item>
+        <item name="call_relatives">Call relatives</item>
+        <item name="change_toothbrush">Change toothbrush</item>
+        <item name="new_towel">Buy new towel</item>
     </array>
 
     <!-- General instructions -->
