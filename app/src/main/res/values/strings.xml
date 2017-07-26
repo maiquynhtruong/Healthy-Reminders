@@ -27,6 +27,7 @@
         <item name="call_relatives">Call relatives</item>
         <item name="change_toothbrush">Change toothbrush</item>
         <item name="new_towel">Buy new towel</item>
+        <item name="pack_lunch">Pack lunch</item>
     </array>
 
     <!-- General instructions -->
