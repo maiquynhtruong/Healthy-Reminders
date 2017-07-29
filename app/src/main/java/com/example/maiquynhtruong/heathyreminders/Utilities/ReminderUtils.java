@@ -19,7 +19,7 @@ public class ReminderUtils {
     public static final int REMINDER_INTERVAL_SECONDS = (int) TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES);
     public static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
 
-    private static final String REMINDER_JOB_TAG = "hydration-reminder-tag";
+    private static final String REMINDER_TAG = "reminder-tag";
     private static boolean sInitialized = false; // check if job has started
 
     synchronized public static void scheduleChargingReminder(final Context context) {
@@ -29,7 +29,7 @@ public class ReminderUtils {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
         Job constraintReminderJob = dispatcher.newJobBuilder()
                 .setService(ReminderFirebaseJobService.class)
-                .setTag(REMINDER_JOB_TAG)
+                .setTag(REMINDER_TAG + "-water")
                 .setConstraints(Constraint.DEVICE_CHARGING)
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
@@ -38,6 +38,21 @@ public class ReminderUtils {
                 .build();
         dispatcher.schedule(constraintReminderJob);
         sInitialized = true;
+    }
+
+    synchronized public static void scheduleReminder(Context context, String tag, int[] constraints) {
+        Driver driver = new GooglePlayDriver(context);
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
+        Job constraintReminderJob = dispatcher.newJobBuilder()
+                .setService(ReminderFirebaseJobService.class)
+                .setTag(REMINDER_TAG + tag)
+                .setConstraints(constraints)
+                .setLifetime(Lifetime.FOREVER)
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(REMINDER_INTERVAL_SECONDS, REMINDER_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
+                .setReplaceCurrent(true)
+                .build();
+        dispatcher.schedule(constraintReminderJob);
     }
 
 }
