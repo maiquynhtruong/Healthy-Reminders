@@ -6,14 +6,14 @@ import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
-public class WaterReminderFirebaseJobService extends JobService {
+public class ReminderFirebaseJobService extends JobService {
     AsyncTask mBackgroundTask;
     @Override
     public boolean onStartJob(final JobParameters job) {
          mBackgroundTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
-                ReminderTask.executeTask(WaterReminderFirebaseJobService.this, ReminderTask.ACTION_REMIND_CHARGING);
+                ReminderTask.executeTask(ReminderFirebaseJobService.this, ReminderTask.ACTION_REMIND_CHARGING);
                 return null;
             }
 

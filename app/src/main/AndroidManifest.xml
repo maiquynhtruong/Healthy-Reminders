@@ -20,10 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Services.WaterReminderIntentService"
+        <service android:name=".Services.ReminderIntentService"
             android:exported="false"
             />
-        <service android:name=".Services.WaterReminderFirebaseJobService"
+        <service android:name=".Services.ReminderFirebaseJobService"
             android:exported="false"
             />
     </application>

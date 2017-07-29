@@ -6,9 +6,9 @@ import android.support.annotation.Nullable;
 
 import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 
-public class WaterReminderIntentService extends IntentService {
-    public WaterReminderIntentService() {
-        super("WaterReminderIntentService");
+public class ReminderIntentService extends IntentService {
+    public ReminderIntentService() {
+        super("ReminderIntentService");
     }
 
     @Override

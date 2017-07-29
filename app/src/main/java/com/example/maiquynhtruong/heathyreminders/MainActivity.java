@@ -24,7 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.maiquynhtruong.heathyreminders.Services.WaterReminderIntentService;
+import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void incrementWater(View view) {
-        Intent incrementWaterCountIntent = new Intent(this, WaterReminderIntentService.class);
+        Intent incrementWaterCountIntent = new Intent(this, ReminderIntentService.class);
         incrementWaterCountIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
         startService(incrementWaterCountIntent);
     }

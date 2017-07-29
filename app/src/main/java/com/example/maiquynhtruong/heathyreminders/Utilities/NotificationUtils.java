@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import com.example.maiquynhtruong.heathyreminders.MainActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.ReminderTask;
-import com.example.maiquynhtruong.heathyreminders.Services.WaterReminderIntentService;
+import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 
 public class NotificationUtils {
     public static final int DRINKING_REMINDER_NOTIFICATION = 1234;
@@ -49,7 +49,7 @@ public class NotificationUtils {
     }
 
     public static NotificationCompat.Action ignoreReminderAction(Context context) {
-        Intent ignoreIntent = new Intent(context, WaterReminderIntentService.class);
+        Intent ignoreIntent = new Intent(context, ReminderIntentService.class);
         ignoreIntent.setAction(ReminderTask.ACTION_DISMISS_NOTIFICATION);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, IGNORE_WATER_PENDING_INTENT, ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px,
@@ -58,7 +58,7 @@ public class NotificationUtils {
     }
 
     public static NotificationCompat.Action drinkWaterAction(Context context) {
-        Intent incrementWaterIntent = new Intent(context, WaterReminderIntentService.class);
+        Intent incrementWaterIntent = new Intent(context, ReminderIntentService.class);
         incrementWaterIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, DRINKING_WATER_PENDING_INTENT, incrementWaterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_local_drink_black_24px,

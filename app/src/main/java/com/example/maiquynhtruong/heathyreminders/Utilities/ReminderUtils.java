@@ -3,7 +3,7 @@ package com.example.maiquynhtruong.heathyreminders.Utilities;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.example.maiquynhtruong.heathyreminders.Services.WaterReminderFirebaseJobService;
+import com.example.maiquynhtruong.heathyreminders.Services.ReminderFirebaseJobService;
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -28,7 +28,7 @@ public class ReminderUtils {
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
         Job constraintReminderJob = dispatcher.newJobBuilder()
-                .setService(WaterReminderFirebaseJobService.class)
+                .setService(ReminderFirebaseJobService.class)
                 .setTag(REMINDER_JOB_TAG)
                 .setConstraints(Constraint.DEVICE_CHARGING)
                 .setLifetime(Lifetime.FOREVER)
