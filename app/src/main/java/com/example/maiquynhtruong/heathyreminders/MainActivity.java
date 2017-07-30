@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,21 +26,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 import com.firebase.jobdispatcher.Constraint;
 
+import butterknife.BindView;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
     Toolbar toolbar;
-    TextView mWaterCountDisplay;
-    TextView mChargingCountDisplay;
-    ImageView mChargingImageView;
-    ImageButton mWaterIncrement;
     SharedPreferences preferences;
     IntentFilter filter;
     ChargingBroadcastReceiver receiver;
+
+    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
+    RecyclerView.LayoutManager layoutManager;
+    RecyclerView.Adapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +62,10 @@ public class MainActivity extends AppCompatActivity
 
         setUpNavigationDrawer();
 
-        /* Set up original values in UI */
-//        updateWaterCount();
-//        updateChargingReminderCount();
+        mainRecyclerView.setHasFixedSize(true);
+        mainRecyclerView.setLayoutManager(layoutManager);
+        layoutManager = new GridLayoutManager(this, 2);
+        adapter = new ReminderAdapter();
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_CHARGING});
 
@@ -75,17 +81,17 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
-            boolean isCharging = batteryManager.isCharging();
-            showCharging(isCharging);
-        } else {
-            IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-            Intent batteryStatus = this.registerReceiver(null, intentFilter);
-            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
-            showCharging(isCharging);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+//            boolean isCharging = batteryManager.isCharging();
+//            showCharging(isCharging);
+//        } else {
+//            IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+//            Intent batteryStatus = this.registerReceiver(null, intentFilter);
+//            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+//            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
+//            showCharging(isCharging);
+//        }
         // for future state changes, we still need the receiver
         registerReceiver(receiver, filter);
     }
@@ -99,26 +105,17 @@ public class MainActivity extends AppCompatActivity
     /* Updates the TextView to display the new water count from SharedPreferences */
     public void updateWaterCount() {
         int currentCount = PreferenceUtils.getWaterCount(this);
-        mWaterCountDisplay.setText(currentCount + "");
+//        mWaterCountDisplay.setText(currentCount + "");
     }
     /* Updates the TextView to display the new charging reminder count from SharedPreferences*/
     public void updateChargingReminderCount() {
         int currentCount = PreferenceUtils.getChargingReminderCount(this);
-        mChargingCountDisplay.setText(currentCount + "");
-    }
-
-    public void showCharging(boolean isCharging) {
-        ImageView charger = (ImageView) findViewById(R.id.iv_power_increment);
-        if (isCharging) {
-            charger.setImageResource(R.drawable.ic_power_pink_80px);
-        } else {
-            charger.setImageResource(R.drawable.ic_power_grey_80px);
-        }
+//        mChargingCountDisplay.setText(currentCount + "");
     }
 
     public void incrementWater(View view) {
         Intent incrementWaterCountIntent = new Intent(this, ReminderIntentService.class);
-        incrementWaterCountIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
+//        incrementWaterCountIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
         startService(incrementWaterCountIntent);
     }
 
@@ -192,8 +189,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_finished) {
 
-        } else if (id == R.id.nav_recommendations) {
-            Intent recommendationIntent = new Intent();
+        } else if (id == R.id.nav_recommendations){
 
         } else if (id == R.id.nav_reminders) {
 
@@ -210,8 +206,16 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            boolean isCharging = action.equals(Intent.ACTION_POWER_CONNECTED);
-            showCharging(isCharging);
+//            boolean isCharging = action.equals(Intent.ACTION_POWER_CONNECTED);
+//            showCharging(isCharging);
         }
     }
+    //    public void showCharging(boolean isCharging) {
+//        ImageView charger = (ImageView) findViewById(R.id.iv_power_increment);
+//        if (isCharging) {
+//            charger.setImageResource(R.drawable.ic_power_pink_80px);
+//        } else {
+//            charger.setImageResource(R.drawable.ic_power_grey_80px);
+//        }
+//    }
 }

@@ -21,10 +21,10 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-    <include
-        android:layout_height="100dp"
+
+    <com.example.maiquynhtruong.heathyreminders.Views.WelcomeView
         android:layout_width="match_parent"
-        layout="@layout/welcome" />
+        android:layout_height="wrap_content"/>
 
     <!--<include layout="@layout/activity_recommendation" />-->
 
