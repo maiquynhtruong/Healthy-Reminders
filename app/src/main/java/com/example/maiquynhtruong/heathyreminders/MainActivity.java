@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
+import com.firebase.jobdispatcher.Constraint;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -56,16 +57,11 @@ public class MainActivity extends AppCompatActivity
 
         setUpNavigationDrawer();
 
-        mWaterCountDisplay = (TextView) findViewById(R.id.tv_water_count);
-        mChargingCountDisplay = (TextView) findViewById(R.id.tv_charging_reminder_count);
-        mChargingImageView = (ImageView) findViewById(R.id.iv_power_increment);
-        mWaterIncrement = (ImageButton) findViewById(R.id.ib_water_increment);
-
         /* Set up original values in UI */
-        updateWaterCount();
-        updateChargingReminderCount();
+//        updateWaterCount();
+//        updateChargingReminderCount();
 
-        ReminderUtils.scheduleChargingReminder(this);
+        ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_CHARGING});
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);

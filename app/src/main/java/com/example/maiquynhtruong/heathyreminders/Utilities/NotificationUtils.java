@@ -27,6 +27,10 @@ public class NotificationUtils {
         notificationManager.cancelAll();
     }
 
+    public static void reminderNotify(Context context) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .addAction(ignoreReminderAction(context));
+    }
     public static void reminderUserBecauseCharging(Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setColor(context.getResources().getColor(R.color.colorPrimary))
@@ -59,7 +63,7 @@ public class NotificationUtils {
 
     public static NotificationCompat.Action drinkWaterAction(Context context) {
         Intent incrementWaterIntent = new Intent(context, ReminderIntentService.class);
-        incrementWaterIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
+//        incrementWaterIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, DRINKING_WATER_PENDING_INTENT, incrementWaterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_local_drink_black_24px,
                 "Drank water", pendingIntent);
