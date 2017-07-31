@@ -3,23 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
+    android:background="@drawable/background_welcome"
     xmlns:tools="http://schemas.android.com/tools">
     <TextView
         android:id="@+id/hello"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Headline"
         android:padding="16dp"
-        tools:text="Hello Mai" />
+        android:text="Hello Mai" />
     <View
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp" />
     <TextView
         android:id="@+id/time_left"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Body2"
         android:textAlignment="viewEnd"

@@ -72,12 +72,7 @@ public class MainActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
-
-        List<Reminder> reminderList = new ArrayList<>();
-        reminderList.add(new Reminder("buy-grocery", "Buy Grocery"));
-        reminderList.add(new Reminder("pay-rent", "Pay the rent"));
-        reminderList.add(new Reminder("pay-insurance", "Pay insurance"));
-        adapter = new ReminderAdapter(reminderList);
+        adapter = new ReminderAdapter(createReminders());
         mainRecyclerView.setAdapter(adapter);
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_CHARGING});

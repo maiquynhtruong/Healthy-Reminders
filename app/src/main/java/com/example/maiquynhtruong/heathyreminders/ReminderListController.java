@@ -20,7 +20,11 @@ public class ReminderListController {
     public Reminder getReminderByPosition(int id) {
 //        return data.idToReminder.get(id);
         Log.d("reminderList", "" + data.reminders.get(id));
-        return data.reminders.get(0);
+        return data.reminders.get(id);
+    }
+
+    public int getListSize() {
+        return data.reminders.size();
     }
 
     public void addReminder(String nameTag, String title) {
@@ -29,7 +33,6 @@ public class ReminderListController {
     }
     public void removeReminder(int id) {
         Reminder reminder = data.idToReminder.get(id);
-
         int position = data.reminders.indexOf(reminder);
         data.reminders.remove(position);
         data.idToReminder.remove(id);

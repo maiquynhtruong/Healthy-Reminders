@@ -26,10 +26,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     ReminderListController controller;
     public List<Reminder> reminderList;
 
-    public ReminderAdapter(List<Reminder> reminderList) {
+    public ReminderAdapter(ReminderListController controller) {
         Log.i("reminder-adapter", "created");
-//         this.controller = controller;
-        this.reminderList = reminderList;
+         this.controller = controller;
     }
     @Override
     public ReminderView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,15 +40,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     @Override
     public void onBindViewHolder(ReminderView holder, int position) {
-//        Reminder reminder = controller.getReminderByPosition(position);
-        Reminder reminder = reminderList.get(position);
+        Reminder reminder = controller.getReminderByPosition(position);
         Log.i("bindViewHolder", "position:" + position);
         holder.name.setText(reminder.getTitle());
         Log.i("bindViewHolder", "text:" + reminder.getTitle());
     }
     @Override
     public int getItemCount() {
-        return reminderList.size();
+        return controller.getListSize();
     }
 
     class ReminderView extends RecyclerView.ViewHolder{

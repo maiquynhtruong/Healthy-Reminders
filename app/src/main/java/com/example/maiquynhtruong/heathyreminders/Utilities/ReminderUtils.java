@@ -22,25 +22,8 @@ public class ReminderUtils {
     private static final String REMINDER_TAG = "reminder-tag";
     private static boolean sInitialized = false; // check if job has started
 
-    synchronized public static void scheduleChargingReminder(final Context context) {
-        if (sInitialized) return;
-        Toast.makeText(context, "Job hasn't started. Staring now", Toast.LENGTH_LONG).show();
-        Driver driver = new GooglePlayDriver(context);
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
-        Job constraintReminderJob = dispatcher.newJobBuilder()
-                .setService(ReminderFirebaseJobService.class)
-                .setTag(REMINDER_TAG + "-water")
-                .setConstraints(Constraint.DEVICE_CHARGING)
-                .setLifetime(Lifetime.FOREVER)
-                .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(REMINDER_INTERVAL_SECONDS, REMINDER_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
-                .setReplaceCurrent(true)
-                .build();
-        dispatcher.schedule(constraintReminderJob);
-        sInitialized = true;
-    }
-
     synchronized public static void scheduleReminder(Context context, String tag, int[] constraints) {
+        if (sInitialized) return;
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
         Job constraintReminderJob = dispatcher.newJobBuilder()
@@ -53,6 +36,7 @@ public class ReminderUtils {
                 .setReplaceCurrent(true)
                 .build();
         dispatcher.schedule(constraintReminderJob);
+        sInitialized = true;
     }
 
 }

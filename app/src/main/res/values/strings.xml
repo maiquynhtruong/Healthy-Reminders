@@ -33,6 +33,12 @@
         <item name="pack_lunch">Pack lunch</item>
     </array>
 
+    <array name="frequency">
+        <item name="daily">Every day</item> <!-- At some time every day -->
+        <item name="weekly">Every week</item> <!-- On a particular day every week -->
+        <item name="monthly">Every month</item> <!-- On a specific day every month -->
+        <item name="yearly">Every year</item> <!-- On some day every year -->
+    </array>
     <!-- General instructions -->
     <string name="instructions">Press the image to show you have completed the reminder</string>
     <string name="default_count">0</string>

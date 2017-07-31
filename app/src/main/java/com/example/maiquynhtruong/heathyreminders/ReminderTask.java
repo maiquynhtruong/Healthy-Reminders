@@ -12,7 +12,8 @@ import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 public class ReminderTask {
 //    public static final String ACTION_INCREMENT_WATER_COUNT = "increment-water-count";
     public static final String ACTION_REMIND = "reminder-tag";
-    public static final String ACTION_DISMISS_NOTIFICATION = "dismiss-notification";
+    public static final String ACTION_POSTPONE_NOTIFICATION = "dismiss-notification";
+    public static final String ACTION_FINISH_NOTIFICATION = "finish-notification";
 //    public static final String ACTION_REMIND_CHARGING = "remind-charging";
 
     public  static void executeTask(Context context, String action) {
