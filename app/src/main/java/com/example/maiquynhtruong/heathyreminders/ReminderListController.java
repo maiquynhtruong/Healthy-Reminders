@@ -1,5 +1,7 @@
 package com.example.maiquynhtruong.heathyreminders;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,11 +18,14 @@ public class ReminderListController {
     }
 
     public Reminder getReminderByPosition(int id) {
-        return data.idToReminder.get(id);
+//        return data.idToReminder.get(id);
+        Log.d("reminderList", "" + data.reminders.get(id));
+        return data.reminders.get(0);
     }
 
-    public void addReminder(Reminder reminder) {
-        data.reminders.add(reminder);
+    public void addReminder(String nameTag, String title) {
+        Log.i("add-remidner", "name:" + title);
+        data.reminders.add(new Reminder(nameTag, title));
     }
     public void removeReminder(int id) {
         Reminder reminder = data.idToReminder.get(id);

@@ -41,7 +41,10 @@ public class MainActivity extends AppCompatActivity
     IntentFilter filter;
     ChargingBroadcastReceiver receiver;
 
-    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
+//    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
+
+    RecyclerView mainRecyclerView;
+
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
     @Override
@@ -51,21 +54,23 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         setUpNavigationDrawer();
-
+        mainRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+        layoutManager = new GridLayoutManager(this, 2);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
-        layoutManager = new GridLayoutManager(this, 2);
+//
         adapter = new ReminderAdapter(createReminders());
+        mainRecyclerView.setAdapter(adapter);
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_CHARGING});
 
@@ -79,22 +84,22 @@ public class MainActivity extends AppCompatActivity
 
     public ReminderListController createReminders() {
         ReminderListController controller = new ReminderListController();
-        controller.addReminder(new Reminder("buy-grocery", "Buy Grocery"));
-        controller.addReminder(new Reminder("pay-rent", "Pay the rent"));
-        controller.addReminder(new Reminder("pay-insurance", "Pay insurance"));
+        controller.addReminder("buy-grocery", "Buy Grocery");
+        controller.addReminder("pay-rent", "Pay the rent");
+        controller.addReminder("pay-insurance", "Pay insurance");
         return controller;
     }
     @Override
     protected void onResume() {
         super.onResume();
         // for future state changes, we still need the receiver
-        registerReceiver(receiver, filter);
+//        registerReceiver(receiver, filter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
     }
 
     /* Updates the TextView to display the new water count from SharedPreferences */

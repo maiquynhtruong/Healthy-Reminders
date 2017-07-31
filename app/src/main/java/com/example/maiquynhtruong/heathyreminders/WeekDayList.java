@@ -6,7 +6,7 @@ package com.example.maiquynhtruong.heathyreminders;
 
 public class WeekDayList {
     private boolean[] weekdays;
-    public final WeekDayList EVERY_DAY = new WeekDayList(127);
+//    public final WeekDayList EVERY_DAY = new WeekDayList(127);
     public WeekDayList(int bitMap) {
         weekdays = new boolean[7];
         int current = 1;
