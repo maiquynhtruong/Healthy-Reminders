@@ -15,6 +15,13 @@ public class ReminderListController {
         data = new ReminderListData();
     }
 
+    public Reminder getReminderByPosition(int id) {
+        return data.idToReminder.get(id);
+    }
+
+    public void addReminder(Reminder reminder) {
+        data.reminders.add(reminder);
+    }
     public void removeReminder(int id) {
         Reminder reminder = data.idToReminder.get(id);
 

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
         layoutManager = new GridLayoutManager(this, 2);
-        adapter = new ReminderAdapter();
+        adapter = new ReminderAdapter(createReminders());
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_CHARGING});
 
@@ -77,21 +77,16 @@ public class MainActivity extends AppCompatActivity
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
     }
 
+    public ReminderListController createReminders() {
+        ReminderListController controller = new ReminderListController();
+        controller.addReminder(new Reminder("buy-grocery", "Buy Grocery"));
+        controller.addReminder(new Reminder("pay-rent", "Pay the rent"));
+        controller.addReminder(new Reminder("pay-insurance", "Pay insurance"));
+        return controller;
+    }
     @Override
     protected void onResume() {
         super.onResume();
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
-//            boolean isCharging = batteryManager.isCharging();
-//            showCharging(isCharging);
-//        } else {
-//            IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-//            Intent batteryStatus = this.registerReceiver(null, intentFilter);
-//            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-//            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
-//            showCharging(isCharging);
-//        }
         // for future state changes, we still need the receiver
         registerReceiver(receiver, filter);
     }
