@@ -16,6 +16,8 @@ public class Reminder {
     ReminderMethod method;
 
     public Reminder(String nameTag, String title) {
+        this.nameTag = nameTag;
+        this.title = title;
         constraints = new int[]{Constraint.DEVICE_CHARGING};
         hour = 12;
         minute = 0;

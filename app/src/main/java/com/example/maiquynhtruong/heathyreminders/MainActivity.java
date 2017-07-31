@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -31,6 +32,9 @@ import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService
 import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 import com.firebase.jobdispatcher.Constraint;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -65,11 +69,15 @@ public class MainActivity extends AppCompatActivity
 
         setUpNavigationDrawer();
         mainRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
-//
-        adapter = new ReminderAdapter(createReminders());
+
+        List<Reminder> reminderList = new ArrayList<>();
+        reminderList.add(new Reminder("buy-grocery", "Buy Grocery"));
+        reminderList.add(new Reminder("pay-rent", "Pay the rent"));
+        reminderList.add(new Reminder("pay-insurance", "Pay insurance"));
+        adapter = new ReminderAdapter(reminderList);
         mainRecyclerView.setAdapter(adapter);
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_CHARGING});
