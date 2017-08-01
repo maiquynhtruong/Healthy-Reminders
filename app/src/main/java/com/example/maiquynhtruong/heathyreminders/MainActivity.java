@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         adapter = new ReminderAdapter(createReminders());
         mainRecyclerView.setAdapter(adapter);
 
-        ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_CHARGING});
+        ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_IDLE});
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);

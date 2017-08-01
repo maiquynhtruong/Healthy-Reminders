@@ -31,10 +31,17 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
          this.controller = controller;
     }
     @Override
-    public ReminderView onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReminderView onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_reminder, parent, false);
-        ReminderView reminderView = new ReminderView(view);
+        final ReminderView reminderView = new ReminderView(view);
         Log.i("on-create-view-holder", "created");
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = parent.indexOfChild(view);
+                Toast.makeText(parent.getContext(), "You clicked on the " + position + "th child", Toast.LENGTH_LONG);
+            }
+        });
         return reminderView;
     }
 
