@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="com.example.maiquynhtruong.heathyreminders.MainActivity">
+    tools:context="com.example.maiquynhtruong.heathyreminders.Activities.MainActivity">
 
     <TextView
         android:id="@+id/tv_instructions"

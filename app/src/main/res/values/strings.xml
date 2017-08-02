@@ -33,12 +33,31 @@
         <item>Packing lunch</item>
     </string-array>
 
+
+    <!--Frequency levels-->
     <string-array name="frequencies">
         <item>Every day</item> <!-- At some time every day -->
         <item>Every week</item> <!-- On a particular day every week -->
         <item>Every month</item> <!-- On a specific day every month -->
         <item>Every year</item> <!-- On some day every year -->
     </string-array>
+
+    <!--More specific frequencies-->
+
+    <!--For everyday-->
+    <string-array name="frequencies_everyday">
+        <item>Morning</item>
+        <item>Noon</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+        <item>At night</item>
+    </string-array>
+
+    <!--For every week, user should be able to pick multiple days. Recommending a checklist-->
+
+    <!--For every month, user should pick a day-->
+
+    <!--For every year, should be able to pick a day-->
     <!-- General instructions -->
     <string name="instructions">Press the image to show you have completed the reminder</string>
     <string name="default_count">0</string>

@@ -1,17 +1,13 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.example.maiquynhtruong.heathyreminders.Activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.BatteryManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -23,21 +19,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
-import com.example.maiquynhtruong.heathyreminders.Fragments.NewReminderActivity;
+import com.example.maiquynhtruong.heathyreminders.Activities.NewReminderActivity;
+import com.example.maiquynhtruong.heathyreminders.R;
+import com.example.maiquynhtruong.heathyreminders.ReminderListController;
+import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
-import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 import com.firebase.jobdispatcher.Constraint;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -123,14 +113,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        // for future state changes, we still need the receiver
-//        registerReceiver(receiver, filter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        unregisterReceiver(receiver);
     }
 
     @Override

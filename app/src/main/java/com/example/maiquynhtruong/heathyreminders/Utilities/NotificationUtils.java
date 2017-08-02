@@ -11,7 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import com.example.maiquynhtruong.heathyreminders.MainActivity;
+import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;

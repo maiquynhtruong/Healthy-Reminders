@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders.Fragments;
+package com.example.maiquynhtruong.heathyreminders.Activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,10 +10,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.maiquynhtruong.heathyreminders.R;
-
-/**
- * Created by d4truom on 7/31/2017.
- */
 
 public class NewReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Spinner frequencySpinner;
