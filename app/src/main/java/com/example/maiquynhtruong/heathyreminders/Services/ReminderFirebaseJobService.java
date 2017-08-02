@@ -13,9 +13,9 @@ public class ReminderFirebaseJobService extends JobService {
          mBackgroundTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
-//                ReminderTask.executeTask(ReminderFirebaseJobService.this, ReminderTask.ACTION_REMIND_CHARGING);
                 // issue a reminder
-                ReminderTask.executeTask(ReminderFirebaseJobService.this, job.getTag());
+//                ReminderTask.executeTask(ReminderFirebaseJobService.this, job.getTag()); // job.getTag() is later to tell which task is which
+                ReminderTask.executeTask(ReminderFirebaseJobService.this);
                 return null;
             }
 

@@ -14,13 +14,7 @@ public class ReminderTask {
     public static final String ACTION_POSTPONE_NOTIFICATION = "dismiss-notification";
     public static final String ACTION_FINISH_NOTIFICATION = "finish-notification";
 
-    public  static void executeTask(Context context, String action) {
-            if (action.equals(ACTION_REMIND)) {
-            reminderNotification(context);
-        }
-    }
-
-    public static void reminderNotification(Context context) {
+    public static void executeTask(Context context) {
         NotificationUtils.reminderNotify(context);
     }
 }

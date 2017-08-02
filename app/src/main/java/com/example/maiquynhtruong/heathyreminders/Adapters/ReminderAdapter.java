@@ -39,7 +39,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             @Override
             public void onClick(View view) {
                 int position = parent.indexOfChild(view);
-                Toast.makeText(parent.getContext(), "You clicked on the " + position + "th child", Toast.LENGTH_LONG);
+                Toast.makeText(parent.getContext(), "You clicked on the " + position + "th child", Toast.LENGTH_LONG).show();
             }
         });
         return reminderView;
