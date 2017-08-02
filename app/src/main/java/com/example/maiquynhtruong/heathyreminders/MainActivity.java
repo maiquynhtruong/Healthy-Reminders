@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
+import com.example.maiquynhtruong.heathyreminders.Fragments.NewReminderActivity;
 import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
@@ -39,7 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
     SharedPreferences preferences;
     IntentFilter filter;
@@ -62,8 +63,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Showing add reminder dialog", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                showAddReminder();
             }
         });
 
@@ -77,12 +79,15 @@ public class MainActivity extends AppCompatActivity
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_IDLE});
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
-
         filter = new IntentFilter();
         filter.addAction(Intent.ACTION_POWER_CONNECTED);
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+    }
+
+    public void showAddReminder() {
+        Intent addReminderIntent = new Intent(this, NewReminderActivity.class);
+        startActivity(addReminderIntent);
+//        startActivityForResult();
     }
 
     public ReminderListController createReminders() {
@@ -92,49 +97,11 @@ public class MainActivity extends AppCompatActivity
         controller.addReminder("pay-insurance", "Pay insurance");
         return controller;
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // for future state changes, we still need the receiver
-//        registerReceiver(receiver, filter);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        unregisterReceiver(receiver);
-    }
-
-    /* Updates the TextView to display the new water count from SharedPreferences */
-    public void updateWaterCount() {
-        int currentCount = PreferenceUtils.getWaterCount(this);
-//        mWaterCountDisplay.setText(currentCount + "");
-    }
-    /* Updates the TextView to display the new charging reminder count from SharedPreferences*/
-    public void updateChargingReminderCount() {
-        int currentCount = PreferenceUtils.getChargingReminderCount(this);
-//        mChargingCountDisplay.setText(currentCount + "");
-    }
 
     public void incrementWater(View view) {
         Intent incrementWaterCountIntent = new Intent(this, ReminderIntentService.class);
 //        incrementWaterCountIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
         startService(incrementWaterCountIntent);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(PreferenceUtils.KEY_WATER_COUNT)) {
-            updateWaterCount();
-        }
-        if (s.equals(PreferenceUtils.KEY_CHARGING_REMINDER_COUNT)) {
-            updateChargingReminderCount();
-        }
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        preferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     public void setUpNavigationDrawer() {
@@ -146,6 +113,24 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // for future state changes, we still need the receiver
+//        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        unregisterReceiver(receiver);
     }
 
     @Override
@@ -213,12 +198,4 @@ public class MainActivity extends AppCompatActivity
 //            showCharging(isCharging);
         }
     }
-    //    public void showCharging(boolean isCharging) {
-//        ImageView charger = (ImageView) findViewById(R.id.iv_power_increment);
-//        if (isCharging) {
-//            charger.setImageResource(R.drawable.ic_power_pink_80px);
-//        } else {
-//            charger.setImageResource(R.drawable.ic_power_grey_80px);
-//        }
-//    }
 }

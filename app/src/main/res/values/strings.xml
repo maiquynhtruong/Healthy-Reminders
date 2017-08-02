@@ -20,25 +20,25 @@
     <string name="charging_reminder_notification_title">Device Charging - Where\'s that water?</string>
     <string name="charging_reminder_notification_body">There\'s never a better time to drink water than when you know your phone is charging. Drink up!</string>
 
-    <array name="recommended_activities">
-        <item name="meditation">Meditation</item>
-        <item name="eating_fruits">Eating fruits</item>
-        <item name="walking">Walking</item>
-        <item name="looking_faraway">Looking far away</item>
-        <item name="drink_water">Drinking water</item>
-        <item name="take_medicine">Take medicine</item>
-        <item name="call_relatives">Call relatives</item>
-        <item name="change_toothbrush">Change toothbrush</item>
-        <item name="new_towel">Buy new towel</item>
-        <item name="pack_lunch">Pack lunch</item>
-    </array>
+    <string-array name="example_reminders">
+        <item>Meditation</item>
+        <item>Eating fruits</item>
+        <item>Walking</item>
+        <item>Looking outside</item>
+        <item>Drinking water</item>
+        <item>Taking medications</item>
+        <item>Calling friends and families</item>
+        <item>Changing toothbrush</item>
+        <item>Buying new towel</item>
+        <item>Packing lunch</item>
+    </string-array>
 
-    <array name="frequency">
-        <item name="daily">Every day</item> <!-- At some time every day -->
-        <item name="weekly">Every week</item> <!-- On a particular day every week -->
-        <item name="monthly">Every month</item> <!-- On a specific day every month -->
-        <item name="yearly">Every year</item> <!-- On some day every year -->
-    </array>
+    <string-array name="frequencies">
+        <item>Every day</item> <!-- At some time every day -->
+        <item>Every week</item> <!-- On a particular day every week -->
+        <item>Every month</item> <!-- On a specific day every month -->
+        <item>Every year</item> <!-- On some day every year -->
+    </string-array>
     <!-- General instructions -->
     <string name="instructions">Press the image to show you have completed the reminder</string>
     <string name="default_count">0</string>
@@ -46,4 +46,5 @@
     <string name="reminder_notification_body">There\'s never a better to do it</string>
     <string name="reminder_finished">OK, I\'m done</string>
     <string name="reminder_postponed">Delay for now</string>
+    <string name="how_often">How often?</string>
 </resources>

@@ -32,7 +32,7 @@ public class NotificationUtils {
                 .setColor(context.getResources().getColor(R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_alarm)
                 .setLargeIcon(largeIcon(context))
-                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
+                .setContentTitle(context.getString(R.string.reminder_notification_title))
                 .setContentText(context.getString(R.string.reminder_notification_title))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.reminder_notification_body)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)

@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
 
     <include layout="@layout/fragment_reminder_description" />
-    <include layout="@layout/fragment_reminder_frequency"/>
+    <include layout="@layout/fragment_reminder_frequency" />
     <include layout="@layout/fragment_reminder_date_picker"/>
 </LinearLayout>
