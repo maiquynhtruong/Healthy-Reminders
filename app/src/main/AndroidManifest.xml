@@ -28,6 +28,8 @@
             android:exported="false"
             />
         <activity android:name=".Activities.AddReminderActivity"/>
+        <receiver android:name=".Receivers.AlarmBroadcastReceiver"/>
+        <receiver android:name=".Receivers.AlarmBroadcastReceiver"/>
     </application>
 
 </manifest>
