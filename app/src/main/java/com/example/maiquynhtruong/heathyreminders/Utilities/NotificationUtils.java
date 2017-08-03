@@ -64,6 +64,7 @@ public class NotificationUtils {
         return action;
     }
 
+    // Supply a PendingIntent to send when the notification is clicked
     public static PendingIntent contentIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, REMINDER_PENDING_INTENT_ID,

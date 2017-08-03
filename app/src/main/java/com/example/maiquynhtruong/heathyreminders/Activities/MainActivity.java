@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     SharedPreferences preferences;
     IntentFilter filter;
-    ChargingBroadcastReceiver receiver;
+    ReminderBroadcastReceiver receiver;
 
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
 
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private class ChargingBroadcastReceiver extends BroadcastReceiver {
+    private class ReminderBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
