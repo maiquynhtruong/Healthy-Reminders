@@ -15,6 +15,6 @@ public class ReminderIntentService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         String action = intent.getAction();
-        ReminderTask.executeTask(this, action);
+        ReminderTask.executeNotificationTask(this, action);
     }
 }

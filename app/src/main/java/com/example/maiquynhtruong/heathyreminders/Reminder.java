@@ -3,17 +3,13 @@ package com.example.maiquynhtruong.heathyreminders;
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Job;
 
-enum ReminderMethod {
-    EMAIL, NOTIFICATION, ALARM
-}
 public class Reminder {
     String nameTag;
     String title;
     public int[] constraints;
     private int hour;
     private int minute;
-    WeekDayList weekDayList;
-    ReminderMethod method;
+    private int id;
 
     public Reminder(String nameTag, String title) {
         this.nameTag = nameTag;
@@ -21,8 +17,6 @@ public class Reminder {
         constraints = new int[]{Constraint.DEVICE_CHARGING};
         hour = 12;
         minute = 0;
-        weekDayList = new WeekDayList(127); // 127 for 1111111 aka everyday
-        method = ReminderMethod.NOTIFICATION;
     }
 
     public String getTitle() {
@@ -63,6 +57,14 @@ public class Reminder {
 
     public void setMinute(int minute) {
         this.minute = minute;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

@@ -1,9 +1,6 @@
 package com.example.maiquynhtruong.heathyreminders.Activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,11 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
-import com.example.maiquynhtruong.heathyreminders.Activities.NewReminderActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.ReminderListController;
 import com.example.maiquynhtruong.heathyreminders.ReminderTask;
-import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 import com.firebase.jobdispatcher.Constraint;
 
@@ -33,8 +28,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
     SharedPreferences preferences;
-    IntentFilter filter;
-
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
 
     RecyclerView mainRecyclerView;
@@ -67,16 +60,11 @@ public class MainActivity extends AppCompatActivity
         mainRecyclerView.setAdapter(adapter);
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_IDLE});
-
-        filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_POWER_CONNECTED);
-        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
     }
 
     public void showAddReminder() {
-        Intent addReminderIntent = new Intent(this, NewReminderActivity.class);
+        Intent addReminderIntent = new Intent(this, AddReminderActivity.class);
         startActivity(addReminderIntent);
-//        startActivityForResult();
     }
 
     public ReminderListController createReminders() {
@@ -84,13 +72,8 @@ public class MainActivity extends AppCompatActivity
         controller.addReminder("buy-grocery", "Buy Grocery");
         controller.addReminder("pay-rent", "Pay the rent");
         controller.addReminder("pay-insurance", "Pay insurance");
+        controller.addReminder("pay-internet-bill", "Pay Internet Bill");
         return controller;
-    }
-
-    public void incrementWater(View view) {
-        Intent incrementWaterCountIntent = new Intent(this, ReminderIntentService.class);
-//        incrementWaterCountIntent.setAction(ReminderTask.ACTION_INCREMENT_WATER_COUNT);
-        startService(incrementWaterCountIntent);
     }
 
     public void setUpNavigationDrawer() {

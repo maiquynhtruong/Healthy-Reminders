@@ -27,7 +27,7 @@
         <service android:name=".Services.ReminderFirebaseJobService"
             android:exported="false"
             />
-        <activity android:name=".Activities.NewReminderActivity"/>
+        <activity android:name=".Activities.AddReminderActivity"/>
     </application>
 
 </manifest>
