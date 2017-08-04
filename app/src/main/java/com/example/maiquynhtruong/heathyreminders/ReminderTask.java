@@ -5,9 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.maiquynhtruong.heathyreminders.Receivers.AlarmBroadcastReceiver;
+import com.example.maiquynhtruong.heathyreminders.Receivers.AlarmReceiver;
 import com.example.maiquynhtruong.heathyreminders.Utilities.NotificationUtils;
-import com.example.maiquynhtruong.heathyreminders.Utilities.PreferenceUtils;
 
 public class ReminderTask {
     public static final String ACTION_REMIND = "reminder-tag";
@@ -26,7 +25,7 @@ public class ReminderTask {
     public static void executeAlarmTask(Context context, String action) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
+        Intent intent = new Intent(context, AlarmReceiver.class);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

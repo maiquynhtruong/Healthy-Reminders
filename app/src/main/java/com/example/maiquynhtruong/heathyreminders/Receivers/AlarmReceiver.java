@@ -7,10 +7,10 @@ import android.content.Intent;
 import com.example.maiquynhtruong.heathyreminders.Utilities.NotificationUtils;
 
 /**
- * Created by d4truom on 8/3/2017.
+ * Raises the notifications when received
  */
 
-public class AlarmBroadcastReceiver extends BroadcastReceiver {
+public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
