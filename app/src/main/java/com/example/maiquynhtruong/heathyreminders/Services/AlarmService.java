@@ -13,6 +13,7 @@ import com.example.maiquynhtruong.heathyreminders.Receivers.AlarmReceiver;
 
 public class AlarmService extends IntentService {
     public static final String CREATE_ALARM = "create-alarm";
+    public static final String DELETE_ALARM = "delete-alarm";
     public AlarmService() {
         super("AlarmService");
     }
@@ -24,9 +25,7 @@ public class AlarmService extends IntentService {
 
     public void setAlarm(Context context, Calendar calendar) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
         Intent intent = new Intent(context, AlarmReceiver.class);
-
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }
