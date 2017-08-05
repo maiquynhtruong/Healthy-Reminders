@@ -14,7 +14,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ReminderDatabase";
     private static final int DATABASE_VERSION = 1;
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + ReminderEntry.TABLE_NAME + " ("
-    + ReminderEntry._ID + " INTEGER PRIMARY KEY, " + ReminderEntry.NOTIICATION_ID + " TEXT)";
+    + ReminderEntry._ID + " INTEGER PRIMARY KEY, " + ReminderEntry.REMINDER_ID + " TEXT)";
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + ReminderEntry.TABLE_NAME;
     public ReminderDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -27,10 +27,11 @@ public class ReminderDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        sqLiteDatabase.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(sqLiteDatabase);
     }
     public static class ReminderEntry implements BaseColumns {
         public static final String TABLE_NAME = "ReminderEntries";
-        public static final String NOTIICATION_ID = "Notification-ID";
+        public static final String REMINDER_ID = "Reminder-ID";
     }
 }
