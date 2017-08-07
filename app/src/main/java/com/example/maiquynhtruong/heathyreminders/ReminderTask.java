@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.maiquynhtruong.heathyreminders.Receivers.AlarmReceiver;
-import com.example.maiquynhtruong.heathyreminders.Utilities.NotificationUtils;
 
 public class ReminderTask {
     public static final String ACTION_REMIND = "reminder-tag";

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.example.maiquynhtruong.heathyreminders.ReminderTask;
-import com.example.maiquynhtruong.heathyreminders.Utilities.NotificationUtils;
 
 public class ReminderIntentService extends IntentService {
     public ReminderIntentService() {

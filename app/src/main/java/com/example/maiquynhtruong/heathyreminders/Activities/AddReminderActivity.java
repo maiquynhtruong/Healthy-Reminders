@@ -1,24 +1,40 @@
 package com.example.maiquynhtruong.heathyreminders.Activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.maiquynhtruong.heathyreminders.R;
+import com.example.maiquynhtruong.heathyreminders.Reminder;
+import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 import com.example.maiquynhtruong.heathyreminders.Services.AlarmService;
+import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 
-public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
+        TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
     Spinner frequencySpinner;
     Spinner datePickerSpinner;
     EditText name;
     EditText description;
+
+    String date;
+    int hour, minute, repeateNumber;
+    boolean repeat;
+    ReminderDatabase database;
+    Calendar calendar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,15 +47,23 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequencySpinner.setAdapter(adapter);
         frequencySpinner.setOnItemSelectedListener(this);
+        calendar = Calendar.getInstance();
+        database = new ReminderDatabase(getBaseContext());
     }
 
     public void saveReminder(View view) {
-        Intent intent = new Intent(getApplicationContext(), AlarmService.class);
-        intent.setAction(AlarmService.CREATE_ALARM);
-        getApplicationContext().startService(intent);
+        String title = name.getText().toString();
+        String date =
+        int reminderID = database.setReminder(new Reminder(title));
+
+        Intent createReminderIntent = new Intent(getBaseContext(), ReminderIntentService.class);
+        createReminderIntent.setAction("CREATE");
+        createReminderIntent.putExtra("ReminderId", reminderID);
+        startService(createReminderIntent);
     }
 
     public void cancelReminder(View view) {
+
         onBackPressed();
     }
 
@@ -51,4 +75,14 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {}
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+    }
 }

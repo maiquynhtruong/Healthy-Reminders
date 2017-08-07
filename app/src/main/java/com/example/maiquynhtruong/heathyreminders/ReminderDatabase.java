@@ -11,6 +11,9 @@ import android.database.sqlite.SQLiteQuery;
 import android.icu.util.Calendar;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_DATE;
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_ID;
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.TABLE_NAME;
@@ -68,16 +71,28 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                         ReminderEntry.REMINDER_REPEAT,
                 }, ReminderDatabase.ReminderEntry.REMINDER_ID + " = ?",
                 new String[]{"" + id}, null, null, null);
-        Reminder reminder = new Reminder("Default reminder");
-        if (cursor.moveToFirst()) {
-            reminder.setTitle(cursor.getString(1));
-            reminder.setDate(cursor.getString(2));
-            reminder.setHour(Integer.parseInt(cursor.getString(3)));
-            reminder.setMinute(Integer.parseInt(cursor.getString(4)));
-            reminder.setRepeat(Boolean.parseBoolean(cursor.getString(5)));
-            reminder.setRepeatNumber(Integer.parseInt(cursor.getString(6)));
-        }
+        Reminder reminder = new Reminder(cursor.getString(1), cursor.getString(2), Integer.parseInt(cursor.getString(3)),
+                Integer.parseInt(cursor.getString(4)), Boolean.parseBoolean(cursor.getString(5)), Integer.parseInt(cursor.getString(6)));
         return reminder;
+    }
+
+    public List<Reminder> getAllReminders() {
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.query(ReminderDatabase.ReminderEntry.TABLE_NAME,
+                new String[]{
+                        ReminderEntry.REMINDER_TITLE,
+                        ReminderEntry.REMINDER_DATE,
+                        ReminderEntry.REMINDER_HOUR,
+                        ReminderEntry.REMINDER_MINUTE,
+                        ReminderEntry.REMINDER_REPEAT_NUMBER,
+                        ReminderEntry.REMINDER_REPEAT,
+                }, null, null, null, null, null);
+        List<Reminder> reminderList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            reminderList.add(new Reminder(cursor.getString(1), cursor.getString(2), Integer.parseInt(cursor.getString(3)),
+                    Integer.parseInt(cursor.getString(4)), Boolean.parseBoolean(cursor.getString(5)), Integer.parseInt(cursor.getString(6))));
+        }
+        return reminderList;
     }
 
     public void deleteReminder(long id) {

@@ -50,6 +50,7 @@ public class AlarmService extends IntentService {
 
     public List<Reminder> getAllReminders() {
         List<Reminder> reminderList = new ArrayList<Reminder>();
+        return reminderList;
     }
 
     public void cancelReminder(Context context, int requestCode) {

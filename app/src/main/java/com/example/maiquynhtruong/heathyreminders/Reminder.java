@@ -9,12 +9,13 @@ public class Reminder {
     private int repeatNumber;
     private String date;
 
-    public Reminder(String title) {
+    public Reminder(String title, String date, int hour, int minute, boolean repeat, int repeatNumber) {
         this.title = title;
-        hour = 12;
-        minute = 0;
-        repeat = false;
-        repeatNumber = 0;
+        this.hour = hour;
+        this.minute = minute;
+        this.repeat = repeat;
+        this.repeatNumber = repeatNumber;
+        this.date = date;
     }
 
     public String getTitle() {
