@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by maiquynhtruong on 8/5/17.
  */
 
-public class ReminderApplications extends Application {
+public class ReminderApplication extends Application {
     public static ReminderDatabase dbHelper;
     public static SQLiteDatabase database;
 

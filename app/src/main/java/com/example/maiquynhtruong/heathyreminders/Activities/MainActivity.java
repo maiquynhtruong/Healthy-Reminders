@@ -19,7 +19,6 @@ import android.view.MenuItem;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
-import com.example.maiquynhtruong.heathyreminders.ReminderListController;
 import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 import com.firebase.jobdispatcher.Constraint;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
-        adapter = new ReminderAdapter(createReminders());
+        adapter = new ReminderAdapter();
         mainRecyclerView.setAdapter(adapter);
 
         ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_IDLE});
@@ -65,15 +64,6 @@ public class MainActivity extends AppCompatActivity
     public void showAddReminder() {
         Intent addReminderIntent = new Intent(this, AddReminderActivity.class);
         startActivity(addReminderIntent);
-    }
-
-    public ReminderListController createReminders() {
-        ReminderListController controller = new ReminderListController();
-        controller.addReminder("buy-grocery", "Buy Grocery");
-        controller.addReminder("pay-rent", "Pay the rent");
-        controller.addReminder("pay-insurance", "Pay insurance");
-        controller.addReminder("pay-internet-bill", "Pay Internet Bill");
-        return controller;
     }
 
     public void setUpNavigationDrawer() {

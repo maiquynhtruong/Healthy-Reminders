@@ -1,22 +1,20 @@
 package com.example.maiquynhtruong.heathyreminders;
 
-import com.firebase.jobdispatcher.Constraint;
-import com.firebase.jobdispatcher.Job;
-
 public class Reminder {
-    String nameTag;
+    private int id;
     String title;
-    public int[] constraints;
     private int hour;
     private int minute;
-    private int id;
+    private boolean repeat;
+    private int repeatNumber;
+    private String date;
 
-    public Reminder(String nameTag, String title) {
-        this.nameTag = nameTag;
+    public Reminder(String title) {
         this.title = title;
-        constraints = new int[]{Constraint.DEVICE_CHARGING};
         hour = 12;
         minute = 0;
+        repeat = false;
+        repeatNumber = 0;
     }
 
     public String getTitle() {
@@ -25,22 +23,6 @@ public class Reminder {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getNameTag() {
-        return nameTag;
-    }
-
-    public void setNameTag(String nameTag) {
-        this.nameTag = nameTag;
-    }
-
-    public int[] getConstraints() {
-        return constraints;
-    }
-
-    public void setConstraints(int[] constraints) {
-        this.constraints = constraints;
     }
 
     public int getHour() {
@@ -66,5 +48,26 @@ public class Reminder {
     public void setId(int id) {
         this.id = id;
     }
+
+    public boolean isRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(boolean repeat) {
+        this.repeat = repeat;
+    }
+
+    public int getRepeatNumber() {
+        return repeatNumber;
+    }
+
+    public void setRepeatNumber(int repeatNumber) {
+        this.repeatNumber = repeatNumber;
+    }
+    public void setDate(String date) { this.date = date; }
+
+    public String getDate() {return this.date;}
+
+
 
 }

@@ -1,11 +1,8 @@
 package com.example.maiquynhtruong.heathyreminders.Activities;
 
-import android.app.AlarmManager;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.AlarmManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,15 +12,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.maiquynhtruong.heathyreminders.R;
-import com.example.maiquynhtruong.heathyreminders.Reminder;
-import com.example.maiquynhtruong.heathyreminders.ReminderListController;
+import com.example.maiquynhtruong.heathyreminders.Services.AlarmService;
 
 public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Spinner frequencySpinner;
     Spinner datePickerSpinner;
     EditText name;
     EditText description;
-    ReminderListController controller;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,15 +31,16 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequencySpinner.setAdapter(adapter);
         frequencySpinner.setOnItemSelectedListener(this);
-        controller = new ReminderListController();
     }
 
     public void saveReminder(View view) {
-        controller.addReminder(name.getText().toString(), name.getText().toString());
+        Intent intent = new Intent(getApplicationContext(), AlarmService.class);
+        intent.setAction(AlarmService.CREATE_ALARM);
+        getApplicationContext().startService(intent);
     }
 
     public void cancelReminder(View view) {
-
+        onBackPressed();
     }
 
     @Override
