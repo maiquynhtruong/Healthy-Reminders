@@ -19,7 +19,6 @@ import android.view.MenuItem;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
-import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
 import com.firebase.jobdispatcher.Constraint;
 
@@ -57,8 +56,6 @@ public class MainActivity extends AppCompatActivity
         mainRecyclerView.setLayoutManager(layoutManager);
         adapter = new ReminderAdapter();
         mainRecyclerView.setAdapter(adapter);
-
-        ReminderUtils.scheduleReminder(this, ReminderTask.ACTION_REMIND, new int[] {Constraint.DEVICE_IDLE});
     }
 
     public void showAddReminder() {

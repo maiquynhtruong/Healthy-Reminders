@@ -2,7 +2,6 @@ package com.example.maiquynhtruong.heathyreminders.Services;
 
 import android.os.AsyncTask;
 
-import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 

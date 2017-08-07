@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.maiquynhtruong.heathyreminders.Services.AlarmService;
-
 /**
  * Created by d4truom on 8/3/2017.
  */

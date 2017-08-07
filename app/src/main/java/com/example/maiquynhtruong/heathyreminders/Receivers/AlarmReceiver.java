@@ -1,5 +1,6 @@
 package com.example.maiquynhtruong.heathyreminders.Receivers;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,13 +10,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
+import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
-import com.example.maiquynhtruong.heathyreminders.ReminderTask;
 import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 
 /**
@@ -23,14 +25,20 @@ import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService
  */
 
 public class AlarmReceiver extends BroadcastReceiver {
+    public static final int REMINDER_PENDING_INTENT_ID = 2;
+    public static final int FINISH_NOTIFICATION_PENDING_INTENT = 3;
+    public static final int POSTPONE_NOTIFICATION_PENDDING_INTENT = 4;
     @Override
     public void onReceive(Context context, Intent intent) {
         reminderNotify(context);
     }
 
-    public static final int REMINDER_PENDING_INTENT_ID = 2;
-    public static final int FINISH_NOTIFICATION_PENDING_INTENT = 3;
-    public static final int POSTPONE_NOTIFICATION_PENDDING_INTENT = 4;
+    public static void setReminder(Context context, Reminder reminder, Calendar calendar) {
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
 
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -60,7 +68,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public static NotificationCompat.Action finishReminderAction(Context context) {
         Intent ignoreIntent = new Intent(context, ReminderIntentService.class);
-        ignoreIntent.setAction(ReminderTask.ACTION_FINISH_NOTIFICATION);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT, ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_done_black_24px, context.getText(R.string.reminder_finished),  pendingIntent);
         return action;
@@ -68,7 +75,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public static NotificationCompat.Action postponeReminder(Context context) {
         Intent postponeReminder  = new Intent(context, ReminderIntentService.class);
-        postponeReminder.setAction(ReminderTask.ACTION_POSTPONE_NOTIFICATION);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDDING_INTENT, postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px, context.getString(R.string.reminder_postponed), pendingIntent);
         return action;

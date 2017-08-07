@@ -27,7 +27,7 @@
             />
         <service android:name=".Services.ReminderFirebaseJobService"
             android:exported="false" />
-        <service android:name=".Services.AlarmService"/>
+
         <activity android:name=".Activities.AddReminderActivity"/>
         <receiver android:name=".Receivers.AlarmReceiver"></receiver>
         <receiver android:name=".Receivers.BootBroadcastReceiver">
