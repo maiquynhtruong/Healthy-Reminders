@@ -22,11 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Services.ReminderIntentService"
-            android:exported="false"
-            />
-        <service android:name=".Services.ReminderFirebaseJobService"
-            android:exported="false" />
 
         <activity android:name=".Activities.AddReminderActivity"/>
         <receiver android:name=".Receivers.AlarmReceiver"></receiver>

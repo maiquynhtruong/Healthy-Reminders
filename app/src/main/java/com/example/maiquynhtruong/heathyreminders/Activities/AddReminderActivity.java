@@ -20,12 +20,10 @@ import android.widget.Toast;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
-import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
 
 public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
     Spinner frequencySpinner;
-    DatePickerDialog datePicker;
     EditText name;
     EditText description;
     TextView atTime, onDate;

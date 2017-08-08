@@ -18,11 +18,6 @@ import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
-import com.example.maiquynhtruong.heathyreminders.Services.ReminderIntentService;
-
-/**
- * Raises the notifications when received
- */
 
 public class AlarmReceiver extends BroadcastReceiver {
     public static final int REMINDER_PENDING_INTENT_ID = 2;
@@ -67,14 +62,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public static NotificationCompat.Action finishReminderAction(Context context) {
-        Intent ignoreIntent = new Intent(context, ReminderIntentService.class);
+        Intent ignoreIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT, ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_done_black_24px, context.getText(R.string.reminder_finished),  pendingIntent);
         return action;
     }
 
     public static NotificationCompat.Action postponeReminder(Context context) {
-        Intent postponeReminder  = new Intent(context, ReminderIntentService.class);
+        Intent postponeReminder  = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDDING_INTENT, postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px, context.getString(R.string.reminder_postponed), pendingIntent);
         return action;

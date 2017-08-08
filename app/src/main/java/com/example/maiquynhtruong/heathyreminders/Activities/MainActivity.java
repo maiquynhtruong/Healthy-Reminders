@@ -19,8 +19,6 @@ import android.view.MenuItem;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
-import com.example.maiquynhtruong.heathyreminders.Utilities.ReminderUtils;
-import com.firebase.jobdispatcher.Constraint;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
