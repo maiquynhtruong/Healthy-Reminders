@@ -32,7 +32,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 ReminderEntry.REMINDER_DAY + " INTEGER, " +
                 ReminderEntry.REMINDER_YEAR + " INTEGER, " +
                 ReminderEntry.REMINDER_REPEAT + " BOOLEAN, " +
-                ReminderEntry.REMINDER_REPEAT_NUMBER + " INTEGER" +
+                ReminderEntry.REMINDER_REPEAT_NUMBER + " INTEGER, " +
+                ReminderEntry.REMINDER_REPEAT_TYPE + " TEXT" +
         ")");
     }
 
@@ -52,6 +53,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_YEAR, reminder.getYear());
         values.put(ReminderEntry.REMINDER_REPEAT, reminder.isRepeat());
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
+        values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
         long newRowId = database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
         return newRowId;
     }
@@ -68,11 +70,12 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                         ReminderEntry.REMINDER_YEAR,
                         ReminderEntry.REMINDER_REPEAT,
                         ReminderEntry.REMINDER_REPEAT_NUMBER,
+                        ReminderEntry.REMINDER_REPEAT_TYPE
                 }, ReminderDatabase.ReminderEntry.REMINDER_ID + " = ?",
                 new String[]{"" + id}, null, null, null);
         Reminder reminder = new Reminder(cursor.getString(1), Integer.parseInt(cursor.getString(2)), Integer.parseInt(cursor.getString(3)),
                 Integer.parseInt(cursor.getString(4)), Integer.parseInt(cursor.getString(5)), Integer.parseInt(cursor.getString(6)),
-                Boolean.parseBoolean(cursor.getString(5)), Integer.parseInt(cursor.getString(6)));
+                Boolean.parseBoolean(cursor.getString(5)), Integer.parseInt(cursor.getString(6)), cursor.getString(7));
         return reminder;
     }
 
@@ -88,12 +91,13 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                         ReminderEntry.REMINDER_YEAR,
                         ReminderEntry.REMINDER_REPEAT,
                         ReminderEntry.REMINDER_REPEAT_NUMBER,
+                        ReminderEntry.REMINDER_REPEAT_TYPE
                 }, null, null, null, null, null);
         List<Reminder> reminderList = new ArrayList<>();
         while (cursor.moveToNext()) {
             reminderList.add(new Reminder(cursor.getString(1), Integer.parseInt(cursor.getString(2)), Integer.parseInt(cursor.getString(3)),
                     Integer.parseInt(cursor.getString(4)), Integer.parseInt(cursor.getString(5)), Integer.parseInt(cursor.getString(6)),
-                    Boolean.parseBoolean(cursor.getString(5)), Integer.parseInt(cursor.getString(6))));
+                    Boolean.parseBoolean(cursor.getString(5)), Integer.parseInt(cursor.getString(6)), cursor.getString(7)));
         }
         return reminderList;
     }
@@ -114,5 +118,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         public static final String REMINDER_YEAR = "year";
         public static final String REMINDER_REPEAT = "repeat";
         public static final String REMINDER_REPEAT_NUMBER = "repeat-number";
+        public static final String REMINDER_REPEAT_TYPE = "repeat-type";
     }
 }

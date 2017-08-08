@@ -18,6 +18,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.maiquynhtruong.heathyreminders.R;
+import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
@@ -27,9 +28,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     EditText name;
     EditText description;
     TextView atTime, onDate;
-    String date;
-    int hour, minute, repeateNumber;
+    int hour, minute, month, day, year, repeatNumber;
     boolean repeat;
+    String repeatType;
     ReminderDatabase database;
     Calendar calendar;
     @Override
@@ -63,9 +64,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     }
     public void saveReminder(View view) {
         String title = name.getText().toString();
-        long reminderID = database.setReminder(new Reminder(title, date, hour, minute, repeat, repeateNumber));
+        long reminderID = database.setReminder(new Reminder(title, hour, minute, month, day, year, repeat, repeatNumber, repeatType));
 
-        Intent createReminderIntent = new Intent("CREATE");
+        Intent createReminderIntent = new Intent(getBaseContext(), ReminderReceiver.class);
         createReminderIntent.putExtra("ReminderId", reminderID);
     }
 
@@ -77,6 +78,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         CharSequence frequency = (CharSequence) adapterView.getItemAtPosition(i);
         Toast.makeText(adapterView.getContext(), frequency, Toast.LENGTH_LONG).show();
+        repeatType = frequency.toString();
     }
 
     @Override

@@ -1,18 +1,24 @@
 package com.example.maiquynhtruong.heathyreminders;
 
 public class Reminder {
+    public static final String HOURLY = "everyhour";
+    public static final String DAILY = "everyday";
+    public static final String WEEKLY = "everyweek";
+    public static final String MONTHLY = "everymonth";
+    public static final String YEARLY = "everyyear";
+
     private int id;
     private String title;
     private int hour;
     private int minute;
-
     private int month;
     private int day;
     private int year;
-    private int repeatNumber;
     private boolean repeat;
+    private int repeatNumber;
+    private String repeatType;
 
-    public Reminder(String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber) {
+    public Reminder(String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber, String repeatType) {
         this.title = title;
         this.hour = hour;
         this.minute = minute;
@@ -21,6 +27,7 @@ public class Reminder {
         this.year = year;
         this.repeat = repeat;
         this.repeatNumber = repeatNumber;
+        this.repeatType = repeatType;
     }
 
     public String getTitle() {
@@ -94,4 +101,13 @@ public class Reminder {
     public void setYear(int year) {
         this.year = year;
     }
+
+    public String getRepeatType() {
+        return repeatType;
+    }
+
+    public void setRepeatType(String repeatType) {
+        this.repeatType = repeatType;
+    }
+
 }

@@ -24,6 +24,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final int FINISH_NOTIFICATION_PENDING_INTENT = 3;
     public static final int POSTPONE_NOTIFICATION_PENDDING_INTENT = 4;
     public static final String REMINDER_TYPE = "ReminderType";
+    public static final String REMINDER_ID = "ReminderID";
     @Override
     public void onReceive(Context context, Intent intent) {
         reminderNotify(context);

@@ -62,9 +62,9 @@ public class MainActivity extends AppCompatActivity
 
     public List<Reminder> createFakeReminders() {
         List<Reminder> reminderList = new ArrayList<>();
-        reminderList.add(new Reminder("Pay Internet bill", "9/10/2017", 12, 0, true, 1));
-        reminderList.add(new Reminder("Pay Insurance", "9/5/2017", 12, 0, true, 1));
-        reminderList.add(new Reminder("Change tooth brush", "9/8/2017", 12, 0, true, 3));
+        reminderList.add(new Reminder("Pay Internet bill", 12, 0, 9, 10, 2017, true, 1, Reminder.MONTHLY));
+        reminderList.add(new Reminder("Pay Insurance", 12, 0, 9, 5, 2017, true, 1, Reminder.MONTHLY));
+        reminderList.add(new Reminder("Change tooth brush", 12, 0, 9, 8, 2017, true, 3, Reminder.MONTHLY));
         return reminderList;
     }
 
