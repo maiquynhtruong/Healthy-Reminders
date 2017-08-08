@@ -2,20 +2,25 @@ package com.example.maiquynhtruong.heathyreminders;
 
 public class Reminder {
     private int id;
-    String title;
+    private String title;
     private int hour;
     private int minute;
-    private boolean repeat;
-    private int repeatNumber;
-    private String date;
 
-    public Reminder(String title, String date, int hour, int minute, boolean repeat, int repeatNumber) {
+    private int month;
+    private int day;
+    private int year;
+    private int repeatNumber;
+    private boolean repeat;
+
+    public Reminder(String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber) {
         this.title = title;
         this.hour = hour;
         this.minute = minute;
+        this.month = month;
+        this.day = day;
+        this.year = year;
         this.repeat = repeat;
         this.repeatNumber = repeatNumber;
-        this.date = date;
     }
 
     public String getTitle() {
@@ -65,10 +70,28 @@ public class Reminder {
     public void setRepeatNumber(int repeatNumber) {
         this.repeatNumber = repeatNumber;
     }
-    public void setDate(String date) { this.date = date; }
 
-    public String getDate() {return this.date;}
+    public int getMonth() {
+        return month;
+    }
 
+    public void setMonth(int month) {
+        this.month = month;
+    }
 
+    public int getDay() {
+        return day;
+    }
 
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
 }

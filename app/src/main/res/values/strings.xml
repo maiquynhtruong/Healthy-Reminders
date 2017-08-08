@@ -36,6 +36,7 @@
 
     <!--Frequency levels-->
     <string-array name="frequencies">
+        <item>Every hour</item>
         <item>Every day</item> <!-- At some time every day -->
         <item>Every week</item> <!-- On a particular day every week -->
         <item>Every month</item> <!-- On a specific day every month -->

@@ -12,7 +12,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            Intent setAlarmIntent = new Intent(context, AlarmReceiver.class);
+            Intent setAlarmIntent = new Intent(context, ReminderReceiver.class);
             // set action create alarm for the intent and send it
             context.startService(setAlarmIntent);
         }

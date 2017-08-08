@@ -19,20 +19,34 @@ import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class ReminderReceiver extends BroadcastReceiver {
     public static final int REMINDER_PENDING_INTENT_ID = 2;
     public static final int FINISH_NOTIFICATION_PENDING_INTENT = 3;
     public static final int POSTPONE_NOTIFICATION_PENDDING_INTENT = 4;
+    public static final String REMINDER_TYPE = "ReminderType";
     @Override
     public void onReceive(Context context, Intent intent) {
         reminderNotify(context);
+        String action = intent.getStringExtra(REMINDER_TYPE);
+        if (action.equals("YEAR")) {
+
+        }
     }
 
-    public static void setReminder(Context context, Reminder reminder, Calendar calendar) {
+    public static void setReminderMonthOrYear(Context context, Reminder reminder, Calendar calendar) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
+        Intent intent = new Intent(context, ReminderReceiver.class);
+        intent.putExtra(REMINDER_TYPE, "YEAR"); // will be intent.putExtra("ReminderType", reminder.getInterval());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    public static void setReminderHourOrDayOrWeek(Context context, Reminder reminder, Calendar calendar) {
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, ReminderReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long interval = AlarmManager.INTERVAL_DAY;
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
     }
 
     public static void clearAllNotifications(Context context) {
