@@ -19,6 +19,10 @@ import android.view.MenuItem;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
+import com.example.maiquynhtruong.heathyreminders.Reminder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,8 +56,16 @@ public class MainActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
-        adapter = new ReminderAdapter();
+        adapter = new ReminderAdapter(createFakeReminders());
         mainRecyclerView.setAdapter(adapter);
+    }
+
+    public List<Reminder> createFakeReminders() {
+        List<Reminder> reminderList = new ArrayList<>();
+        reminderList.add(new Reminder("Pay Internet bill", "9/10/2017", 12, 0, true, 1));
+        reminderList.add(new Reminder("Pay Insurance", "9/5/2017", 12, 0, true, 1));
+        reminderList.add(new Reminder("Change tooth brush", "9/8/2017", 12, 0, true, 3));
+        return reminderList;
     }
 
     public void showAddReminder() {

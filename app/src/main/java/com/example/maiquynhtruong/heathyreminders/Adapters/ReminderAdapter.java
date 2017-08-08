@@ -16,9 +16,10 @@ import java.util.List;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderView> {
-    public List<Reminder> reminderList;
+    public static List<Reminder> reminderList;
 
-    public ReminderAdapter() {
+    public ReminderAdapter(List<Reminder> reminderList) {
+        this.reminderList = reminderList;
         Log.i("reminder-adapter", "created");
     }
     @Override
