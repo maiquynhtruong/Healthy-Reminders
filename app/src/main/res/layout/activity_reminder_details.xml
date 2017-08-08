@@ -11,4 +11,10 @@
     <include layout="@layout/fragment_reminder_date_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <include layout="@layout/fragment_reminder_time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <include layout="@layout/fragment_save_cancel_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

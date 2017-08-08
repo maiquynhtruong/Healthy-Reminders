@@ -54,7 +54,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         ImageButton editBtn;
         public ReminderView(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.reminder_title);
+            name = itemView.findViewById(R.id.reminder_title_view_holder);
         }
     }
 }

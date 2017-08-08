@@ -67,25 +67,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
                 android.text.format.DateFormat.is24HourFormat(this));
         dialog.show();
     }
-    public void saveReminder(View view) {
-        String title = name.getText().toString();
-        long reminderID = database.setReminder(new Reminder(title, hour, minute, month, day, year, repeat, repeatNumber, repeatType));
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.YEAR, year);
-
-        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(), repeatType);
-        else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR);
-        else if (repeatType.equals(Reminder.DAILY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
-        else if (repeatType.equals(Reminder.WEEKLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY*7);
-    }
-
-    public void cancelReminder(View view) {
-        onBackPressed();
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -109,6 +90,27 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
-        atTime.setText(hourOfDay + ":" + minute + ":" + "00");
+        atTime.setText(hourOfDay + ":" + minute + ":");
     }
+
+    public void saveReminder(View view) {
+        String title = name.getText().toString();
+        long reminderID = database.setReminder(new Reminder(title, hour, minute, month, day, year, repeat, repeatNumber, repeatType));
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+
+        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(), repeatType);
+        else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR);
+        else if (repeatType.equals(Reminder.DAILY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
+        else if (repeatType.equals(Reminder.WEEKLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY*7);
+    }
+
+    public void cancelReminder(View view) {
+        onBackPressed();
+    }
+
 }
