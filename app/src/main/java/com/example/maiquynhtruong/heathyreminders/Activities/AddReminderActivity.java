@@ -1,5 +1,6 @@
 package com.example.maiquynhtruong.heathyreminders.Activities;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -42,11 +43,15 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         description = (EditText) findViewById(R.id.reminder_description);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.frequencies, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         frequencySpinner.setAdapter(adapter);
         frequencySpinner.setOnItemSelectedListener(this);
+
         calendar = Calendar.getInstance();
+
         database = new ReminderDatabase(getBaseContext());
     }
 
@@ -65,9 +70,17 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     public void saveReminder(View view) {
         String title = name.getText().toString();
         long reminderID = database.setReminder(new Reminder(title, hour, minute, month, day, year, repeat, repeatNumber, repeatType));
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
 
-        Intent createReminderIntent = new Intent(getBaseContext(), ReminderReceiver.class);
-        createReminderIntent.putExtra("ReminderId", reminderID);
+        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(), repeatType);
+        else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR);
+        else if (repeatType.equals(Reminder.DAILY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
+        else if (repeatType.equals(Reminder.WEEKLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY*7);
     }
 
     public void cancelReminder(View view) {

@@ -23,31 +23,39 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final int REMINDER_PENDING_INTENT_ID = 2;
     public static final int FINISH_NOTIFICATION_PENDING_INTENT = 3;
     public static final int POSTPONE_NOTIFICATION_PENDDING_INTENT = 4;
-    public static final String REMINDER_TYPE = "ReminderType";
+    public static final String REMINDER_REPEAT_TYPE = "ReminderType";
     public static final String REMINDER_ID = "ReminderID";
+    public static final String REMINDER_TIME_MILLIS = "ReminderMillis";
     @Override
     public void onReceive(Context context, Intent intent) {
         reminderNotify(context);
-        String action = intent.getStringExtra(REMINDER_TYPE);
-        if (action.equals("YEAR")) {
-
+        String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);
+        int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        if (type.equals(Reminder.YEARLY)) {
+            calendar.add(Calendar.YEAR, 1);
+            setReminderMonthOrYear(context, calendar.getTimeInMillis(), Reminder.YEARLY);
+        } else if (type.equals(Reminder.MONTHLY)) {
+            calendar.add(Calendar.MONTH, 1);
+            setReminderMonthOrYear(context, calendar.getTimeInMillis(), Reminder.YEARLY);
         }
     }
 
-    public static void setReminderMonthOrYear(Context context, Reminder reminder, Calendar calendar) {
+    public static void setReminderMonthOrYear(Context context, long timeInMillis, String repeatType) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ReminderReceiver.class);
-        intent.putExtra(REMINDER_TYPE, "YEAR"); // will be intent.putExtra("ReminderType", reminder.getInterval());
+        intent.putExtra(REMINDER_REPEAT_TYPE, repeatType); // will be intent.putExtra("ReminderType", reminder.getInterval());
+        intent.putExtra(REMINDER_TIME_MILLIS, timeInMillis);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        manager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
     }
 
-    public static void setReminderHourOrDayOrWeek(Context context, Reminder reminder, Calendar calendar) {
+    public static void setReminderHourOrDayOrWeek(Context context, long timeInMillis, long interval) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ReminderReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        long interval = AlarmManager.INTERVAL_DAY;
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
     }
 
     public static void clearAllNotifications(Context context) {
