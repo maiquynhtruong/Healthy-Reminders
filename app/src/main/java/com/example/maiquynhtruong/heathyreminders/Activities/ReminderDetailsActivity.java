@@ -1,13 +1,18 @@
 package com.example.maiquynhtruong.heathyreminders.Activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
@@ -16,12 +21,13 @@ import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
 import butterknife.ButterKnife;
 
-public class ReminderDetailsActivity extends AppCompatActivity {
+public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     EditText reminderTitle;
     TextView date, time;
     Reminder reminder;
     Button cancelBtn, saveBtn;
     ReminderDatabase database;
+    Calendar calendar;
     long reminderID;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +53,22 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     }
 
     public void saveReminder(View view) {
-        Reminder reminder = new Reminder(reminderTitle.getText().toString(), );
-        database.updateReminder(reminderID, reminder);
+        Reminder toBeSaved = new Reminder(reminderTitle.getText().toString(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), reminder.isRepeat(), reminder.getRepeatNumber(),
+                reminder.getRepeatType());
+        database.updateReminder(reminderID, toBeSaved);
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
     }
 }
