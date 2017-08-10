@@ -38,6 +38,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder);
+
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
         name = (EditText) findViewById(R.id.reminder_name);
         description = (EditText) findViewById(R.id.reminder_description);
@@ -52,7 +53,15 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         calendar = Calendar.getInstance();
 
+        atTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
+        onDate.setText(calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+
         database = new ReminderDatabase(getBaseContext());
+
+        // recover states on device rotation
+        if (savedInstanceState != null) {
+
+        }
     }
 
     public void showDatePicker(View view) {
@@ -93,15 +102,21 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         atTime.setText(hourOfDay + ":" + minute + ":");
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     public void saveReminder(View view) {
         String title = name.getText().toString();
-        long reminderID = database.setReminder(new Reminder(title, hour, minute, month, day, year, repeat, repeatNumber, repeatType));
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.YEAR, year);
+        long reminderID = database.setReminder(new Reminder(title, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
+//        calendar.set(Calendar.HOUR_OF_DAY, hour);
+//        calendar.set(Calendar.MINUTE, minute);
+//        calendar.set(Calendar.SECOND, 0);
+//        calendar.set(Calendar.DAY_OF_MONTH, day);
+//        calendar.set(Calendar.MONTH, month);
+//        calendar.set(Calendar.YEAR, year);
 
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(), repeatType);
         else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR);
