@@ -53,6 +53,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         calendar = Calendar.getInstance();
 
+        // set the current time as the default time when first showed
         atTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
         onDate.setText(calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
 
@@ -99,7 +100,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
-        atTime.setText(hourOfDay + ":" + minute + ":");
+        atTime.setText(hourOfDay + ":" + minute);
     }
 
     @Override
@@ -118,10 +119,16 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 //        calendar.set(Calendar.MONTH, month);
 //        calendar.set(Calendar.YEAR, year);
 
-        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(), repeatType);
-        else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR);
-        else if (repeatType.equals(Reminder.DAILY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
-        else if (repeatType.equals(Reminder.WEEKLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY*7);
+        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(),
+                reminderID, repeatType);
+        else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
+                reminderID, AlarmManager.INTERVAL_HOUR);
+        else if (repeatType.equals(Reminder.DAILY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
+                reminderID, AlarmManager.INTERVAL_DAY);
+        else if (repeatType.equals(Reminder.WEEKLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
+                reminderID, AlarmManager.INTERVAL_DAY*7);
+
+        onBackPressed();
     }
 
     public void cancelReminder(View view) {

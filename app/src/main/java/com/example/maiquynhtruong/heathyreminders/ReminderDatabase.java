@@ -102,6 +102,24 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         return reminderList;
     }
 
+    public void updateReminder(long id, Reminder reminder) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.query(ReminderDatabase.ReminderEntry.TABLE_NAME,
+                new String[]{
+                        ReminderEntry.REMINDER_TITLE,
+                        ReminderEntry.REMINDER_HOUR,
+                        ReminderEntry.REMINDER_MINUTE,
+                        ReminderEntry.REMINDER_MONTH,
+                        ReminderEntry.REMINDER_DAY,
+                        ReminderEntry.REMINDER_YEAR,
+                        ReminderEntry.REMINDER_REPEAT,
+                        ReminderEntry.REMINDER_REPEAT_NUMBER,
+                        ReminderEntry.REMINDER_REPEAT_TYPE
+                }, ReminderDatabase.ReminderEntry.REMINDER_ID + " = ?",
+                new String[]{"" + id}, null, null, null);
+
+    }
+
     public void deleteReminder(long id) {
         SQLiteDatabase database = this.getWritableDatabase();
         database.delete(TABLE_NAME, ReminderEntry.REMINDER_ID + " = ?", new String[] {"" + id});
