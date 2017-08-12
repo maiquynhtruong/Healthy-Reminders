@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_ID;
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.TABLE_NAME;
 
 public class ReminderDatabase extends SQLiteOpenHelper {
@@ -24,15 +25,15 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + ReminderEntry.TABLE_NAME + " (" +
-                ReminderEntry.REMINDER_ID + " INTEGER PRIMARY KEY, " +
-                ReminderEntry.REMINDER_TITLE + " TEXT, " +
-                ReminderEntry.REMINDER_HOUR + " INTEGER, " +
-                ReminderEntry.REMINDER_MINUTE + " INTEGER, " +
-                ReminderEntry.REMINDER_MONTH + " INTEGER, " +
-                ReminderEntry.REMINDER_DAY + " INTEGER, " +
-                ReminderEntry.REMINDER_YEAR + " INTEGER, " +
-                ReminderEntry.REMINDER_REPEAT + " BOOLEAN, " +
-                ReminderEntry.REMINDER_REPEAT_NUMBER + " INTEGER, " +
+                ReminderEntry.REMINDER_ID + " INTEGER PRIMARY KEY," +
+                ReminderEntry.REMINDER_TITLE + " TEXT," +
+                ReminderEntry.REMINDER_HOUR + " INTEGER," +
+                ReminderEntry.REMINDER_MINUTE + " INTEGER," +
+                ReminderEntry.REMINDER_MONTH + " INTEGER," +
+                ReminderEntry.REMINDER_DAY + " INTEGER," +
+                ReminderEntry.REMINDER_YEAR + " INTEGER," +
+                ReminderEntry.REMINDER_REPEAT + " BOOLEAN," +
+                ReminderEntry.REMINDER_REPEAT_NUMBER + " INTEGER," +
                 ReminderEntry.REMINDER_REPEAT_TYPE + " TEXT" +
         ")");
     }
@@ -104,20 +105,17 @@ public class ReminderDatabase extends SQLiteOpenHelper {
 
     public void updateReminder(long id, Reminder reminder) {
         SQLiteDatabase database = this.getWritableDatabase();
-        Cursor cursor = database.query(ReminderDatabase.ReminderEntry.TABLE_NAME,
-                new String[]{
-                        ReminderEntry.REMINDER_TITLE,
-                        ReminderEntry.REMINDER_HOUR,
-                        ReminderEntry.REMINDER_MINUTE,
-                        ReminderEntry.REMINDER_MONTH,
-                        ReminderEntry.REMINDER_DAY,
-                        ReminderEntry.REMINDER_YEAR,
-                        ReminderEntry.REMINDER_REPEAT,
-                        ReminderEntry.REMINDER_REPEAT_NUMBER,
-                        ReminderEntry.REMINDER_REPEAT_TYPE
-                }, ReminderDatabase.ReminderEntry.REMINDER_ID + " = ?",
-                new String[]{"" + id}, null, null, null);
-
+        ContentValues values = new ContentValues();
+        values.put(ReminderEntry.REMINDER_TITLE, reminder.getTitle());
+        values.put(ReminderEntry.REMINDER_HOUR, reminder.getHour());
+        values.put(ReminderEntry.REMINDER_MINUTE, reminder.getMinute());
+        values.put(ReminderEntry.REMINDER_MONTH, reminder.getMonth());
+        values.put(ReminderEntry.REMINDER_DAY, reminder.getDay());
+        values.put(ReminderEntry.REMINDER_YEAR, reminder.getYear());
+        values.put(ReminderEntry.REMINDER_REPEAT, reminder.isRepeat());
+        values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
+        values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
+        database.update(ReminderDatabase.ReminderEntry.TABLE_NAME, values, REMINDER_ID + " = ?", new String[] {"" + reminder.getId()});
     }
 
     public void deleteReminder(long id) {
@@ -135,7 +133,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         public static final String REMINDER_DAY = "day";
         public static final String REMINDER_YEAR = "year";
         public static final String REMINDER_REPEAT = "repeat";
-        public static final String REMINDER_REPEAT_NUMBER = "repeat-number";
-        public static final String REMINDER_REPEAT_TYPE = "repeat-type";
+        public static final String REMINDER_REPEAT_NUMBER = "repeat_number";
+        public static final String REMINDER_REPEAT_TYPE = "repeat_type";
     }
 }

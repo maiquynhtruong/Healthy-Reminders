@@ -40,7 +40,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         setContentView(R.layout.activity_add_reminder);
 
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
-        name = (EditText) findViewById(R.id.reminder_name);
+        name = (EditText) findViewById(R.id.reminder_title);
         description = (EditText) findViewById(R.id.reminder_description);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
