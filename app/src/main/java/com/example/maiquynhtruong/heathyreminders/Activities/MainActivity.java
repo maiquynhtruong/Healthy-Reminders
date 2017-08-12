@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +25,7 @@ import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -31,12 +33,12 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     SharedPreferences preferences;
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
-
     RecyclerView mainRecyclerView;
     TextView noReminders;
     RecyclerView.LayoutManager layoutManager;
     ReminderAdapter adapter;
     ReminderDatabase database;
+    public static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,22 +65,16 @@ public class MainActivity extends AppCompatActivity
         adapter = new ReminderAdapter();
         mainRecyclerView.setAdapter(adapter);
         database = new ReminderDatabase(this);
+        database.deleteAllReminders();
+
         List<Reminder> reminders = database.getAllReminders();
-        if (reminders == null) {
+        Log.i(TAG, Arrays.toString(reminders.toArray()));
+        if (reminders == null || reminders.size() == 0) {
             noReminders.setVisibility(View.VISIBLE);
         } else {
             adapter.setUpReminders(reminders);
         }
     }
-
-    public List<Reminder> createFakeReminders() {
-        List<Reminder> reminderList = new ArrayList<>();
-        reminderList.add(new Reminder("Pay Internet bill", 12, 0, 9, 10, 2017, true, 1, Reminder.MONTHLY));
-        reminderList.add(new Reminder("Pay Insurance", 12, 0, 9, 5, 2017, true, 1, Reminder.MONTHLY));
-        reminderList.add(new Reminder("Change tooth brush", 12, 0, 9, 8, 2017, true, 3, Reminder.MONTHLY));
-        return reminderList;
-    }
-
     public void showAddReminder() {
         Intent addReminderIntent = new Intent(this, AddReminderActivity.class);
         startActivity(addReminderIntent);

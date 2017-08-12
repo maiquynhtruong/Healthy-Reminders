@@ -28,9 +28,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         reminderList.addAll(reminders);
     }
 
-    public void deleteReminder(Reminder reminder) {
-
+    public List<Reminder> createFakeReminders() {
+        List<Reminder> reminderList = new ArrayList<>();
+        reminderList.add(new Reminder("Pay Internet bill", 12, 0, 9, 10, 2017, true, 1, Reminder.MONTHLY));
+        reminderList.add(new Reminder("Pay Insurance", 12, 0, 9, 5, 2017, true, 1, Reminder.MONTHLY));
+        reminderList.add(new Reminder("Change tooth brush", 12, 0, 9, 8, 2017, true, 3, Reminder.MONTHLY));
+        return reminderList;
     }
+
     @Override
     public ReminderView onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_reminder, parent, false);

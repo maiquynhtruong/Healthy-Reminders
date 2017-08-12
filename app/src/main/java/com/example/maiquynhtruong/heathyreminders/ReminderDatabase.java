@@ -118,6 +118,10 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         database.update(ReminderDatabase.ReminderEntry.TABLE_NAME, values, REMINDER_ID + " = ?", new String[] {"" + reminder.getId()});
     }
 
+    public void deleteAllReminders() {
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.delete(TABLE_NAME, null, null);
+    }
     public void deleteReminder(long id) {
         SQLiteDatabase database = this.getWritableDatabase();
         database.delete(TABLE_NAME, ReminderEntry.REMINDER_ID + " = ?", new String[] {"" + id});

@@ -10,7 +10,7 @@
     <string name="action_reminder_delete">Delete</string>
 
     <!-- General instruction strings -->
-    <string name="no_reminders">No reminders yet. Click the plus icon to start creating one</string>
+    <string name="no_reminders">No reminders yet. Click the plus icon to start creating one!</string>
 
     <string-array name="example_reminders">
         <item>Meditation</item>
