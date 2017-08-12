@@ -16,10 +16,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
+import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +33,10 @@ public class MainActivity extends AppCompatActivity
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
 
     RecyclerView mainRecyclerView;
-
+    TextView noReminders;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter adapter;
+    ReminderAdapter adapter;
+    ReminderDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +56,19 @@ public class MainActivity extends AppCompatActivity
 
         setUpNavigationDrawer();
         mainRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+        noReminders = (TextView) findViewById(R.id.no_reminders_text);
         layoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
-        adapter = new ReminderAdapter(createFakeReminders());
+        adapter = new ReminderAdapter();
         mainRecyclerView.setAdapter(adapter);
+        database = new ReminderDatabase(this);
+        List<Reminder> reminders = database.getAllReminders();
+        if (reminders == null) {
+            noReminders.setVisibility(View.VISIBLE);
+        } else {
+            adapter.setUpReminders(reminders);
+        }
     }
 
     public List<Reminder> createFakeReminders() {

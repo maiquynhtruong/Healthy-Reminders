@@ -12,15 +12,24 @@ import android.widget.Toast;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderView> {
     public static List<Reminder> reminderList;
 
-    public ReminderAdapter(List<Reminder> reminderList) {
-        this.reminderList = reminderList;
+    public ReminderAdapter() {
+        this.reminderList = new ArrayList<>();
         Log.i("reminder-adapter", "created");
+    }
+
+    public void setUpReminders(List<Reminder> reminders) {
+        reminderList.addAll(reminders);
+    }
+
+    public void deleteReminder(Reminder reminder) {
+
     }
     @Override
     public ReminderView onCreateViewHolder(final ViewGroup parent, int viewType) {
