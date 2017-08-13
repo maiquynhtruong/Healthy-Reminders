@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
     public long setReminder(Reminder reminder) {
+        Log.i("ReminderDatabase", "creating new reminder " + reminder.getTitle());
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ReminderEntry.REMINDER_TITLE, reminder.getTitle());

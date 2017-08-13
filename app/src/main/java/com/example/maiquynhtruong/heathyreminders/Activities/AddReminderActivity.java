@@ -8,6 +8,7 @@ import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,6 +35,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     String repeatType;
     ReminderDatabase database;
     Calendar calendar;
+    public static final String TAG = "AddActivity";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +120,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 //        calendar.set(Calendar.DAY_OF_MONTH, day);
 //        calendar.set(Calendar.MONTH, month);
 //        calendar.set(Calendar.YEAR, year);
+
+        Toast.makeText(this, "Save reminder as " + title + " at " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + " on " + calendar.get(Calendar.MONTH) +
+        "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR), Toast.LENGTH_SHORT);
 
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(),
                 reminderID, repeatType);

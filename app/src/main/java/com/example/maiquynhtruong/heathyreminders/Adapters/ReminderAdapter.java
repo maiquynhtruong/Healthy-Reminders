@@ -26,6 +26,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     public void setUpReminders(List<Reminder> reminders) {
         reminderList.addAll(reminders);
+        notifyDataSetChanged();
     }
 
     public List<Reminder> createFakeReminders() {
@@ -41,13 +42,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_reminder, parent, false);
         final ReminderView reminderView = new ReminderView(view);
         Log.i("on-create-view-holder", "created");
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = parent.indexOfChild(view);
-                Toast.makeText(parent.getContext(), "You clicked on the " + position + "th child", Toast.LENGTH_LONG).show();
-            }
-        });
         return reminderView;
     }
 
@@ -63,12 +57,23 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         return reminderList.size();
     }
 
-    class ReminderView extends RecyclerView.ViewHolder{
+
+    class ReminderView extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         TextView name;
         ImageButton editBtn;
         public ReminderView(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.reminder_title_view_holder);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            return false;
         }
     }
 }

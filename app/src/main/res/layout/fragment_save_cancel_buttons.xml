@@ -4,8 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="right"
-    tools:context=".Activities.AddReminderActivity">
+    android:gravity="right">
     <Button
         android:id="@+id/btn_save"
         style="@style/button"

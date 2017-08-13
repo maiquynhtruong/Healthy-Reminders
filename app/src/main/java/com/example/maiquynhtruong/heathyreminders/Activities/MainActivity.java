@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     ReminderAdapter adapter;
     ReminderDatabase database;
+    public static final int ADD_REMINDER_REQUEST_CODE = 147;
     public static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +69,26 @@ public class MainActivity extends AppCompatActivity
         database.deleteAllReminders();
 
         List<Reminder> reminders = database.getAllReminders();
-        Log.i(TAG, Arrays.toString(reminders.toArray()));
-        if (reminders == null || reminders.size() == 0) {
+        Log.i(TAG + ", onCreate", Arrays.toString(reminders.toArray()));
+        if (reminders.isEmpty()) {
             noReminders.setVisibility(View.VISIBLE);
         } else {
+            noReminders.setVisibility(View.GONE);
             adapter.setUpReminders(reminders);
         }
     }
     public void showAddReminder() {
         Intent addReminderIntent = new Intent(this, AddReminderActivity.class);
-        startActivity(addReminderIntent);
+        startActivityForResult(addReminderIntent, ADD_REMINDER_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_REMINDER_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                data.getLongExtra(ReminderDatabase.ReminderEntry.REMINDER_ID, 0);
+            }
+        }
     }
 
     public void setUpNavigationDrawer() {
@@ -99,6 +110,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        List<Reminder> reminders = database.getAllReminders();
+        Log.i(TAG + ", onResume", Arrays.toString(reminders.toArray()));
+        if (reminders.isEmpty()) {
+            noReminders.setVisibility(View.VISIBLE);
+        } else {
+            noReminders.setVisibility(View.GONE);
+            adapter.setUpReminders(reminders);
+        }
     }
 
     @Override
