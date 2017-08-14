@@ -30,6 +30,7 @@ dependencies {
     compile 'com.android.support:design:26.+'
     compile 'com.android.support:recyclerview-v7:26.0.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.firebase:firebase-jobdispatcher:0.7.0'
+    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    compile 'com.github.florent37:materialtextfield:1.0.7'
     testCompile 'junit:junit:4.12'
 }

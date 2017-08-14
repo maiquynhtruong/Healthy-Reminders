@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +23,7 @@ import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 import butterknife.ButterKnife;
 
 public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
-    EditText reminderTitle;
+    TextInputEditText reminderTitle;
     TextView date, time;
     Reminder reminder;
     Button cancelBtn, saveBtn;
@@ -35,7 +36,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         setContentView(R.layout.activity_add_reminder);
         date = (TextView) findViewById(R.id.datePicker);
         time = (TextView) findViewById(R.id.timePicker);
-        reminderTitle = (EditText) findViewById(R.id.reminder_title);
+        reminderTitle = (TextInputEditText) findViewById(R.id.reminder_title);
         cancelBtn = (Button) findViewById(R.id.btn_cancel);
         saveBtn = (Button) findViewById(R.id.btn_save);
         database = new ReminderDatabase(this);

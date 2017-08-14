@@ -2,6 +2,7 @@ package com.example.maiquynhtruong.heathyreminders.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,6 +25,8 @@ import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences preferences;
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
     RecyclerView mainRecyclerView;
-    TextView noReminders;
+    TextView noReminders, hello, timeLeft;
     RecyclerView.LayoutManager layoutManager;
     ReminderAdapter adapter;
     ReminderDatabase database;
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity
         setUpNavigationDrawer();
         mainRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         noReminders = (TextView) findViewById(R.id.no_reminders_text);
+        hello = (TextView) findViewById(R.id.hello);
+        timeLeft = (TextView) findViewById(R.id.time_left);
         layoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
@@ -68,14 +73,21 @@ public class MainActivity extends AppCompatActivity
         database = new ReminderDatabase(this);
         database.deleteAllReminders();
 
+        setTimeLeft();
+
         List<Reminder> reminders = database.getAllReminders();
-        Log.i(TAG + ", onCreate", Arrays.toString(reminders.toArray()));
         if (reminders.isEmpty()) {
             noReminders.setVisibility(View.VISIBLE);
         } else {
             noReminders.setVisibility(View.GONE);
             adapter.setUpReminders(reminders);
         }
+    }
+
+    public void setTimeLeft() {
+        Calendar calendar = Calendar.getInstance();
+        int time = 24 - calendar.get(Calendar.HOUR_OF_DAY);
+        timeLeft.setText("You have " + time + " left before end of day");
     }
     public void showAddReminder() {
         Intent addReminderIntent = new Intent(this, AddReminderActivity.class);

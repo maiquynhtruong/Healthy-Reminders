@@ -11,7 +11,16 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_DAY;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_HOUR;
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_ID;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_MINUTE;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_MONTH;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_REPEAT;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_REPEAT_NUMBER;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_REPEAT_TYPE;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_TITLE;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_YEAR;
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.TABLE_NAME;
 
 public class ReminderDatabase extends SQLiteOpenHelper {
@@ -45,7 +54,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
     public long setReminder(Reminder reminder) {
-        Log.i("ReminderDatabase", "creating new reminder " + reminder.getTitle());
+        Log.i("ReminderDatabase", "creating new reminder: " + reminder.getTitle());
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ReminderEntry.REMINDER_TITLE, reminder.getTitle());
@@ -98,9 +107,16 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 }, null, null, null, null, null);
         List<Reminder> reminderList = new ArrayList<>();
         while (cursor.moveToNext()) {
-            reminderList.add(new Reminder(cursor.getString(1), Integer.parseInt(cursor.getString(2)), Integer.parseInt(cursor.getString(3)),
-                    Integer.parseInt(cursor.getString(4)), Integer.parseInt(cursor.getString(5)), Integer.parseInt(cursor.getString(6)),
-                    Boolean.parseBoolean(cursor.getString(5)), Integer.parseInt(cursor.getString(6)), cursor.getString(7)));
+            String title = cursor.getString(cursor.getColumnIndex(REMINDER_TITLE));
+            int hour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_HOUR)));
+            int minute = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MINUTE)));
+            int month = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MONTH)));
+            int day = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_DAY)));
+            int year = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_YEAR)));
+            boolean repeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT)));
+            int repeatNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_NUMBER)));
+            String repeatType = cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_TYPE));
+            reminderList.add(new Reminder(title, hour, minute, month, day, year, repeat, repeatNumber, repeatType));
         }
         return reminderList;
     }

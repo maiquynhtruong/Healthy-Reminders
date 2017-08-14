@@ -3,12 +3,11 @@ package com.example.maiquynhtruong.heathyreminders.Activities;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,8 +26,7 @@ import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
     Spinner frequencySpinner;
-    EditText name;
-    EditText description;
+    TextInputEditText title;
     TextView atTime, onDate;
     int hour, minute, month, day, year, repeatNumber;
     boolean repeat;
@@ -42,8 +40,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         setContentView(R.layout.activity_add_reminder);
 
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
-        name = (EditText) findViewById(R.id.reminder_title);
-        description = (EditText) findViewById(R.id.reminder_description);
+        title = (TextInputEditText) findViewById(R.id.reminder_title);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
 
@@ -57,7 +54,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         // set the current time as the default time when first showed
         atTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
-        onDate.setText(calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+        onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
 
         database = new ReminderDatabase(getBaseContext());
 
@@ -111,7 +108,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     }
 
     public void saveReminder(View view) {
-        String title = name.getText().toString();
+        String title = this.title.getText().toString();
         long reminderID = database.setReminder(new Reminder(title, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
 //        calendar.set(Calendar.HOUR_OF_DAY, hour);
@@ -122,7 +119,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 //        calendar.set(Calendar.YEAR, year);
 
         Toast.makeText(this, "Save reminder as " + title + " at " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + " on " + calendar.get(Calendar.MONTH) +
-        "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR), Toast.LENGTH_SHORT);
+        "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR), Toast.LENGTH_LONG).show();
 
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(),
                 reminderID, repeatType);
@@ -139,5 +136,4 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     public void cancelReminder(View view) {
         onBackPressed();
     }
-
 }

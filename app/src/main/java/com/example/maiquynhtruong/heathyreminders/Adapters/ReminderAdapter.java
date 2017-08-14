@@ -25,6 +25,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     public void setUpReminders(List<Reminder> reminders) {
+        reminderList.clear();
         reminderList.addAll(reminders);
         notifyDataSetChanged();
     }
@@ -41,7 +42,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public ReminderView onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_reminder, parent, false);
         final ReminderView reminderView = new ReminderView(view);
-        Log.i("on-create-view-holder", "created");
         return reminderView;
     }
 
