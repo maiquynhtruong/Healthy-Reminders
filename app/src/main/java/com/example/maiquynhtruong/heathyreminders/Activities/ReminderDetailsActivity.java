@@ -20,7 +20,6 @@ import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
-import butterknife.ButterKnife;
 
 public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     TextInputEditText reminderTitle;

@@ -133,6 +133,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (adapter != null) {
+            adapter.saveStates(outState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (adapter != null) {
+            adapter.restoreStates(savedInstanceState);
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
     }

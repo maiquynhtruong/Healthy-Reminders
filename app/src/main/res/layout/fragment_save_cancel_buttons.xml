@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="right">
-    <Button
+
+    <mehdi.sakout.fancybuttons.FancyButton
         android:id="@+id/btn_save"
-        style="@style/button"
-        android:text="SAVE"
-        android:onClick="saveReminder"/>
-    <Button
-        android:id="@+id/btn_cancel"
-        style="@style/button"
-        android:text="CANCEL"
-        android:onClick="cancelReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_margin="10dp"
+        android:onClick="saveReminder"
+        fancy:fb_text="SAVE"
+        fancy:fb_radius="30dp"
+        fancy:fb_focusColor="@android:color/holo_green_dark"
+        fancy:fb_defaultColor="@android:color/holo_green_light"
         />
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_margin="10dp"
+        fancy:fb_text="CANCEL"
+        fancy:fb_radius="30dp"
+        android:onClick="cancelReminder"
+        fancy:fb_focusColor="@android:color/holo_red_dark"
+        fancy:fb_defaultColor="@android:color/holo_red_light"/>
 </LinearLayout>
