@@ -11,6 +11,7 @@
 
     <!-- General instruction strings -->
     <string name="no_reminders">No reminders yet. Click the plus icon to start creating one!</string>
+    <string name="title_hint">Remind me to...</string>
 
     <string-array name="example_reminders">
         <item>Meditation</item>
@@ -35,22 +36,12 @@
         <item>Every year</item> <!-- On some day every year -->
     </string-array>
 
-    <!--More specific frequencies-->
-
-    <!--For everyday-->
-    <string-array name="frequencies_everyday">
-        <item>Morning</item>
-        <item>Noon</item>
-        <item>Afternoon</item>
-        <item>Evening</item>
-        <item>At night</item>
+    <string-array name="time_frequencies">
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>Custom...</item>
     </string-array>
-
-    <!--For every week, user should be able to pick multiple days. Recommending a checklist-->
-
-    <!--For every month, user should pick a day-->
-
-    <!--For every year, should be able to pick a day-->
+    
     <!-- General instructions -->
     <string name="instructions">Press the image to show you have completed the reminder</string>
     <string name="default_count">0</string>
