@@ -12,6 +12,7 @@
     <!-- General instruction strings -->
     <string name="no_reminders">No reminders yet. Click the plus icon to start creating one!</string>
     <string name="title_hint">Remind me to...</string>
+    <string name="title_empty_error">Title must not be empty</string>
 
     <string-array name="example_reminders">
         <item>Meditation</item>

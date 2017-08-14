@@ -7,7 +7,10 @@ import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,6 +30,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
     Spinner frequencySpinner;
     TextInputEditText title;
+    TextInputLayout titleLayout;
     TextView atTime, onDate;
     int hour, minute, month, day, year, repeatNumber;
     boolean repeat;
@@ -41,8 +45,28 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
         title = (TextInputEditText) findViewById(R.id.reminder_title);
+        titleLayout = (TextInputLayout) findViewById(R.id.reminder_title_layout);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
+
+        // error for empty title
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (title.getText().toString().trim().isEmpty()) {
+                    titleLayout.setError(getString(R.string.title_empty_error));
+                } else {
+                    titleLayout.setErrorEnabled(false);
+                }
+            }
+        });
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.frequencies, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
