@@ -20,12 +20,14 @@ import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
+import mehdi.sakout.fancybuttons.FancyButton;
+
 
 public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     TextInputEditText reminderTitle;
     TextView date, time;
     Reminder reminder;
-    Button cancelBtn, saveBtn;
+    FancyButton cancelBtn, saveBtn;
     ReminderDatabase database;
     Calendar calendar;
     long reminderID;
@@ -36,8 +38,8 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         date = (TextView) findViewById(R.id.datePicker);
         time = (TextView) findViewById(R.id.timePicker);
         reminderTitle = (TextInputEditText) findViewById(R.id.reminder_title);
-        cancelBtn = (Button) findViewById(R.id.btn_cancel);
-        saveBtn = (Button) findViewById(R.id.btn_save);
+        cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
+        saveBtn = (FancyButton) findViewById(R.id.btn_save);
         database = new ReminderDatabase(this);
 
         // get stuff from intent calling this activity

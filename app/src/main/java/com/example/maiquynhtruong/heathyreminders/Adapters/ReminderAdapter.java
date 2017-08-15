@@ -1,5 +1,6 @@
 package com.example.maiquynhtruong.heathyreminders.Adapters;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.example.maiquynhtruong.heathyreminders.Activities.ReminderDetailsActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 
@@ -28,7 +30,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         this.reminderList = new ArrayList<>();
         viewBinderHelper.setOpenOnlyOne(true); // show only one swipe view at a time
         createFakeReminders();
-        Log.i("reminder-adapter", "created");
     }
 
     public void setUpReminders(List<Reminder> reminders) {
@@ -90,13 +91,17 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             deleteSwipe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(itemView.getContext(), "Gonna delete this reminder", Toast.LENGTH_LONG).show();
+                    int position = getAdapterPosition();
+                    notifyItemRemoved(position);
+                    Toast.makeText(itemView.getContext(), "Gonna delete the reminder at index " + position, Toast.LENGTH_LONG).show();
                 }
             });
             editSwipe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(itemView.getContext(), "Edit this reminder", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(itemView.getContext(), ReminderDetailsActivity.class);
+                    itemView.getContext().startActivity(intent);
                 }
             });
         }
