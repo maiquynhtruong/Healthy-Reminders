@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -78,7 +77,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         calendar = Calendar.getInstance();
 
         // set the current time as the default time when first showed
-        atTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND) + calendar.get(Calendar.AM_PM));
+        atTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
 
         database = new ReminderDatabase(getBaseContext());
@@ -124,7 +123,8 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
-        atTime.setText(hourOfDay + ":" + minute);
+        boolean isPM = (hourOfDay >= 12);
+        atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
     }
 
     @Override
@@ -136,13 +136,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         String title = this.title.getText().toString();
         long reminderID = database.setReminder(new Reminder(title, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
-//        calendar.set(Calendar.HOUR_OF_DAY, hour);
-//        calendar.set(Calendar.MINUTE, minute);
-//        calendar.set(Calendar.SECOND, 0);
-//        calendar.set(Calendar.DAY_OF_MONTH, day);
-//        calendar.set(Calendar.MONTH, month);
-//        calendar.set(Calendar.YEAR, year);
-
         Toast.makeText(this, "Save reminder as " + title + " at " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + " on " + calendar.get(Calendar.MONTH) +
         "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR), Toast.LENGTH_LONG).show();
 

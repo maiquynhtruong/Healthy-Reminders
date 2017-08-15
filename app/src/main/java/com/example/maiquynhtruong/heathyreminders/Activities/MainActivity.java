@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
+import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
@@ -33,11 +34,11 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences preferences;
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
     RecyclerView mainRecyclerView;
-    TextView noReminders, hello, timeLeft;
+    TextView noReminders;
     RecyclerView.LayoutManager layoutManager;
     ReminderAdapter adapter;
     ReminderDatabase database;
-    public static final int ADD_REMINDER_REQUEST_CODE = 147;
+    ReminderReceiver receiver;
     public static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        setUpNavigationDrawer();
+        toolbar.setTitle(R.string.app_name);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,20 +58,17 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        setUpNavigationDrawer();
+        receiver = new ReminderReceiver();
+
         mainRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         noReminders = (TextView) findViewById(R.id.no_reminders_text);
-        hello = (TextView) findViewById(R.id.hello);
-        timeLeft = (TextView) findViewById(R.id.time_left);
         layoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(layoutManager);
-        adapter = new ReminderAdapter();
+        adapter = new ReminderAdapter(this);
         mainRecyclerView.setAdapter(adapter);
         database = new ReminderDatabase(this);
         database.deleteAllReminders();
-
-        setTimeLeft();
 
         List<Reminder> reminders = database.getAllReminders();
         if (reminders.isEmpty()) {
@@ -79,22 +78,21 @@ public class MainActivity extends AppCompatActivity
             adapter.setUpReminders(reminders);
         }
     }
-
-    public void setTimeLeft() {
-        Calendar calendar = Calendar.getInstance();
-        int time = 24 - calendar.get(Calendar.HOUR_OF_DAY);
-        timeLeft.setText("You have " + time + " left before end of day");
-    }
     public void showAddReminder() {
         Intent addReminderIntent = new Intent(this, AddReminderActivity.class);
-        startActivityForResult(addReminderIntent, ADD_REMINDER_REQUEST_CODE);
+        startActivity(addReminderIntent);
     }
 
+    public void showEditReminder(int clickID) {
+        Intent intent = new Intent(this, ReminderDetailsActivity.class);
+        intent.putExtra(ReminderDetailsActivity.REMINDER_ID, String.valueOf(clickID));
+        startActivityForResult(intent, ReminderDetailsActivity.EDIT_REMINDER_REQUEST_CODE);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_REMINDER_REQUEST_CODE) {
+        if (requestCode == ReminderDetailsActivity.EDIT_REMINDER_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                data.getLongExtra(ReminderDatabase.ReminderEntry.REMINDER_ID, 0);
+                adapter.notifyDataSetChanged();
             }
         }
     }

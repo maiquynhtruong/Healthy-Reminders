@@ -1,5 +1,6 @@
 package com.example.maiquynhtruong.heathyreminders.Adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
 import com.example.maiquynhtruong.heathyreminders.Activities.ReminderDetailsActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
@@ -26,9 +28,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     // This object helps you save/restore the open/close state of each view
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
     public static List<Reminder> reminderList;
-
-    public ReminderAdapter() {
+    Context context;
+    public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
+        this.context = context;
         viewBinderHelper.setOpenOnlyOne(true); // show only one swipe view at a time
         createFakeReminders();
     }
@@ -55,14 +58,28 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     @Override
-    public void onBindViewHolder(ReminderView holder, int position) {
+    public void onBindViewHolder(ReminderView holder, final int position) {
         Reminder reminder = reminderList.get(position);
         // Save/restore the open/close state.
         // You need to provide a String id which uniquely defines the data object.
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(reminder.getId()));
 
         holder.title.setText(reminder.getTitle());
-        Log.i("bindViewHolder", "text:" + reminder.getTitle());
+        holder.deleteSwipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ReminderDatabase(view.getContext()).deleteReminder(reminderList.get(position).getId());
+                reminderList.remove(position);
+                notifyItemRemoved(position);
+                Toast.makeText(view.getContext(), "Gonna delete the reminder at index " + position, Toast.LENGTH_LONG).show();
+            }
+        });
+        holder.editSwipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)context).showEditReminder(position);
+            }
+        });
     }
     @Override
     public int getItemCount() {
@@ -88,25 +105,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             swipeRevealLayout = itemView.findViewById(R.id.swipe_reveal_layout);
             deleteSwipe = itemView.findViewById(R.id.swipe_delete);
             editSwipe = itemView.findViewById(R.id.swipe_edit);
-
-            deleteSwipe.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    new ReminderDatabase(itemView.getContext()).deleteReminder(reminderList.get(position).getId());
-                    reminderList.remove(position);
-                    notifyItemRemoved(position);
-                    Toast.makeText(itemView.getContext(), "Gonna delete the reminder at index " + position, Toast.LENGTH_LONG).show();
-                }
-            });
-            editSwipe.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(itemView.getContext(), "Edit this reminder", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(itemView.getContext(), ReminderDetailsActivity.class);
-                    itemView.getContext().startActivity(intent);
-                }
-            });
         }
     }
 }

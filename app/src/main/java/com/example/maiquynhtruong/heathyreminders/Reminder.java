@@ -18,7 +18,23 @@ public class Reminder {
     private int repeatNumber;
     private String repeatType;
 
+    public Reminder() {
+
+    }
     public Reminder(String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber, String repeatType) {
+        this.title = title;
+        this.hour = hour;
+        this.minute = minute;
+        this.month = month;
+        this.day = day;
+        this.year = year;
+        this.repeat = repeat;
+        this.repeatNumber = repeatNumber;
+        this.repeatType = repeatType;
+    }
+
+    public Reminder(int id, String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber, String repeatType) {
+        this.id = id;
         this.title = title;
         this.hour = hour;
         this.minute = minute;
