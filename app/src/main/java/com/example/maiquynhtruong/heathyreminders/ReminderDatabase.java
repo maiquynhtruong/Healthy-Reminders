@@ -66,14 +66,14 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_REPEAT, reminder.isRepeat());
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
-        long newRowId = database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
-        return newRowId;
+        return database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
     }
 
     public Reminder getReminder(long id) {
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.query(ReminderDatabase.ReminderEntry.TABLE_NAME,
                 new String[]{
+                        ReminderEntry.REMINDER_ID,
                         ReminderEntry.REMINDER_TITLE,
                         ReminderEntry.REMINDER_HOUR,
                         ReminderEntry.REMINDER_MINUTE,
@@ -87,8 +87,9 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 new String[]{"" + id}, null, null, null);
         Reminder reminder = null;
         if (cursor.moveToFirst()) {
-            String title = cursor.getString(cursor.getColumnIndex(REMINDER_TITLE));
-            int hour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_HOUR)));
+//            int reminder_id = Integer.parseInt(cursor.getString(0));
+            String title = cursor.getString(1);
+            int hour = Integer.parseInt(cursor.getString(2));
             int minute = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MINUTE)));
             int month = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MONTH)));
             int day = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_DAY)));
@@ -117,6 +118,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 }, null, null, null, null, null);
         List<Reminder> reminderList = new ArrayList<>();
         while (cursor.moveToNext()) {
+//            int reminder_id = Integer.parseInt(cursor.getString(0));
             String title = cursor.getString(cursor.getColumnIndex(REMINDER_TITLE));
             int hour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_HOUR)));
             int minute = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MINUTE)));

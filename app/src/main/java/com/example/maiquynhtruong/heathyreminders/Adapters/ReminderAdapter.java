@@ -16,6 +16,7 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.maiquynhtruong.heathyreminders.Activities.ReminderDetailsActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
+import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
+                    new ReminderDatabase(itemView.getContext()).deleteReminder(reminderList.get(position).getId());
+                    reminderList.remove(position);
                     notifyItemRemoved(position);
                     Toast.makeText(itemView.getContext(), "Gonna delete the reminder at index " + position, Toast.LENGTH_LONG).show();
                 }
