@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     TextView noReminders;
     RecyclerView.LayoutManager layoutManager;
     ReminderAdapter adapter;
-    ReminderDatabase database;
+    public ReminderDatabase database;
     ReminderReceiver receiver;
     public static final String TAG = "MainActivity";
     @Override

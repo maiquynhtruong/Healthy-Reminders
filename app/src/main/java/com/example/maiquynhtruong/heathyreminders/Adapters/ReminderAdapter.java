@@ -42,6 +42,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         notifyDataSetChanged();
     }
 
+    public void removeReminder(int reminderID) {
+    }
+
     public List<Reminder> createFakeReminders() {
 //        List<Reminder> reminderList = new ArrayList<>();
         reminderList.add(new Reminder("Pay Internet bill", 12, 0, 9, 10, 2017, true, 1, Reminder.MONTHLY));
@@ -68,7 +71,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         holder.deleteSwipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ReminderDatabase(view.getContext()).deleteReminder(reminderList.get(position).getId());
+                ((MainActivity)context).database.deleteReminder(reminderList.get(position).getId());
                 reminderList.remove(position);
                 notifyItemRemoved(position);
                 Toast.makeText(view.getContext(), "Gonna delete the reminder at index " + position, Toast.LENGTH_LONG).show();
