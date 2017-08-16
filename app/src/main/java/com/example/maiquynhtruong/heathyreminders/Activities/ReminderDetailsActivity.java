@@ -49,7 +49,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         database = new ReminderDatabase(this);
 
 
-        getSupportActionBar().setTitle(getString(R.string.edit_reminder));
+        getSupportActionBar().setTitle(getString(R.string.app_edit_reminder));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
