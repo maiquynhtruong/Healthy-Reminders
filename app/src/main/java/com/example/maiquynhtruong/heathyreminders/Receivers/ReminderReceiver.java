@@ -35,7 +35,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);
         int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
         int reminderId = intent.getIntExtra(REMINDER_ID, 0);
-        reminderNotify(context, reminderId);
+        reminderNotify(context, reminderId); // start notification
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
         if (type.equals(Reminder.YEARLY)) {
