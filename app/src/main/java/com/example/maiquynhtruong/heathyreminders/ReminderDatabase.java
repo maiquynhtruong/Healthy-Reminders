@@ -85,19 +85,21 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                         ReminderEntry.REMINDER_REPEAT_TYPE
                 }, ReminderDatabase.ReminderEntry.REMINDER_ID + " = ?",
                 new String[]{"" + id}, null, null, null);
-        if (cursor != null) cursor.moveToFirst();
-
-        int reminder_id = Integer.parseInt(cursor.getString(0));
-        String title = cursor.getString(1);
-        int hour = Integer.parseInt(cursor.getString(2));
-        int minute = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MINUTE)));
-        int month = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MONTH)));
-        int day = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_DAY)));
-        int year = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_YEAR)));
-        boolean repeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT)));
-        int repeatNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_NUMBER)));
-        String repeatType = cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_TYPE));
-        Reminder reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
+        Reminder reminder = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            int reminder_id = Integer.parseInt(cursor.getString(0));
+            String title = cursor.getString(1);
+            int hour = Integer.parseInt(cursor.getString(2));
+            int minute = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MINUTE)));
+            int month = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MONTH)));
+            int day = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_DAY)));
+            int year = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_YEAR)));
+            boolean repeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT)));
+            int repeatNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_NUMBER)));
+            String repeatType = cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_TYPE));
+            reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
+            cursor.close();
+        }
         return reminder;
     }
 
@@ -146,6 +148,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     public void deleteReminder(long id) {
         SQLiteDatabase database = this.getWritableDatabase();
         database.delete(TABLE_NAME, ReminderEntry.REMINDER_ID + " = ?", new String[] {"" + id});
+        database.close();
     }
 
     public static class ReminderEntry implements BaseColumns {

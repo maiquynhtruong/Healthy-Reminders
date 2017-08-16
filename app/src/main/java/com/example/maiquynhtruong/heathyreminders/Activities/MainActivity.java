@@ -31,14 +31,13 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
-    SharedPreferences preferences;
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
     RecyclerView mainRecyclerView;
     TextView noReminders;
     RecyclerView.LayoutManager layoutManager;
     ReminderAdapter adapter;
     public ReminderDatabase database;
-    ReminderReceiver receiver;
+    public ReminderReceiver receiver;
     public static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +45,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.app_name));
+
         setUpNavigationDrawer();
         toolbar.setTitle(R.string.app_name);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Showing add reminder dialog", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 showAddReminder();
             }
         });
@@ -68,7 +67,6 @@ public class MainActivity extends AppCompatActivity
         adapter = new ReminderAdapter(this);
         mainRecyclerView.setAdapter(adapter);
         database = new ReminderDatabase(this);
-        database.deleteAllReminders();
 
         List<Reminder> reminders = database.getAllReminders();
         if (reminders.isEmpty()) {
@@ -90,11 +88,7 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ReminderDetailsActivity.EDIT_REMINDER_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                adapter.notifyDataSetChanged();
-            }
-        }
+        adapter.setUpReminders(database.getAllReminders());
     }
 
     public void setUpNavigationDrawer() {

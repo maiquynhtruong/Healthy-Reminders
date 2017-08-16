@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -31,6 +32,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     FancyButton cancelBtn, saveBtn;
     ReminderDatabase database;
     Calendar calendar;
+    Toolbar toolbar;
     long reminderID;
     public static final String REMINDER_ID = "reminder-id";
     public static final int EDIT_REMINDER_REQUEST_CODE = 1;
@@ -46,12 +48,19 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         saveBtn = (FancyButton) findViewById(R.id.btn_save);
         database = new ReminderDatabase(this);
 
+
+        getSupportActionBar().setTitle(getString(R.string.edit_reminder));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         // get stuff from intent calling this activity
-        reminderID = getIntent().getIntExtra(ReminderReceiver.REMINDER_ID, 0);
+        reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_ID, 0);
         reminder = database.getReminder(reminderID);
-        reminderTitle.setText(reminder.getTitle());
-        date.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
-        time.setText(reminder.getHour() + ":" + reminder.getMinute());
+        if (reminder != null) {
+            reminderTitle.setText(reminder.getTitle());
+            date.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+            time.setText(reminder.getHour() + ":" + reminder.getMinute());
+        }
     }
 
     @Override

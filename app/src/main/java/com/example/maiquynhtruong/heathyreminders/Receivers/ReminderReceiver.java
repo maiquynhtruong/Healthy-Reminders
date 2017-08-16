@@ -25,7 +25,7 @@ import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 public class ReminderReceiver extends BroadcastReceiver {
     public static final int REMINDER_PENDING_INTENT_ID = 2;
     public static final int FINISH_NOTIFICATION_PENDING_INTENT = 3;
-    public static final int POSTPONE_NOTIFICATION_PENDDING_INTENT = 4;
+    public static final int POSTPONE_NOTIFICATION_PENDING_INTENT = 4;
     public static final String REMINDER_REPEAT_TYPE = "ReminderType";
     public static final String REMINDER_ID = "ReminderID";
     public static final String REMINDER_TIME_MILLIS = "ReminderMillis";
@@ -34,7 +34,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);
         int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
-        long reminderId = intent.getLongExtra(REMINDER_ID, 0);
+        int reminderId = intent.getIntExtra(REMINDER_ID, 0);
         reminderNotify(context, reminderId);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
@@ -51,23 +51,28 @@ public class ReminderReceiver extends BroadcastReceiver {
         }
     }
 
-    public static void setReminderMonthOrYear(Context context, long timeInMillis, long reminderID, String repeatType) {
+    public static void setReminderMonthOrYear(Context context, long timeInMillis, int reminderID, String repeatType) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ReminderReceiver.class);
         intent.putExtra(REMINDER_REPEAT_TYPE, repeatType);
         intent.putExtra(REMINDER_TIME_MILLIS, timeInMillis);
         intent.putExtra(REMINDER_ID, reminderID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         manager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
     }
 
-    public static void setReminderHourOrDayOrWeek(Context context, long timeInMillis, long reminderID, long interval) {
+    public static void setReminderHourOrDayOrWeek(Context context, long timeInMillis, int reminderID, long interval) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ReminderReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
     }
 
+    public void cancelAlarm(Context context, int ID) {
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent intent = PendingIntent.getBroadcast(context, ID, new Intent(context, ReminderReceiver.class), 0);
+        manager.cancel(intent);
+    }
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
@@ -103,7 +108,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     public static NotificationCompat.Action postponeReminder(Context context) {
         Intent postponeReminder  = new Intent(context, ReminderDetailsActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDDING_INTENT, postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDING_INTENT, postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px, context.getString(R.string.reminder_postponed), pendingIntent);
         return action;
     }

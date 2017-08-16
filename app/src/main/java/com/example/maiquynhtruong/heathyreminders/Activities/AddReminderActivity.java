@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -32,7 +33,8 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     TextInputEditText title;
     TextInputLayout titleLayout;
     TextView atTime, onDate;
-    int hour, minute, month, day, year, repeatNumber;
+    Toolbar toolbar;
+    int repeatNumber;
     boolean repeat;
     String repeatType;
     ReminderDatabase database;
@@ -42,12 +44,16 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
         title = (TextInputEditText) findViewById(R.id.reminder_title);
         titleLayout = (TextInputLayout) findViewById(R.id.reminder_title_layout);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
+
+        getSupportActionBar().setTitle(getString(R.string.add_reminder));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         // error for empty title
         title.addTextChangedListener(new TextWatcher() {

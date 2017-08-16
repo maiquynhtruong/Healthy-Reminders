@@ -33,7 +33,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         this.reminderList = new ArrayList<>();
         this.context = context;
         viewBinderHelper.setOpenOnlyOne(true); // show only one swipe view at a time
-        createFakeReminders();
+//        createFakeReminders();
     }
 
     public void setUpReminders(List<Reminder> reminders) {
@@ -46,7 +46,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     public List<Reminder> createFakeReminders() {
-//        List<Reminder> reminderList = new ArrayList<>();
         reminderList.add(new Reminder("Pay Internet bill", 12, 0, 9, 10, 2017, true, 1, Reminder.MONTHLY));
         reminderList.add(new Reminder("Pay Insurance", 12, 0, 9, 5, 2017, true, 1, Reminder.MONTHLY));
         reminderList.add(new Reminder("Change tooth brush", 12, 0, 9, 8, 2017, true, 3, Reminder.MONTHLY));
@@ -62,7 +61,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     @Override
     public void onBindViewHolder(ReminderView holder, final int position) {
-        Reminder reminder = reminderList.get(position);
+        final Reminder reminder = reminderList.get(position);
         // Save/restore the open/close state.
         // You need to provide a String id which uniquely defines the data object.
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(reminder.getId()));
@@ -71,10 +70,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         holder.deleteSwipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (reminderList.isEmpty()) return;
                 ((MainActivity)context).database.deleteReminder(reminderList.get(position).getId());
+                ((MainActivity)context).receiver.cancelAlarm(context.getApplicationContext(), reminderList.get(position).getId());
                 reminderList.remove(position);
                 notifyItemRemoved(position);
-                Toast.makeText(view.getContext(), "Gonna delete the reminder at index " + position, Toast.LENGTH_LONG).show();
             }
         });
         holder.editSwipe.setOnClickListener(new View.OnClickListener() {
