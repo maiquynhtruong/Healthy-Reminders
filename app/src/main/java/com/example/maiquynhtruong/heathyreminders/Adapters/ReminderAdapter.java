@@ -9,12 +9,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
@@ -26,18 +28,23 @@ import com.example.maiquynhtruong.heathyreminders.Reminder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
+
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderView> {
     // This object helps you save/restore the open/close state of each view
-    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
-    public static List<Reminder> reminderList;
+//    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
+    public List<Reminder> reminderList;
+    public List<Reminder> reminderPendingRemoval;
+    public static int PENDING_REMOVAL_TIMEOUT = 3000;
     RecyclerView recyclerView;
     ItemTouchHelper itemTouchHelper;
     Context context;
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
         this.context = context;
-        viewBinderHelper.setOpenOnlyOne(true); // show only one swipe view at a time
+        this.reminderPendingRemoval = new ArrayList<>();
+//        viewBinderHelper.setOpenOnlyOne(true); // show only one swipe view at a time
 //        createFakeReminders();
     }
 
@@ -71,7 +78,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     @Override
     public ReminderView onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.swipelayout_main, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_reminder, parent, false);
         return new ReminderView(view);
     }
 
@@ -80,50 +87,55 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         final Reminder reminder = reminderList.get(position);
         // Save/restore the open/close state.
         // You need to provide a String id which uniquely defines the data object.
-        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(reminder.getId()));
+//        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(reminder.getId()));
+        if (reminderPendingRemoval.contains(reminder)) {
+            holder.mainLayout.setVisibility(GONE);
+            holder.swipeLayout.setVisibility(View.VISIBLE);
+            holder.undo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    undoDelete(reminder);
+                }
+            });
+        } else {
+            holder.mainLayout.setVisibility(View.VISIBLE);
+            holder.swipeLayout.setVisibility(GONE);
+            holder.title.setText(reminder.getTitle());
+        }
+    }
 
-        holder.title.setText(reminder.getTitle());
-        holder.deleteSwipe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (reminderList.isEmpty()) return;
-                ((MainActivity)context).database.deleteReminder(reminderList.get(position).getId());
-                ((MainActivity)context).receiver.cancelAlarm(context.getApplicationContext(), reminderList.get(position).getId());
-                reminderList.remove(position);
-                notifyItemRemoved(position);
-            }
-        });
-        holder.editSwipe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)context).showEditReminder(position);
-            }
-        });
+    public void undoDelete(Reminder reminder) {
+
     }
     @Override
     public int getItemCount() {
         return reminderList.size();
     }
 
-    public void saveStates(Bundle outState) {
-        viewBinderHelper.saveStates(outState);
-    }
+//    public void saveStates(Bundle outState) {
+//        viewBinderHelper.saveStates(outState);
+//    }
+//
+//    public void restoreStates(Bundle inState) {
+//        viewBinderHelper.restoreStates(inState);
+//    }
 
-    public void restoreStates(Bundle inState) {
-        viewBinderHelper.restoreStates(inState);
-    }
-
-    class ReminderView extends RecyclerView.ViewHolder{
-        TextView title;
-        ImageView deleteSwipe, editSwipe;
-        SwipeRevealLayout swipeRevealLayout;
+    class ReminderView extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView title, undo, deleteSwipe;
+        LinearLayout mainLayout, swipeLayout;
 
         public ReminderView(final View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.reminder_title_view_holder);
-            swipeRevealLayout = itemView.findViewById(R.id.swipe_reveal_layout);
+            swipeLayout = itemView.findViewById(R.id.swipe_layout);
+            mainLayout = itemView.findViewById(R.id.main_layout);
             deleteSwipe = itemView.findViewById(R.id.swipe_delete);
-            editSwipe = itemView.findViewById(R.id.swipe_edit);
+            undo = itemView.findViewById(R.id.undo);
+        }
+
+        @Override
+        public void onClick(View view) {
+            ((MainActivity)context).showEditReminder(getAdapterPosition());
         }
     }
 
@@ -164,7 +176,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             paint.setColor(Color.WHITE);
             paint.setTextSize(48);
             paint.setTextAlign(Paint.Align.CENTER);
-            c.drawText("DELETE", xMarkLeft, xMarkTop);
+            c.drawText("DELETE", xMarkLeft, xMarkTop, paint);
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }

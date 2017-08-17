@@ -51,7 +51,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
 
-        getSupportActionBar().setTitle(getString(R.string.add_reminder));
+        getSupportActionBar().setTitle(getString(R.string.app_add_reminder));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 

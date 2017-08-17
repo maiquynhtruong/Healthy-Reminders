@@ -5,6 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <!--Main layout -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_layout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:background="@android:color/holo_purple"
@@ -24,7 +25,7 @@
     </LinearLayout>
     <!--Swipe layout-->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeLayout"
+        android:id="@+id/swipe_layout"
         android:orientation="horizontal" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
