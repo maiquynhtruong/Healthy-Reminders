@@ -27,6 +27,8 @@ import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
+import mehdi.sakout.fancybuttons.FancyButton;
+
 public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
     Spinner frequencySpinner;
@@ -39,6 +41,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     String repeatType;
     ReminderDatabase database;
     Calendar calendar;
+    FancyButton saveBtn;
     public static final String TAG = "AddActivity";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,11 +53,18 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         titleLayout = (TextInputLayout) findViewById(R.id.reminder_title_layout);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
+        saveBtn = (FancyButton) findViewById(R.id.btn_save);
 
         getSupportActionBar().setTitle(getString(R.string.app_add_reminder));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveReminder(view);
+            }
+        });
         // error for empty title
         title.addTextChangedListener(new TextWatcher() {
             @Override

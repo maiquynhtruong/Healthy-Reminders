@@ -15,7 +15,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_margin="10dp"
-        android:onClick="saveReminder"
+
         fancy:fb_text="SAVE"
         fancy:fb_radius="30dp"
         fancy:fb_focusColor="@android:color/holo_green_dark"

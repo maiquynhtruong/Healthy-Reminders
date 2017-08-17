@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
@@ -83,7 +85,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     @Override
-    public void onBindViewHolder(ReminderView holder, final int position) {
+    public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
         // Save/restore the open/close state.
         // You need to provide a String id which uniquely defines the data object.
@@ -102,6 +104,12 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             holder.swipeLayout.setVisibility(GONE);
             holder.title.setText(reminder.getTitle());
         }
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)context).showEditReminder(position);
+            }
+        });
     }
 
     public void undoDelete(Reminder reminder) {
@@ -123,7 +131,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     class ReminderView extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title, undo, deleteSwipe;
         LinearLayout mainLayout, swipeLayout;
-
+        CardView cardView;
         public ReminderView(final View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.reminder_title_view_holder);
@@ -131,6 +139,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             mainLayout = itemView.findViewById(R.id.main_layout);
             deleteSwipe = itemView.findViewById(R.id.swipe_delete);
             undo = itemView.findViewById(R.id.undo);
+            cardView = itemView.findViewById(R.id.card_view);
+
         }
 
         @Override
