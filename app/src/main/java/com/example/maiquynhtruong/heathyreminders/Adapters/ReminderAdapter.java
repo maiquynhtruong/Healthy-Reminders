@@ -2,7 +2,13 @@ package com.example.maiquynhtruong.heathyreminders.Adapters;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -122,9 +128,51 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     public class ItemTouchCallBack extends ItemTouchHelper.SimpleCallback {
+
+        Drawable background, xMark; // cache these and not allocate anything repeatedly in the onChildDraw method
+        int xMarkMargin;
+        Drawable deleteIcon;
+        boolean initiated;
         public ItemTouchCallBack() {
             super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT);
 
+        }
+
+        @Override
+        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            View itemView = viewHolder.itemView;
+            if (!initiated) initiate();
+
+            // draw the background
+            background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+            background.draw(c);
+
+            // mark the boundaries of the trash bin
+            int itemHeight = itemView.getBottom() - itemView.getTop(); // height of itemView
+            int intrinsicWidth = deleteIcon.getIntrinsicWidth();
+            int intrinsicHeight = deleteIcon.getIntrinsicWidth();
+            int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
+            int xMarkRight = itemView.getRight() - xMarkMargin;
+            int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+            int xMarkBottom = xMarkTop + intrinsicHeight;
+            // now draw the bin
+            deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+            deleteIcon.draw(c);
+
+            // set the swipe delete text
+            Paint paint = new Paint();
+            paint.setColor(Color.WHITE);
+            paint.setTextSize(48);
+            paint.setTextAlign(Paint.Align.CENTER);
+            c.drawText("DELETE", xMarkLeft, xMarkTop);
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+
+        public void initiate() {
+            background = new ColorDrawable(Color.RED);
+            deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24px);
+            initiated = true;
         }
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -132,13 +180,26 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         }
 
         @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            removeReminder(viewHolder.getAdapterPosition());
+        public boolean isItemViewSwipeEnabled() {
+            return true;
         }
 
         @Override
-        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        public int getMovementFlags(RecyclerView recyclerView,
+                                    RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
+
+        @Override
+        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            removeReminder(viewHolder.getAdapterPosition());
         }
     }
 }
