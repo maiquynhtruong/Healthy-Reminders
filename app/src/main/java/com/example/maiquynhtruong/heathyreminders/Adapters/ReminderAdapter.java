@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -21,25 +22,27 @@ import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.view.View.GONE;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderView> {
-    // This object helps you save/restore the open/close state of each view
-//    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
     public List<Reminder> reminderList;
     public List<Reminder> reminderPendingRemoval;
     public static int PENDING_REMOVAL_TIMEOUT = 3000;
     RecyclerView recyclerView;
     ItemTouchHelper itemTouchHelper;
     Context context;
+    private Handler handler = new Handler(); // hanlder for running delayed runnables
+    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
+
+    HashMap<String, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
         this.context = context;
         this.reminderPendingRemoval = new ArrayList<>();
-//        viewBinderHelper.setOpenOnlyOne(true); // show only one swipe view at a time
 //        createFakeReminders();
     }
 
@@ -60,10 +63,25 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         if (reminderList.isEmpty()) return;
         ((MainActivity)context).database.deleteReminder(reminderList.get(position).getId());
         ((MainActivity)context).receiver.cancelAlarm(context.getApplicationContext(), reminderList.get(position).getId());
+        reminderPendingRemoval.remove(reminderList.get(position));
         reminderList.remove(position);
         notifyItemRemoved(position);
     }
 
+    public void pendingRemoveReminder(int position) {
+        final Reminder reminder = reminderList.get(position);
+        reminderPendingRemoval.add(reminder);
+        // this will redraw row in "undo" state
+        notifyItemChanged(position);
+        // let's create, store and post a runnable to remove the item
+        Runnable pendingRemovalRunnable = new Runnable() {
+            @Override
+            public void run() {
+                removeReminder(reminderList.indexOf(reminder));
+            }
+        };
+        handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
+    }
     public List<Reminder> createFakeReminders() {
         reminderList.add(new Reminder("Pay Internet bill", 12, 0, 9, 10, 2017, true, 1, Reminder.MONTHLY));
         reminderList.add(new Reminder("Pay Insurance", 12, 0, 9, 5, 2017, true, 1, Reminder.MONTHLY));
@@ -80,22 +98,24 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     @Override
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
-        // Save/restore the open/close state.
-        // You need to provide a String id which uniquely defines the data object.
-//        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(reminder.getId()));
         if (reminderPendingRemoval.contains(reminder)) {
+//            holder.itemView.setBackground(Color.RED);
             holder.mainLayout.setVisibility(GONE);
             holder.swipeLayout.setVisibility(View.VISIBLE);
+            holder.undo.setVisibility(View.VISIBLE);
             holder.undo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    undoDelete(reminder, position);
+                    undoDelete(reminder);
                 }
             });
+
         } else {
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.swipeLayout.setVisibility(GONE);
             holder.title.setText(reminder.getTitle());
+            holder.undo.setVisibility(GONE);
+            holder.undo.setOnClickListener(null);
         }
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,24 +125,17 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         });
     }
 
-    public void undoDelete(Reminder reminder, int position) {
-        reminderList.add(position, reminder);
-        notifyItemInserted(position);
-        reminderPendingRemoval.remove(position);
+    public void undoDelete(Reminder reminder) {
+        reminderList.add(reminder);
+        reminderPendingRemoval.remove(reminder);
+        int position = reminderList.indexOf(reminder);
         recyclerView.scrollToPosition(position);
+        notifyItemChanged(position);
     }
     @Override
     public int getItemCount() {
         return reminderList.size();
     }
-
-//    public void saveStates(Bundle outState) {
-//        viewBinderHelper.saveStates(outState);
-//    }
-//
-//    public void restoreStates(Bundle inState) {
-//        viewBinderHelper.restoreStates(inState);
-//    }
 
     class ReminderView extends RecyclerView.ViewHolder {
         TextView title, undo, deleteSwipe;
@@ -236,7 +249,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            removeReminder(viewHolder.getAdapterPosition());
+            int swipePosition = viewHolder.getAdapterPosition();
+            removeReminder(swipePosition);
         }
     }
 }
