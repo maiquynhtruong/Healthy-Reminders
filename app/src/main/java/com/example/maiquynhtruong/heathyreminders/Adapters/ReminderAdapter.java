@@ -152,11 +152,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public class ItemTouchCallBack extends ItemTouchHelper.SimpleCallback {
 
         Drawable background, xMark; // cache these and not allocate anything repeatedly in the onChildDraw method
-        int xMarkMargin;
+        int xMarkMargin = 5;
         Drawable deleteIcon;
         boolean initiated;
         public ItemTouchCallBack() {
-            super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT);
+            super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
 
         }
 
@@ -165,28 +165,53 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             View itemView = viewHolder.itemView;
             if (!initiated) initiate();
 
-            // draw the background
-            background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-            background.draw(c);
+            if (getSwipeDirs(recyclerView, viewHolder) == ItemTouchHelper.LEFT) {
+                // draw the background
+                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                background.draw(c);
 
-            // mark the boundaries of the trash bin
-            int itemHeight = itemView.getBottom() - itemView.getTop(); // height of itemView
-            int intrinsicWidth = deleteIcon.getIntrinsicWidth();
-            int intrinsicHeight = deleteIcon.getIntrinsicWidth();
-            int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-            int xMarkRight = itemView.getRight() - xMarkMargin;
-            int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-            int xMarkBottom = xMarkTop + intrinsicHeight;
-            // now draw the bin
-            deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-            deleteIcon.draw(c);
+                // mark the boundaries of the trash bin
+                int itemHeight = itemView.getBottom() - itemView.getTop(); // height of itemView
+                int intrinsicWidth = deleteIcon.getIntrinsicWidth();
+                int intrinsicHeight = deleteIcon.getIntrinsicWidth();
+                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
+                int xMarkRight = itemView.getRight() - xMarkMargin;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                int xMarkBottom = xMarkTop + intrinsicHeight;
+                // now draw the bin
+                deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+                deleteIcon.draw(c);
 
-            // set the swipe delete text
-            Paint paint = new Paint();
-            paint.setColor(Color.WHITE);
-            paint.setTextSize(48);
-            paint.setTextAlign(Paint.Align.CENTER);
-            c.drawText("DELETE", xMarkLeft, xMarkTop, paint);
+                // set the swipe delete text
+                Paint paint = new Paint();
+                paint.setColor(Color.WHITE);
+                paint.setTextSize(48);
+                paint.setTextAlign(Paint.Align.CENTER);
+                c.drawText("DELETE", itemView.getLeft() + 150, xMarkBottom, paint);
+            } else {
+                // draw the background
+                background.setBounds(itemView.getRight(), itemView.getTop(), itemView.getLeft() - (int) dX, itemView.getBottom());
+                background.draw(c);
+
+                // mark the boundaries of the trash bin
+                int itemHeight = itemView.getBottom() - itemView.getTop(); // height of itemView
+                int intrinsicWidth = deleteIcon.getIntrinsicWidth();
+                int intrinsicHeight = deleteIcon.getIntrinsicWidth();
+                int xMarkLeft = itemView.getLeft() + xMarkMargin;
+                int xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                int xMarkBottom = xMarkTop + intrinsicHeight;
+                // now draw the bin
+                deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+                deleteIcon.draw(c);
+
+                // set the swipe delete text
+                Paint paint = new Paint();
+                paint.setColor(Color.WHITE);
+                paint.setTextSize(48);
+                paint.setTextAlign(Paint.Align.CENTER);
+                c.drawText("DELETE", itemView.getRight() - 150, xMarkBottom, paint);
+            }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }

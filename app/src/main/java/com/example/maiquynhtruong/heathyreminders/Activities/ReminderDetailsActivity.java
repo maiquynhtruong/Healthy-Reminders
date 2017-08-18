@@ -28,12 +28,15 @@ import mehdi.sakout.fancybuttons.FancyButton;
 public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     TextInputEditText reminderTitle;
     TextView date, time;
+    int hour, minute, month, day, year, repeatNumber;
+    long reminderID;
+    boolean repeat;
+    String repeatType;
     Reminder reminder;
     FancyButton cancelBtn, saveBtn;
     ReminderDatabase database;
     Calendar calendar;
-    Toolbar toolbar;
-    long reminderID;
+    ReminderReceiver receiver;
     public static final String REMINDER_ID = "reminder-id";
     public static final int EDIT_REMINDER_REQUEST_CODE = 1;
 
@@ -61,6 +64,20 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             date.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
             time.setText(reminder.getHour() + ":" + reminder.getMinute());
         }
+        saveBtn.setText("UPDATE");
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateReminder(view);
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        receiver = new ReminderReceiver();
     }
 
     @Override
@@ -74,5 +91,21 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
+    }
+
+    public void updateReminder(View view) {
+        reminder.setTitle(reminderTitle.toString());
+        reminder.setHour(hour);
+        reminder.setMinute(minute);
+        reminder.setDay(day);
+        reminder.setMonth(month);
+        reminder.setYear(year);
+        reminder.setRepeat(repeat);
+        reminder.setRepeatNumber(repeatNumber);
+        reminder.setRepeatType(repeatType);
+
+        database.updateReminder(reminder);
+
+
     }
 }

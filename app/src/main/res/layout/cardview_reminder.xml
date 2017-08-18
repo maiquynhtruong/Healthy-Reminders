@@ -27,37 +27,37 @@
         </android.support.v7.widget.CardView>
     </LinearLayout>
     <!--Swipe layout-->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/swipe_layout"
-        android:orientation="horizontal" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/swipe_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/holo_red_light"
             android:paddingBottom="5dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="5dp"
-            android:text="DELETE"
             android:textColor="@android:color/white"
-            android:textStyle="bold"
             android:textSize="24sp"
-            android:background="@android:color/holo_red_light"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/undo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/holo_green_light"
             android:gravity="end"
             android:paddingBottom="5dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="5dp"
-            android:background="@android:color/holo_green_light"
             android:text="UNDO"
             android:textColor="@android:color/white"
             android:textSize="22sp"
