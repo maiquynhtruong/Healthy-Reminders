@@ -13,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +97,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             holder.undo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    undoDelete(reminder);
+                    undoDelete(reminder, position);
                 }
             });
         } else {
@@ -112,8 +113,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         });
     }
 
-    public void undoDelete(Reminder reminder) {
-
+    public void undoDelete(Reminder reminder, int position) {
+        reminderList.add(position, reminder);
+        notifyItemInserted(position);
+        reminderPendingRemoval.remove(position);
+        recyclerView.scrollToPosition(position);
     }
     @Override
     public int getItemCount() {
@@ -128,7 +132,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 //        viewBinderHelper.restoreStates(inState);
 //    }
 
-    class ReminderView extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ReminderView extends RecyclerView.ViewHolder {
         TextView title, undo, deleteSwipe;
         LinearLayout mainLayout, swipeLayout;
         CardView cardView;
@@ -142,11 +146,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             cardView = itemView.findViewById(R.id.card_view);
 
         }
-
-        @Override
-        public void onClick(View view) {
-            ((MainActivity)context).showEditReminder(getAdapterPosition());
-        }
     }
 
     public class ItemTouchCallBack extends ItemTouchHelper.SimpleCallback {
@@ -156,7 +155,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         Drawable deleteIcon;
         boolean initiated;
         public ItemTouchCallBack() {
-            super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
 
         }
 
@@ -164,8 +163,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             View itemView = viewHolder.itemView;
             if (!initiated) initiate();
-
-            if (getSwipeDirs(recyclerView, viewHolder) == ItemTouchHelper.LEFT) {
+            Log.i("ReminderAdapter", "Comparing " + getSwipeDirs(recyclerView, viewHolder) + " and " + ItemTouchHelper.LEFT);
+            if (dX < 0) { // swipe to the left
                 // draw the background
                 background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                 background.draw(c);
