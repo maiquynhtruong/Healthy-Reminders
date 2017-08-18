@@ -2,16 +2,13 @@ package com.example.maiquynhtruong.heathyreminders.Activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -58,6 +55,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
 
         // get stuff from intent calling this activity
         reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_ID, 0);
+        Log.i("ReminderDetailsActivity", String.valueOf(reminderID));
         reminder = database.getReminder(reminderID);
         if (reminder != null) {
             reminderTitle.setText(reminder.getTitle());
