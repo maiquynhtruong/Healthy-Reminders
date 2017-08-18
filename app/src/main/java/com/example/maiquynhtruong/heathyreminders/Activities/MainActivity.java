@@ -32,10 +32,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
 //    @BindView(R.id.main_recycler_view) RecyclerView mainRecyclerView;
-    RecyclerView mainRecyclerView;
-    TextView noReminders;
+    public RecyclerView mainRecyclerView;
+    public TextView noReminders;
     RecyclerView.LayoutManager layoutManager;
-    ReminderAdapter adapter;
+    public ReminderAdapter adapter;
     public ReminderDatabase database;
     public ReminderReceiver receiver;
     public static final String TAG = "MainActivity";

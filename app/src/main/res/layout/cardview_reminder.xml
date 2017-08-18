@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/holo_green_light"
+            android:background="@android:color/holo_red_light"
             android:gravity="end"
             android:paddingBottom="5dp"
             android:paddingLeft="16dp"
