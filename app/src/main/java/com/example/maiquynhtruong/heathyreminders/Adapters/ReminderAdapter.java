@@ -15,10 +15,10 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
@@ -135,7 +135,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
         if (pendingRemovalReminders.contains(reminder)) {
-//            holder.itemView.setBackground(Color.RED);
             holder.mainLayout.setVisibility(GONE);
             holder.swipeLayout.setVisibility(View.VISIBLE);
             holder.undo.setVisibility(View.VISIBLE);
@@ -154,26 +153,26 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             holder.undo.setOnClickListener(null);
 
             final boolean isExpanded = position == mExpandedPosition;
-            holder.date.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
-            holder.time.setText(reminder.getHour() + ":" + reminder.getMinute());
+            holder.editBtn.setVisibility(isExpanded?View.VISIBLE:GONE);
+            holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+            holder.timeTextView.setText(reminder.getHour() + ":" + reminder.getMinute());
             holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
             holder.itemView.setActivated(isExpanded);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "Clicked on a view", Toast.LENGTH_LONG).show();
                     mExpandedPosition = isExpanded ? -1 : position;
                     TransitionManager.beginDelayedTransition(recyclerView);
                     notifyDataSetChanged();
                 }
             });
+            holder.editBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.showEditReminder(position);
+                }
+            });
         }
-//        holder.cardView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                activity.showEditReminder(position);
-//            }
-//        });
     }
 
     @Override
@@ -182,9 +181,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     class ReminderView extends RecyclerView.ViewHolder {
-        TextView title, undo, deleteSwipe, time, date;
+        TextView title, undo, deleteSwipe, timeTextView, dateTextView;
         LinearLayout swipeLayout;
         RelativeLayout mainLayout, timeAndDate;
+        ImageView editBtn;
         CardView cardView;
         public ReminderView(final View itemView) {
             super(itemView);
@@ -195,8 +195,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             undo = itemView.findViewById(R.id.undo);
             cardView = itemView.findViewById(R.id.card_view);
             timeAndDate = itemView.findViewById(R.id.time_and_date);
-            time = itemView.findViewById(R.id.time);
-            date = itemView.findViewById(R.id.date);
+            timeTextView = itemView.findViewById(R.id.timeTextView);
+            dateTextView = itemView.findViewById(R.id.dateTextView);
+            editBtn = itemView.findViewById(R.id.edit_btn);
         }
     }
 

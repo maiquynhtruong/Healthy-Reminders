@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
@@ -35,6 +36,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     ReminderDatabase database;
     Calendar calendar;
     ReminderReceiver receiver;
+    ReminderAdapter adapter;
     public static final String REMINDER_ID = "reminder-id";
     public static final int EDIT_REMINDER_REQUEST_CODE = 1;
 
@@ -102,8 +104,8 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         reminder.setRepeat(repeat);
         reminder.setRepeatNumber(repeatNumber);
         reminder.setRepeatType(repeatType);
-
         database.updateReminder(reminder);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
