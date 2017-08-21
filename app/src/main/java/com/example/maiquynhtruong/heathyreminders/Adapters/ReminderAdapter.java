@@ -34,6 +34,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     RecyclerView recyclerView;
     ItemTouchHelper itemTouchHelper;
     Context context;
+    MainActivity activity;
     boolean undoOn;
     private Handler handler = new Handler(); // hanlder for running delayed runnables
     private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
@@ -60,7 +61,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     public void removeReminder(int position) {
-        MainActivity activity = (MainActivity) context;
         Reminder reminder = reminderList.get(position);
         if (pendingRemovalReminders.contains(reminder)) {
             pendingRemovalReminders.remove(reminderList.get(position));
@@ -151,7 +151,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)context).showEditReminder(position);
+                activity.showEditReminder(position);
             }
         });
     }
