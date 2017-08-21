@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
@@ -44,6 +45,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         this.reminderList = new ArrayList<>();
         this.context = context;
         this.pendingRemovalReminders = new ArrayList<>();
+        activity = (MainActivity) context;
 //        createFakeReminders();
     }
 
@@ -163,7 +165,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     class ReminderView extends RecyclerView.ViewHolder {
         TextView title, undo, deleteSwipe;
-        LinearLayout mainLayout, swipeLayout;
+        LinearLayout swipeLayout;
+        RelativeLayout mainLayout;
         CardView cardView;
         public ReminderView(final View itemView) {
             super(itemView);
