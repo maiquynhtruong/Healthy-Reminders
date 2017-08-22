@@ -236,8 +236,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 Paint paint = new Paint();
                 paint.setColor(Color.WHITE);
                 paint.setTextSize(48);
-                paint.setTextAlign(Paint.Align.CENTER);
-                c.drawText("DELETE", itemView.getLeft() + 150, xMarkBottom, paint);
+                paint.setTextAlign(Paint.Align.LEFT);
+                c.drawText("DELETE", itemView.getLeft() + xMarkMargin, xMarkBottom, paint);
             } else { // swipe to the right
                 // draw the background
                 background.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());

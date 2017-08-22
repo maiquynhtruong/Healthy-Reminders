@@ -100,8 +100,8 @@ public class ReminderReceiver extends BroadcastReceiver {
     }
 
     public static NotificationCompat.Action finishReminderAction(Context context) {
-        Intent ignoreIntent = new Intent(context, ReminderDetailsActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT, ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent finishIntent = new Intent(context, ReminderDetailsActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_done_black_24px, context.getText(R.string.reminder_finished),  pendingIntent);
         return action;
     }
@@ -116,7 +116,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     // should show the reminder that is showed in the notification
     public static PendingIntent contentIntent(Context context, long reminderID) {
         Intent intent = new Intent(context, ReminderDetailsActivity.class);
-        intent.putExtra(ReminderDatabase.ReminderEntry.REMINDER_ID, reminderID);
+        intent.putExtra(ReminderDetailsActivity.REMINDER_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, REMINDER_PENDING_INTENT_ID,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;

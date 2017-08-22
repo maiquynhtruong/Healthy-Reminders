@@ -57,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
+                android:layout_alignParentLeft="true"
                 android:src="@drawable/ic_access_time_black_24px"/>
             <TextView
                 android:id="@+id/timeTextView"
@@ -69,8 +70,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:layout_toStartOf="@id/dateTextView"
-                android:src="@drawable/ic_date_range_black_24dp"/>
+                android:src="@drawable/ic_date_range_black_24dp"
+                android:layout_toLeftOf="@id/dateTextView"
+                android:layout_alignEnd="@+id/timeImageView" />
             <TextView
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
