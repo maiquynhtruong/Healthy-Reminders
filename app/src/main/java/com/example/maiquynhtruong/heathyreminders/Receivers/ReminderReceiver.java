@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -22,20 +23,24 @@ import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
+import static com.example.maiquynhtruong.heathyreminders.Activities.ReminderDetailsActivity.REMINDER_ID;
+
 public class ReminderReceiver extends BroadcastReceiver {
     public static final int REMINDER_PENDING_INTENT_ID = 2;
     public static final int FINISH_NOTIFICATION_PENDING_INTENT = 3;
     public static final int POSTPONE_NOTIFICATION_PENDING_INTENT = 4;
     public static final String REMINDER_REPEAT_TYPE = "ReminderType";
-    public static final String REMINDER_ID = "ReminderID";
     public static final String REMINDER_TIME_MILLIS = "ReminderMillis";
-    public static final String TAG = "AddReminderActivity";
     @Override
     public void onReceive(Context context, Intent intent) {
         String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);
         int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
         int reminderId = intent.getIntExtra(REMINDER_ID, 0);
-        reminderNotify(context, reminderId); // start notification
+
+        // Get reminder from database
+        ReminderDatabase database = new ReminderDatabase(context);
+        Reminder reminder = database.getReminder(reminderId);
+        createNotification(context, reminder); // start notification
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
         if (type.equals(Reminder.YEARLY)) {
@@ -53,6 +58,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     public static void setReminderMonthOrYear(Context context, long timeInMillis, int reminderID, String repeatType) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
         Intent intent = new Intent(context, ReminderReceiver.class);
         intent.putExtra(REMINDER_REPEAT_TYPE, repeatType);
         intent.putExtra(REMINDER_TIME_MILLIS, timeInMillis);
@@ -78,17 +84,20 @@ public class ReminderReceiver extends BroadcastReceiver {
         notificationManager.cancelAll();
     }
 
-    public static void reminderNotify(Context context, long reminderID) {
+    public static void createNotification(Context context, Reminder reminder) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setColor(context.getResources().getColor(R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_alarm)
                 .setLargeIcon(largeIcon(context))
-                .setContentTitle(context.getString(R.string.reminder_notification_title))
-                .setContentText(context.getString(R.string.reminder_notification_title))
+                .setTicker(reminder.getTitle())
+                .setContentTitle(context.getString(R.string.app_name))
+                .setContentText(context.getString(R.string.reminder_notification_title) + reminder.getTitle())
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.reminder_notification_body)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setContentIntent(contentIntent(context, reminderID)) // supply PendingIntent to send when the notification is clicked
+                .setContentIntent(contentIntent(context, reminder.getId())) // supply PendingIntent to send when the notification is clicked
                 .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .addAction(postponeReminder(context))
                 .addAction(finishReminderAction(context));
 
@@ -99,10 +108,21 @@ public class ReminderReceiver extends BroadcastReceiver {
         manager.notify(REMINDER_PENDING_INTENT_ID, builder.build());
     }
 
+    // should show the reminder that is showed in the notification
+    public static PendingIntent contentIntent(Context context, long reminderID) {
+        Intent intent = new Intent(context, ReminderDetailsActivity.class);
+        intent.putExtra(REMINDER_ID, reminderID);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, REMINDER_PENDING_INTENT_ID,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        clearAllNotifications(context);
+        return pendingIntent;
+    }
+
     public static NotificationCompat.Action finishReminderAction(Context context) {
         Intent finishIntent = new Intent(context, ReminderDetailsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_done_black_24px, context.getText(R.string.reminder_finished),  pendingIntent);
+        clearAllNotifications(context);
         return action;
     }
 
@@ -110,16 +130,8 @@ public class ReminderReceiver extends BroadcastReceiver {
         Intent postponeReminder  = new Intent(context, ReminderDetailsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDING_INTENT, postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px, context.getString(R.string.reminder_postponed), pendingIntent);
+        clearAllNotifications(context);
         return action;
-    }
-
-    // should show the reminder that is showed in the notification
-    public static PendingIntent contentIntent(Context context, long reminderID) {
-        Intent intent = new Intent(context, ReminderDetailsActivity.class);
-        intent.putExtra(ReminderDetailsActivity.REMINDER_ID, reminderID);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, REMINDER_PENDING_INTENT_ID,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return pendingIntent;
     }
 
     public static Bitmap largeIcon(Context context) {

@@ -47,7 +47,7 @@
     <!-- General instructions -->
     <string name="instructions">Press the image to show you have completed the reminder</string>
     <string name="default_count">0</string>
-    <string name="reminder_notification_title">It\'s about time to remind yourself</string>
+    <string name="reminder_notification_title">Reminder: </string>
     <string name="reminder_notification_body">There\'s never a better to do it</string>
     <string name="reminder_finished">OK, I\'m done</string>
     <string name="reminder_postponed">Delay for now</string>
