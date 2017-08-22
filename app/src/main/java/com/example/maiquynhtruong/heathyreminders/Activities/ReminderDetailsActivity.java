@@ -37,7 +37,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     Calendar calendar;
     ReminderReceiver receiver;
     ReminderAdapter adapter;
-    public static final String REMINDER_ID = "reminder-id";
+    public static final String REMINDER_DETAILS_ID = "reminder-id";
     public static final int EDIT_REMINDER_REQUEST_CODE = 1;
 
     @Override
@@ -57,7 +57,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         getSupportActionBar().setHomeButtonEnabled(true);
 
         // get stuff from intent calling this activity
-        reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_ID, 0);
+        reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, 0);
         Log.i("ReminderDetailsActivity", String.valueOf(reminderID));
         reminder = database.getReminder(reminderID);
         if (reminder != null) {

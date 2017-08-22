@@ -44,6 +44,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     Calendar calendar;
     FancyButton saveBtn, cancelBtn;
     public static final String TAG = "AddActivity";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +159,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     }
 
     public void saveReminder(View view) {
+
         String title = this.title.getText().toString();
+
         int reminderID = (int) database.setReminder(new Reminder(title, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
         Toast.makeText(this, "Save reminder as " + title + " at " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + " on " + calendar.get(Calendar.MONTH) +

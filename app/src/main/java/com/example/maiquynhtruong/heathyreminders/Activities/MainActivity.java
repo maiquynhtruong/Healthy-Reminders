@@ -1,10 +1,8 @@
 package com.example.maiquynhtruong.heathyreminders.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,7 +25,7 @@ import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
     public void showEditReminder(int clickID) {
         Intent intent = new Intent(this, ReminderDetailsActivity.class);
-        intent.putExtra(ReminderDetailsActivity.REMINDER_ID, String.valueOf(clickID));
+        intent.putExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, String.valueOf(clickID));
         startActivityForResult(intent, ReminderDetailsActivity.EDIT_REMINDER_REQUEST_CODE);
     }
     @Override

@@ -5,8 +5,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,13 +19,12 @@ import android.util.Log;
 
 import java.util.Calendar;
 
-import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
 import com.example.maiquynhtruong.heathyreminders.Activities.ReminderDetailsActivity;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Reminder;
 import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
-import static com.example.maiquynhtruong.heathyreminders.Activities.ReminderDetailsActivity.REMINDER_ID;
+import static com.example.maiquynhtruong.heathyreminders.Activities.ReminderDetailsActivity.REMINDER_DETAILS_ID;
 
 public class ReminderReceiver extends BroadcastReceiver {
     public static final int REMINDER_PENDING_INTENT_ID = 2;
@@ -31,25 +32,28 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final int POSTPONE_NOTIFICATION_PENDING_INTENT = 4;
     public static final String REMINDER_REPEAT_TYPE = "ReminderType";
     public static final String REMINDER_TIME_MILLIS = "ReminderMillis";
+    public static final String TAG = "ReminderDetailsActivity";
     @Override
     public void onReceive(Context context, Intent intent) {
         String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);
         int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
-        int reminderId = intent.getIntExtra(REMINDER_ID, 0);
+        int reminderId = intent.getIntExtra(REMINDER_DETAILS_ID, 0);
 
         // Get reminder from database
         ReminderDatabase database = new ReminderDatabase(context);
         Reminder reminder = database.getReminder(reminderId);
         createNotification(context, reminder); // start notification
+
+        // if the reminder is repeating yearly or monthly we have to set a new one
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
         if (type.equals(Reminder.YEARLY)) {
-            calendar.add(Calendar.YEAR, 1);
+            calendar.add(Calendar.YEAR, 1); // add a year to the clock
             Log.i(TAG, "Added one year. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
                     calendar.get(Calendar.YEAR));
             setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, Reminder.YEARLY);
         } else if (type.equals(Reminder.MONTHLY)) {
-            calendar.add(Calendar.MONTH, 1);
+            calendar.add(Calendar.MONTH, 1); // add a month to the clock
             Log.i(TAG, "Added one month. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
                     calendar.get(Calendar.YEAR));
             setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, Reminder.MONTHLY);
@@ -62,23 +66,46 @@ public class ReminderReceiver extends BroadcastReceiver {
         Intent intent = new Intent(context, ReminderReceiver.class);
         intent.putExtra(REMINDER_REPEAT_TYPE, repeatType);
         intent.putExtra(REMINDER_TIME_MILLIS, timeInMillis);
-        intent.putExtra(REMINDER_ID, reminderID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.putExtra(REMINDER_DETAILS_ID, reminderID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         manager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
+
+        // Restart alarm if device is rebooted
+        ComponentName receiver = new ComponentName(context, BootBroadcastReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
     }
 
     public static void setReminderHourOrDayOrWeek(Context context, long timeInMillis, int reminderID, long interval) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
         Intent intent = new Intent(context, ReminderReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
+
+        // Restart alarm if device is rebooted
+        ComponentName receiver = new ComponentName(context, BootBroadcastReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
     }
 
-    public void cancelAlarm(Context context, int ID) {
+    public void cancelAlarm(Context context, int reminderID) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent intent = PendingIntent.getBroadcast(context, ID, new Intent(context, ReminderReceiver.class), 0);
+        PendingIntent intent = PendingIntent.getBroadcast(context, reminderID, new Intent(context, ReminderReceiver.class), 0);
         manager.cancel(intent);
+
+        // disable automatic alarm restart
+        ComponentName receiver = new ComponentName(context, BootBroadcastReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
     }
+
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
@@ -111,7 +138,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     // should show the reminder that is showed in the notification
     public static PendingIntent contentIntent(Context context, long reminderID) {
         Intent intent = new Intent(context, ReminderDetailsActivity.class);
-        intent.putExtra(REMINDER_ID, reminderID);
+        intent.putExtra(REMINDER_DETAILS_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, REMINDER_PENDING_INTENT_ID,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         clearAllNotifications(context);
