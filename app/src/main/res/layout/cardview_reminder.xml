@@ -156,6 +156,18 @@
                 android:text="UNDO"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
+            <ImageView
+                android:id="@+id/trash_bin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical|end"
+                android:paddingBottom="5dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="5dp"
+                android:src="@drawable/ic_delete_white_24px"
+                android:visibility="gone"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
