@@ -17,7 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.example.maiquynhtruong.heathyreminders.Adapters.ReminderAdapter;
+import com.example.maiquynhtruong.heathyreminders.ReminderAdapter;
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
 import com.example.maiquynhtruong.heathyreminders.Reminder;

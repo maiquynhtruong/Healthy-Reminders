@@ -3,6 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="selected_comment_background">#B0BEC5</color>
-    <color name="comment_background">#ECEFF1</color>
+    <color name="selected_comment_background">#CE93D8</color>
+    <color name="comment_background">#E1BEE7</color>
 </resources>

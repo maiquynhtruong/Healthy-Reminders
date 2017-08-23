@@ -19,7 +19,6 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -130,7 +129,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         CharSequence frequency = (CharSequence) adapterView.getItemAtPosition(i);
-        Toast.makeText(adapterView.getContext(), frequency, Toast.LENGTH_LONG).show();
         repeatType = frequency.toString();
     }
 
@@ -164,8 +162,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         int reminderID = (int) database.setReminder(new Reminder(title, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
-        Toast.makeText(this, "Save reminder as " + title + " at " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + " on " + calendar.get(Calendar.MONTH) +
-        "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR), Toast.LENGTH_LONG).show();
 
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(),
                 reminderID, repeatType);

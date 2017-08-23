@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders.Adapters;
+package com.example.maiquynhtruong.heathyreminders;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,7 +16,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maiquynhtruong.heathyreminders.Activities.MainActivity;
-import com.example.maiquynhtruong.heathyreminders.R;
-import com.example.maiquynhtruong.heathyreminders.Reminder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,7 +135,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
         if (pendingRemovalReminders.contains(reminder)) {
-            holder.mainLayout.setVisibility(GONE);
+            holder.mainLayout.setVisibility(View.GONE);
             holder.swipeLayout.setVisibility(View.VISIBLE);
             holder.undo.setVisibility(View.VISIBLE);
             holder.undo.setOnClickListener(new View.OnClickListener() {
@@ -161,10 +158,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             holder.timeTextView.setText(reminder.getHour() + ":" + reminder.getMinute());
             holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
             holder.itemView.setActivated(isExpanded);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "view clicked", Toast.LENGTH_LONG).show();
                     mExpandedPosition = isExpanded ? -1 : position;
                     TransitionManager.beginDelayedTransition(recyclerView);
                     notifyDataSetChanged();
@@ -185,10 +181,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     class ReminderView extends RecyclerView.ViewHolder {
-        ConstraintLayout constraintLayout;
+        ConstraintLayout constraintLayout, timeAndDate;
         TextView title, undo, deleteSwipe, timeTextView, dateTextView;
         LinearLayout swipeLayout;
-        RelativeLayout mainLayout, timeAndDate;
+        RelativeLayout mainLayout;
         ImageView editBtn;
         CardView cardView;
         public ReminderView(final View itemView) {
@@ -213,6 +209,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         Drawable deleteIcon;
         boolean initiated;
         Paint backgroundPaint;
+        boolean swipedOnce;
         public ItemTouchCallBack() {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
@@ -220,43 +217,51 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         @Override
         public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             View itemView = viewHolder.itemView;
-            if (!initiated) initiate();
-            int itemHeight = itemView.getBottom() - itemView.getTop(); // height of itemView
-            // mark the boundaries of the trash bin
-            int intrinsicWidth = deleteIcon.getIntrinsicWidth();
-            int intrinsicHeight = deleteIcon.getIntrinsicWidth();
-            if (dX < 0) { // swipe to the left
-                // draw the background
-                background = new RectF((float) itemView.getRight() + dX - 50, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                c.drawRoundRect(background, 60, 60, backgroundPaint);
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                if (!initiated) initiate(recyclerView, viewHolder);
+                int itemHeight = itemView.getBottom() - itemView.getTop(); // height of itemView
+                // mark the boundaries of the trash bin
+                int intrinsicWidth = deleteIcon.getIntrinsicWidth();
+                int intrinsicHeight = deleteIcon.getIntrinsicWidth();
+                xMarkMargin = itemHeight / 3;
+                View currentView = recyclerView.getChildAt(viewHolder.getAdapterPosition());
+                if (dX < 0) { // swipe to the left
+                    // draw the background
+                    background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+                    c.drawRect(background, backgroundPaint);
+//                    if (currentView.findViewById(R.id.swipe_undo).getVisibility() == View.GONE) {
+                        int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
+                        int xMarkRight = itemView.getRight() - xMarkMargin;
+                        int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                        int xMarkBottom = xMarkTop + intrinsicHeight;
+                        // now draw the bin
+                        deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+                        deleteIcon.draw(c);
+//                    }
+                } else { // swipe to the right
+                    // draw the background
+                    background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+                    c.drawRect(background, backgroundPaint);
 
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                int xMarkBottom = xMarkTop + intrinsicHeight;
-                // now draw the bin
-                deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-                deleteIcon.draw(c);
-            } else { // swipe to the right
-                // draw the background
-                background = new RectF((float) itemView.getRight() + dX - 50, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                backgroundPaint= new Paint();
-                c.drawRoundRect(background, 50, 50, backgroundPaint);
-
-                int xMarkLeft = itemView.getLeft() + xMarkMargin;
-                int xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                int xMarkBottom = xMarkTop + intrinsicHeight;
-                // now draw the bin
-                deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-                deleteIcon.draw(c);
+                    int xMarkLeft = itemView.getLeft() + xMarkMargin;
+                    int xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
+                    int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                    int xMarkBottom = xMarkTop + intrinsicHeight;
+                    // now draw the bin
+                    deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+                    deleteIcon.draw(c);
+                }
+            } else {
+                Toast.makeText(context, "Stopped swiping first", Toast.LENGTH_SHORT).show();
+                itemView.setVisibility(GONE);
             }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
 
-        public void initiate() {
+        public void initiate(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             backgroundPaint = new Paint();
+            backgroundPaint.setColor(Color.parseColor("#D32F2F"));
             deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24px);
             initiated = true;
         }
@@ -296,6 +301,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int swipePosition = viewHolder.getAdapterPosition();
             pendingRemove(swipePosition);
+            swipedOnce = true;
+            Toast.makeText(context, "onSwiped is called", Toast.LENGTH_SHORT).show();
         }
     }
 }
