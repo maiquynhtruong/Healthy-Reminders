@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +83,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         Reminder reminder = reminderList.get(position);
         return pendingRemovalReminders.contains(reminder);
     }
-    public void pendingRemove(int position) {
+    public void pendingRemove(final int position) {
         final Reminder reminder = reminderList.get(position);
         if (!pendingRemovalReminders.contains(reminder)) {
             pendingRemovalReminders.add(reminder);
@@ -92,7 +93,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             Runnable pendingRemovalRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    removeReminder(reminderList.indexOf(reminder));
+                    removeReminder(position);
                 }
             };
             handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT); // delay the thread
@@ -111,10 +112,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         int position = reminderList.indexOf(reminder);
         recyclerView.scrollToPosition(position);
         notifyItemChanged(position);
-    }
-
-    public void setUndoOn(boolean undoOn) {
-        this.undoOn = undoOn;
     }
 
     public List<Reminder> createFakeReminders() {
@@ -204,24 +201,33 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     public class ItemTouchCallBack extends ItemTouchHelper.SimpleCallback {
         RectF background;
-        int xMarkMargin;
+        int xMarkMargin, intrinsicWidth, intrinsicHeight;
         Drawable deleteIcon;
         boolean initiated;
         Paint backgroundPaint;
         Reminder reminder;
+        int itemHeight;
         public ItemTouchCallBack() {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
 
+        public void initiate(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            backgroundPaint = new Paint();
+            backgroundPaint.setColor(Color.parseColor("#D32F2F"));
+            deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24px);
+            // mark the boundaries of the trash bin
+            itemHeight = viewHolder.itemView.getBottom() - viewHolder.itemView.getTop(); // height of itemView
+            intrinsicWidth  = deleteIcon.getIntrinsicWidth();
+            intrinsicHeight = deleteIcon.getIntrinsicWidth();
+            xMarkMargin = itemHeight / 3;
+            initiated = true;
+        }
         @Override
         public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             View itemView = viewHolder.itemView;
             if (!initiated) initiate(recyclerView, viewHolder);
-            int itemHeight = itemView.getBottom() - itemView.getTop(); // height of itemView
-            // mark the boundaries of the trash bin
-            int intrinsicWidth = deleteIcon.getIntrinsicWidth();
-            int intrinsicHeight = deleteIcon.getIntrinsicWidth();
-            xMarkMargin = itemHeight / 3;
+            reminder = reminderList.get(viewHolder.getAdapterPosition());
+            Log.i("ReminderAdapter", "current reminder: " + reminder.getTitle());
             if (!pendingRemovalReminders.contains(reminder) && reminderList.contains(reminder)) {
                 if (dX < 0) { // swipe to the left
                     // draw the background
@@ -252,13 +258,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
 
-        public void initiate(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            backgroundPaint = new Paint();
-            backgroundPaint.setColor(Color.parseColor("#D32F2F"));
-            deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24px);
-            reminder = reminderList.get(viewHolder.getAdapterPosition());
-            initiated = true;
-        }
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
             return false;

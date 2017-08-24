@@ -103,7 +103,9 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         List<Reminder> reminders = database.getAllReminders();
-        Log.i(TAG + ", onResume", Arrays.toString(reminders.toArray()));
+        for (Reminder reminder : reminders) {
+            Log.i(TAG + ", onResume", reminder.getTitle());
+        }
         if (reminders.isEmpty()) {
             noReminders.setVisibility(View.VISIBLE);
         } else {

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -105,8 +106,8 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
-
         database = new ReminderDatabase(getBaseContext());
+        repeatType = Reminder.HOURLY;
 
         // recover states on device rotation
         if (savedInstanceState != null) {
@@ -131,6 +132,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         CharSequence frequency = (CharSequence) adapterView.getItemAtPosition(i);
         repeatType = frequency.toString();
+        Log.i("ReminderAddActivity", "repeatType set as: " + repeatType);
     }
 
     @Override
@@ -165,15 +167,18 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
 
         // Need to set calendar in case user doesn't choose date and time, aka current time
-        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
-            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatType);
-        else if (repeatType.equals(Reminder.HOURLY))
-            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
-        else if (repeatType.equals(Reminder.DAILY))
+
+        Log.i("AddReminderActivity", "Setting reminder " + title);
+        if (repeatType.equals(Reminder.DAILY))
             ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
         else if (repeatType.equals(Reminder.WEEKLY))
             ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
-
+        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
+            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatType);
+        else //if (repeatType.equals(Reminder.HOURLY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
+//        else
+//            Log.i("AddReminderActivity", "Setting reminder but none of the above type!");
         onBackPressed();
     }
 

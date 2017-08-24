@@ -51,7 +51,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         getSupportActionBar().setHomeButtonEnabled(true);
 
         // get stuff from intent calling this activity
-        reminderID = Integer.parseInt(getIntent().getStringExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID));
+        reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, 0);
         Log.i("ReminderDetailsActivity", String.valueOf(reminderID));
         reminder = database.getReminder(reminderID);
         if (reminder != null) {

@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
         int reminderId = intent.getIntExtra(REMINDER_DETAILS_ID, 0);
 
+        Log.i("Receiver-onReceived", "Received reminder with ID " + reminderId);
         // Get reminder from database
         ReminderDatabase database = new ReminderDatabase(context);
         Reminder reminder = database.getReminder(reminderId);
@@ -76,12 +78,18 @@ public class ReminderReceiver extends BroadcastReceiver {
     }
 
     public static void setReminderHourOrDayOrWeek(Context context, long timeInMillis, int reminderID, long interval) {
+        Log.i("Receiver", "Setting alarm with ID " + reminderID);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(context, ReminderReceiver.class);
+        intent.putExtra(REMINDER_REPEAT_TYPE, "null");
+        intent.putExtra(REMINDER_TIME_MILLIS, timeInMillis);
+        intent.putExtra(REMINDER_DETAILS_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, Calendar.HOUR/60, interval, pendingIntent);
-
+//        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
+        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() +
+                        2 * 1000, pendingIntent);
+        Toast.makeText(context, "Setting time now", Toast.LENGTH_SHORT).show();
         // Restart alarm if device is rebooted
         ComponentName receiver = new ComponentName(context, BootBroadcastReceiver.class);
         PackageManager pm = context.getPackageManager();
@@ -122,8 +130,8 @@ public class ReminderReceiver extends BroadcastReceiver {
                 .setContentIntent(contentIntent(context, reminder.getId())) // supply PendingIntent to send when the notification is clicked
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
-                .addAction(postponeReminder(context))
-                .addAction(finishReminderAction(context));
+                .addAction(postponeReminder(context, reminder.getId()))
+                .addAction(finishReminderAction(context, reminder.getId()));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             builder.setPriority(Notification.PRIORITY_HIGH);
@@ -133,7 +141,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     }
 
     // should show the reminder that is showed in the notification
-    public static PendingIntent contentIntent(Context context, long reminderID) {
+    public static PendingIntent contentIntent(Context context, int reminderID) {
         Toast.makeText(context, "Notificaiton clicked, opening reminder", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context, ReminderDetailsActivity.class);
         intent.putExtra(REMINDER_DETAILS_ID, reminderID);
@@ -143,16 +151,18 @@ public class ReminderReceiver extends BroadcastReceiver {
         return pendingIntent;
     }
 
-    public static NotificationCompat.Action finishReminderAction(Context context) {
+    public static NotificationCompat.Action finishReminderAction(Context context, int reminderID) {
         Intent finishIntent = new Intent(context, ReminderDetailsActivity.class);
+        finishIntent.putExtra(REMINDER_DETAILS_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_done_black_24px, context.getText(R.string.reminder_finished),  pendingIntent);
         clearAllNotifications(context);
         return action;
     }
 
-    public static NotificationCompat.Action postponeReminder(Context context) {
+    public static NotificationCompat.Action postponeReminder(Context context, int reminderID) {
         Intent postponeReminder  = new Intent(context, ReminderDetailsActivity.class);
+        postponeReminder.putExtra(REMINDER_DETAILS_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDING_INTENT, postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px, context.getString(R.string.reminder_postponed), pendingIntent);
         clearAllNotifications(context);
