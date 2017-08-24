@@ -64,6 +64,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     public void removeReminder(int position) {
+        if (position < 0) return;
         Reminder reminder = reminderList.get(position);
         if (pendingRemovalReminders.contains(reminder)) {
             pendingRemovalReminders.remove(reminderList.get(position));
@@ -85,7 +86,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         final Reminder reminder = reminderList.get(position);
         if (!pendingRemovalReminders.contains(reminder)) {
             pendingRemovalReminders.add(reminder);
-            Toast.makeText(context, "added reminder " + reminder.getTitle() + " into pending queue", Toast.LENGTH_SHORT).show();
             // this will redraw row in "undo" state
             notifyItemChanged(position);
             // let's create, store and post a runnable to remove the item
@@ -299,7 +299,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 pendingRemove(swipePosition);
             } else {
                 Toast.makeText(context, "Swipe a second tiem", Toast.LENGTH_LONG).show();
-                viewHolder.itemView.setVisibility(GONE);
+                removeReminder(reminderList.indexOf(reminder));
             }
         }
     }

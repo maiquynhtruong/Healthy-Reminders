@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import com.example.maiquynhtruong.heathyreminders.R;
 import com.example.maiquynhtruong.heathyreminders.ReminderReceiver;
@@ -148,7 +149,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
         boolean isPM = (hourOfDay >= 12);
-        atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+        atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
     }
 
     @Override
@@ -163,14 +164,15 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         int reminderID = (int) database.setReminder(new Reminder(title, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
 
-        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(),
-                reminderID, repeatType);
-        else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
-                reminderID, AlarmManager.INTERVAL_HOUR);
-        else if (repeatType.equals(Reminder.DAILY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
-                reminderID, AlarmManager.INTERVAL_DAY);
-        else if (repeatType.equals(Reminder.WEEKLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
-                reminderID, AlarmManager.INTERVAL_DAY*7);
+        // Need to set calendar in case user doesn't choose date and time, aka current time
+        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
+            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatType);
+        else if (repeatType.equals(Reminder.HOURLY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
+        else if (repeatType.equals(Reminder.DAILY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
+        else if (repeatType.equals(Reminder.WEEKLY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
 
         onBackPressed();
     }
