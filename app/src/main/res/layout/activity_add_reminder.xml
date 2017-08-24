@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:theme="@style/AppTheme.NoActionBar"
-    tools:context=".Activities.AddReminderActivity">
+    tools:context=".AddReminderActivity">
 
 
     <include layout="@layout/fragment_reminder_description" />

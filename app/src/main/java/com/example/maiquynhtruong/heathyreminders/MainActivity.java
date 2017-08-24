@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders.Activities;
+package com.example.maiquynhtruong.heathyreminders;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-import com.example.maiquynhtruong.heathyreminders.ReminderAdapter;
-import com.example.maiquynhtruong.heathyreminders.R;
-import com.example.maiquynhtruong.heathyreminders.Receivers.ReminderReceiver;
-import com.example.maiquynhtruong.heathyreminders.Reminder;
-import com.example.maiquynhtruong.heathyreminders.ReminderDatabase;
 
 import java.util.Arrays;
 import java.util.List;
