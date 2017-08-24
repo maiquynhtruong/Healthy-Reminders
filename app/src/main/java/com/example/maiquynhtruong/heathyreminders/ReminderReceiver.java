@@ -16,6 +16,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -78,7 +79,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(context, ReminderReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, Calendar.HOUR/60, interval, pendingIntent);
 
         // Restart alarm if device is rebooted
         ComponentName receiver = new ComponentName(context, BootBroadcastReceiver.class);
@@ -132,6 +133,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     // should show the reminder that is showed in the notification
     public static PendingIntent contentIntent(Context context, long reminderID) {
+        Toast.makeText(context, "Notificaiton clicked, opening reminder", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context, ReminderDetailsActivity.class);
         intent.putExtra(REMINDER_DETAILS_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, REMINDER_PENDING_INTENT_ID,
