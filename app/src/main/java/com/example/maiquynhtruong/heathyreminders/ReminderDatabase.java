@@ -69,7 +69,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         return database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
     }
 
-    public Reminder getReminder(long id) {
+    public Reminder getReminder(int id) {
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.query(ReminderDatabase.ReminderEntry.TABLE_NAME,
                 new String[]{
@@ -90,15 +90,17 @@ public class ReminderDatabase extends SQLiteOpenHelper {
             int reminder_id = Integer.parseInt(cursor.getString(0));
             String title = cursor.getString(1);
             int hour = Integer.parseInt(cursor.getString(2));
-            int minute = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MINUTE)));
-            int month = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_MONTH)));
-            int day = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_DAY)));
-            int year = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_YEAR)));
-            boolean repeat = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT)));
-            int repeatNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_NUMBER)));
-            String repeatType = cursor.getString(cursor.getColumnIndex(REMINDER_REPEAT_TYPE));
+            int minute = Integer.parseInt(cursor.getString(3));
+            int month = Integer.parseInt(cursor.getString(4));
+            int day = Integer.parseInt(cursor.getString(5));
+            int year = Integer.parseInt(cursor.getString(6));
+            boolean repeat = Boolean.parseBoolean(cursor.getString(7));
+            int repeatNumber = Integer.parseInt(cursor.getString(8));
+            String repeatType = cursor.getString(9);
             reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
             cursor.close();
+        } else {
+            Log.i("Reminderdatabase", "cursor is null!!");
         }
         return reminder;
     }

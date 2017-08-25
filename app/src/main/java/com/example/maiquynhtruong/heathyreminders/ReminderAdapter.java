@@ -40,7 +40,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     boolean undoOn;
     int mExpandedPosition = -1;
     private Handler handler = new Handler(); // hanlder for running delayed runnables
-    private static final int PENDING_REMOVAL_TIMEOUT = 7000; // 3sec
+    private static final int PENDING_REMOVAL_TIMEOUT = 5000; // 3sec
     HashMap<Reminder, Runnable> pendingRunnables = new HashMap<>(); // map of reminders to pending runnables, so we can cancel a removal if need be
 
     public ReminderAdapter(Context context) {
@@ -76,7 +76,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         }
         if (reminderList.isEmpty()) {activity.noReminders.setVisibility(View.VISIBLE);}
         activity.database.deleteReminder(reminder.getId());
-        activity.receiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
+        ReminderReceiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
     }
 
     public boolean isPendingRemoval(int position) {
@@ -145,6 +145,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.swipeLayout.setVisibility(GONE);
             holder.title.setText(reminder.getTitle());
+            Log.i("ReminderAdapter", "setting reminder titlte as " + reminder.getTitle());
             holder.undo.setVisibility(GONE);
             holder.undo.setOnClickListener(null);
 

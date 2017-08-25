@@ -168,7 +168,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         // Need to set calendar in case user doesn't choose date and time, aka current time
 
-        Log.i("AddReminderActivity", "Setting reminder " + title);
+        Log.i("AddReminderActivity", "Setting reminder " + title + " with id " + reminderID);
         if (repeatType.equals(Reminder.DAILY))
             ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
         else if (repeatType.equals(Reminder.WEEKLY))

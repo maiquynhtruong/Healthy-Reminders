@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity
 
     public void showEditReminder(int clickID) {
         Intent intent = new Intent(this, ReminderDetailsActivity.class);
-        intent.putExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, String.valueOf(clickID));
+        intent.putExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, clickID);
+        Log.i("showEditReminder", "reminder passed iwth id " + clickID);
         startActivityForResult(intent, ReminderDetailsActivity.EDIT_REMINDER_REQUEST_CODE);
     }
     @Override
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         List<Reminder> reminders = database.getAllReminders();
         for (Reminder reminder : reminders) {
-            Log.i(TAG + ", onResume", reminder.getTitle());
+            Log.i(TAG,"onResume" + reminder.getTitle());
         }
         if (reminders.isEmpty()) {
             noReminders.setVisibility(View.VISIBLE);

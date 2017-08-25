@@ -53,14 +53,19 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
 
         database = new ReminderDatabase(this);
 
-
         getSupportActionBar().setTitle(getString(R.string.app_edit_reminder));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        calendar = Calendar.getInstance();
+
         // get stuff from intent calling this activity
-        reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, 0);
+//        reminderID = Integer.parseInt(getIntent().getStringExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID));
+        int reminder__ID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID,0);
+
+        Log.i("ReminderDetailsActivity", "The reminder passed has id " + reminder__ID);
         reminder = database.getReminder(reminderID);
+
         if (reminder != null) {
             reminderTitle.setText(reminder.getTitle());
             hourOfDay = reminder.getHour();
@@ -72,9 +77,9 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             boolean isPM = (hourOfDay >= 12);
             atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
             onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+        } else {
+            Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminder__ID + " is null !");
         }
-
-        calendar = Calendar.getInstance();
 
         updateBtn.setText("UPDATE");
         updateBtn.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +116,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     }
 
     public void updateReminder(View view) {
-        reminder.setTitle(reminderTitle.toString());
+        reminder.setTitle(reminderTitle.getText().toString());
         reminder.setHour(hourOfDay);
         reminder.setMinute(minute);
         reminder.setDay(dayOfMonth);
