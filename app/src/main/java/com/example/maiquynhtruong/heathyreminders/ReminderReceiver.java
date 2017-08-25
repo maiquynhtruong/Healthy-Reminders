@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -47,19 +46,19 @@ public class ReminderReceiver extends BroadcastReceiver {
         calendar.setTimeInMillis(millis);
         if (type.equals(Reminder.YEARLY)) {
             calendar.add(Calendar.YEAR, 1); // add a year to the clock
-            Toast.makeText(context, "Added one year. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
-                    calendar.get(Calendar.YEAR), Toast.LENGTH_SHORT).show();
+            Log.i("ReminderReceiver", "onReceive() Added one year. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
+                    calendar.get(Calendar.YEAR));
             setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, Reminder.YEARLY);
         } else if (type.equals(Reminder.MONTHLY)) {
             calendar.add(Calendar.MONTH, 1); // add a month to the clock
-            Toast.makeText(context, "Added one month. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
-                    calendar.get(Calendar.YEAR), Toast.LENGTH_SHORT).show();
+            Log.i("ReminderReceiver", "onReceive() Added one month. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
+                    calendar.get(Calendar.YEAR));
             setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, Reminder.MONTHLY);
         }
     }
 
     public static void setReminderMonthOrYear(Context context, long timeInMillis, int reminderID, String repeatType) {
-        Toast.makeText(context, "Reminder set for month or year for id: " + reminderID, Toast.LENGTH_SHORT).show();
+        Log.i("ReminderReceiver", "setReminderMonthOrYear() Reminder set with id: " + reminderID);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(context, ReminderReceiver.class);
@@ -78,7 +77,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     }
 
     public static void setReminderHourOrDayOrWeek(Context context, long timeInMillis, int reminderID, long interval) {
-        Log.i("Receiver", "Setting alarm with ID " + reminderID);
+        Log.i("ReminderReceiver", "setReminderHourOrDayOrWeek() Reminder set with id: " + reminderID);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(context, ReminderReceiver.class);
@@ -89,7 +88,6 @@ public class ReminderReceiver extends BroadcastReceiver {
 //        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() +
                         2 * 1000, pendingIntent);
-        Toast.makeText(context, "Setting time now", Toast.LENGTH_SHORT).show();
         // Restart alarm if device is rebooted
         ComponentName receiver = new ComponentName(context, BootBroadcastReceiver.class);
         PackageManager pm = context.getPackageManager();

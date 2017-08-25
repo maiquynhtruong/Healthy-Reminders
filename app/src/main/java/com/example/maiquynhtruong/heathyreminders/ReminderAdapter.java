@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -295,10 +294,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int swipePosition = viewHolder.getAdapterPosition();
             if (!pendingRemovalReminders.contains(reminder)) {
-                Toast.makeText(context, "Swipe first time: " + reminder.getTitle(), Toast.LENGTH_SHORT).show();
+                Log.i("ReminderAdapter", "Swipe first time: " + reminder.getTitle());
                 pendingRemove(swipePosition);
             } else {
-                Toast.makeText(context, "Swipe a second tiem", Toast.LENGTH_LONG).show();
+                Log.i("ReminderAdapter", "Swipe second time" + reminder.getTitle());
                 removeReminder(reminderList.indexOf(reminder));
             }
         }
