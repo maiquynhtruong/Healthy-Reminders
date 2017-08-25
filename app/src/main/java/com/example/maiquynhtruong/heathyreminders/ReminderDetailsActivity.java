@@ -134,14 +134,14 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         // cancel old notification
         ReminderReceiver.cancelAlarm(getApplicationContext(), reminderID);
         // create new notification
-        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(),
-                reminderID, repeatType);
-        else if (repeatType.equals(Reminder.HOURLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
-                reminderID, AlarmManager.INTERVAL_HOUR);
-        else if (repeatType.equals(Reminder.DAILY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
-                reminderID, AlarmManager.INTERVAL_DAY);
-        else if (repeatType.equals(Reminder.WEEKLY)) new ReminderReceiver().setReminderHourOrDayOrWeek(this, calendar.getTimeInMillis(),
-                reminderID, AlarmManager.INTERVAL_DAY*7);
+        if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
+            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatType);
+        else if (repeatType.equals(Reminder.HOURLY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
+        else if (repeatType.equals(Reminder.DAILY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
+        else if (repeatType.equals(Reminder.WEEKLY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
 
         onBackPressed();
     }
