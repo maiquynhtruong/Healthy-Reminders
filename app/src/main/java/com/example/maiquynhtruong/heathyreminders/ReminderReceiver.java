@@ -98,7 +98,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                 PackageManager.DONT_KILL_APP);
     }
 
-    public void cancelAlarm(Context context, int reminderID) {
+    public static void cancelAlarm(Context context, int reminderID) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent intent = PendingIntent.getBroadcast(context, reminderID, new Intent(context, ReminderReceiver.class), 0);
         manager.cancel(intent);

@@ -10,7 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -19,9 +22,10 @@ import java.util.Calendar;
 import mehdi.sakout.fancybuttons.FancyButton;
 
 
-public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
+        AdapterView.OnItemSelectedListener{
     TextInputEditText reminderTitle;
-    TextView date, time;
+    TextView onDate, atTime;
     int hourOfDay, minute, month, dayOfMonth, year, repeatNumber;
     int reminderID;
     boolean repeat;
@@ -29,8 +33,8 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     Reminder reminder;
     FancyButton cancelBtn, updateBtn;
     ReminderDatabase database;
+    Spinner frequencySpinner;
     Calendar calendar;
-    ReminderReceiver receiver;
     public static final String REMINDER_DETAILS_ID = "reminder-id";
     public static final int EDIT_REMINDER_REQUEST_CODE = 1;
 
@@ -38,11 +42,15 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder);
-        date = (TextView) findViewById(R.id.datePicker);
-        time = (TextView) findViewById(R.id.timePicker);
+        onDate = (TextView) findViewById(R.id.datePicker);
+        atTime = (TextView) findViewById(R.id.timePicker);
         reminderTitle = (TextInputEditText) findViewById(R.id.reminder_title);
+        frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
+        atTime = (TextView) findViewById(R.id.timePicker);
+        onDate = (TextView) findViewById(R.id.datePicker);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
         updateBtn = (FancyButton) findViewById(R.id.btn_save);
+
         database = new ReminderDatabase(this);
 
 
@@ -52,13 +60,22 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
 
         // get stuff from intent calling this activity
         reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, 0);
-        Log.i("ReminderDetailsActivity", String.valueOf(reminderID));
         reminder = database.getReminder(reminderID);
         if (reminder != null) {
             reminderTitle.setText(reminder.getTitle());
-            date.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
-            time.setText(reminder.getHour() + ":" + reminder.getMinute());
+            hourOfDay = reminder.getHour();
+            minute = reminder.getMinute();
+            month = reminder.getMonth();
+            dayOfMonth = reminder.getDay();
+            year = reminder.getYear();
+            repeatType = reminder.getRepeatType();
+            boolean isPM = (hourOfDay >= 12);
+            atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
+            onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
         }
+
+        calendar = Calendar.getInstance();
+
         updateBtn.setText("UPDATE");
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +89,12 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                 onBackPressed();
             }
         });
-        receiver = new ReminderReceiver();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.frequencies, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        frequencySpinner.setAdapter(adapter);
+        frequencySpinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -110,7 +132,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         calendar.set(Calendar.MINUTE, minute);
 
         // cancel old notification
-        receiver.cancelAlarm(getApplicationContext(), reminderID);
+        ReminderReceiver.cancelAlarm(getApplicationContext(), reminderID);
         // create new notification
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY)) new ReminderReceiver().setReminderMonthOrYear(this, calendar.getTimeInMillis(),
                 reminderID, repeatType);
@@ -132,5 +154,15 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }
