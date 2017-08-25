@@ -25,6 +25,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static android.view.View.GONE;
 
@@ -150,8 +151,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
             final boolean isExpanded = position == mExpandedPosition;
             holder.editBtn.setVisibility(isExpanded?View.VISIBLE:GONE);
+            boolean isPM = (reminder.getHour() >= 12);
+            holder.timeTextView.setText(String.format(Locale.US, "%02d:%02d %s", (reminder.getHour() == 12 || reminder.getHour() == 0) ? 12 :
+                    reminder.getHour() % 12, reminder.getMinute(), isPM ? "PM" : "AM"));
+            Log.i("ReminderAdapter", "onBindViewHolder() sets date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
             holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
-            holder.timeTextView.setText(reminder.getHour() + ":" + reminder.getMinute());
             holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
             holder.itemView.setActivated(isExpanded);
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {

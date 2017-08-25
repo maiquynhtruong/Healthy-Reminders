@@ -54,9 +54,11 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
     public long setReminder(Reminder reminder) {
-        Log.i("ReminderDatabase", "creating new reminder: " + reminder.getTitle());
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        Log.i("ReminderDatabase", "setReminder() add reminder " + reminder.getTitle() + ", " +
+                reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
+                ", and " + reminder.getRepeatType());
         values.put(ReminderEntry.REMINDER_TITLE, reminder.getTitle());
         values.put(ReminderEntry.REMINDER_HOUR, reminder.getHour());
         values.put(ReminderEntry.REMINDER_MINUTE, reminder.getMinute());
@@ -100,7 +102,9 @@ public class ReminderDatabase extends SQLiteOpenHelper {
             int repeatNumber = Integer.parseInt(cursor.getString(8));
             String repeatType = cursor.getString(9);
             reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
-            Log.i("ReminderDatabase", "getReminder() successful with name " + title + " and id " + reminder_id);
+            Log.i("ReminderDatabase", "getReminder() successful with " + reminder.getTitle() + ", " +
+                    reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
+                            ", and " + reminder.getRepeatType());
             cursor.close();
         } else {
             Log.i("ReminderDatabase", "getReminder() failed from id " + id + " since cursor is null!!");
@@ -115,17 +119,21 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         List<Reminder> reminderList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                Reminder reminder = new Reminder();
-                reminder.setId(Integer.parseInt(cursor.getString(0)));
-                reminder.setTitle(cursor.getString(1));
-                reminder.setHour(Integer.parseInt(cursor.getString(2)));
-                reminder.setMinute(Integer.parseInt(cursor.getString(3)));
-                reminder.setDay(Integer.parseInt(cursor.getString(4)));
-                reminder.setYear(Integer.parseInt(cursor.getString(5)));
-                reminder.setRepeat(Boolean.parseBoolean(cursor.getString(6)));
-                reminder.setRepeatNumber(Integer.parseInt(cursor.getString(7)));
-                reminder.setRepeatType(cursor.getString(6));
+                int reminder_id = Integer.parseInt(cursor.getString(0));
+                String title = cursor.getString(1);
+                int hour = Integer.parseInt(cursor.getString(2));
+                int minute = Integer.parseInt(cursor.getString(3));
+                int month = Integer.parseInt(cursor.getString(4));
+                int day = Integer.parseInt(cursor.getString(5));
+                int year = Integer.parseInt(cursor.getString(6));
+                boolean repeat = Boolean.parseBoolean(cursor.getString(7));
+                int repeatNumber = Integer.parseInt(cursor.getString(8));
+                String repeatType = cursor.getString(9);
+                Reminder reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
                 reminderList.add(reminder);
+                Log.i("ReminderDatabase", "getAllReminders() add reminder " + reminder.getId() + ", " + reminder.getTitle() + ", " +
+                reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
+                ", and " + reminder.getRepeatType());
             } while (cursor.moveToNext());
         }
         return reminderList;

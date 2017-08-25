@@ -44,6 +44,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     ReminderDatabase database;
     Calendar calendar;
     FancyButton saveBtn, cancelBtn;
+    int month, dayOfMonth, year, hourOfDay, minute;
     public static final String TAG = "AddActivity";
 
     @Override
@@ -102,12 +103,19 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         // set the current time as the default time when first showed
         calendar = Calendar.getInstance();
-        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        this.hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        this.minute = calendar.get(Calendar.MINUTE);
+        this.dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        this.month = calendar.get(Calendar.MONTH);
+        this.year = calendar.get(Calendar.YEAR);
+        this.repeat = true;
+        this.repeatNumber = 1;
+        this.repeatType = Reminder.HOURLY;
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+
         database = new ReminderDatabase(getApplicationContext());
-        repeatType = Reminder.HOURLY;
 
         // recover states on device rotation
         if (savedInstanceState != null) {
@@ -140,16 +148,17 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        onDate.setText(month + "/" + dayOfMonth + "/" + year);
+        this.year = year;
+        this.month = month;
+        this.dayOfMonth = dayOfMonth;
+        onDate.setText(++month + "/" + dayOfMonth + "/" + year);
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
+        this.hourOfDay = hourOfDay;
+        this.minute = minute;
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
     }
@@ -163,8 +172,14 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         String title = this.title.getText().toString();
 
-        int reminderID = (int) database.setReminder(new Reminder(title, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), repeat, repeatNumber, repeatType));
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+
+        int reminderID = (int) database.setReminder(new Reminder(title, hourOfDay, minute, month,
+                dayOfMonth, year, repeat, repeatNumber, repeatType));
 
         // Need to set calendar in case user doesn't choose date and time, aka current time
 

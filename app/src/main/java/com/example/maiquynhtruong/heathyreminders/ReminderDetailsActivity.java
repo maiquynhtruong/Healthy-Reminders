@@ -107,7 +107,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         this.year = year;
         this.month = month;
         this.dayOfMonth = dayOfMonth;
-        onDate.setText(month + "/" + dayOfMonth + "/" + year);
+        onDate.setText(++month + "/" + dayOfMonth + "/" + year);
     }
 
     @Override
