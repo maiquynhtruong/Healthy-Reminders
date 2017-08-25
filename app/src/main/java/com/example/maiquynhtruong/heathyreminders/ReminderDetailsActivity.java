@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 
@@ -51,7 +52,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
         updateBtn = (FancyButton) findViewById(R.id.btn_save);
 
-        database = new ReminderDatabase(this);
+        database = new ReminderDatabase(getApplicationContext());
 
         getSupportActionBar().setTitle(getString(R.string.app_edit_reminder));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,10 +61,9 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         calendar = Calendar.getInstance();
 
         // get stuff from intent calling this activity
-//        reminderID = Integer.parseInt(getIntent().getStringExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID));
-        int reminder__ID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID,0);
+        int reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID,0);
 
-        Log.i("ReminderDetailsActivity", "The reminder passed has id " + reminder__ID);
+        Log.i("ReminderDetailsActivity", "onCreate() The reminder passed has id " + reminderID);
         reminder = database.getReminder(reminderID);
 
         if (reminder != null) {
@@ -76,9 +76,9 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             repeatType = reminder.getRepeatType();
             boolean isPM = (hourOfDay >= 12);
             atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
-            onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+            onDate.setText(month + "/" + dayOfMonth + "/" + year);
         } else {
-            Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminder__ID + " is null !");
+            Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
         }
 
         updateBtn.setText("UPDATE");
@@ -107,12 +107,15 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         this.year = year;
         this.month = month;
         this.dayOfMonth = dayOfMonth;
+        onDate.setText(month + "/" + dayOfMonth + "/" + year);
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         this.hourOfDay = hourOfDay;
         this.minute = minute;
+        boolean isPM = (hourOfDay >= 12);
+        atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
     }
 
     public void updateReminder(View view) {
@@ -149,6 +152,19 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
 
         onBackPressed();
+    }
+
+    public void showDatePicker(View view) {
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(this, this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+        dialog.show();
+    }
+
+    public void showTimePicker(View view) {
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog dialog = new TimePickerDialog(this, this, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),
+                android.text.format.DateFormat.is24HourFormat(this));
+        dialog.show();
     }
 
     @Override

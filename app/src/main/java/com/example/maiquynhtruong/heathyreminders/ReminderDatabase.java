@@ -66,10 +66,12 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_REPEAT, reminder.isRepeat());
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
-        return database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
+        long reminderID = database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
+        return reminderID;
     }
 
     public Reminder getReminder(int id) {
+        Log.i("ReminderDatabase", "getReminder() called with id " + id);
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.query(ReminderDatabase.ReminderEntry.TABLE_NAME,
                 new String[]{
@@ -98,9 +100,10 @@ public class ReminderDatabase extends SQLiteOpenHelper {
             int repeatNumber = Integer.parseInt(cursor.getString(8));
             String repeatType = cursor.getString(9);
             reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
+            Log.i("ReminderDatabase", "getReminder() successful with name " + title + " and id " + reminder_id);
             cursor.close();
         } else {
-            Log.i("Reminderdatabase", "cursor is null!!");
+            Log.i("ReminderDatabase", "getReminder() failed from id " + id + " since cursor is null!!");
         }
         return reminder;
     }
@@ -141,6 +144,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
         database.update(ReminderDatabase.ReminderEntry.TABLE_NAME, values, REMINDER_ID + " = ?", new String[] {"" + reminder.getId()});
+        Log.i("ReminderDatabase", "updateReminder() with reminder title " + reminder.getTitle() + " and id " + reminder.getId());
     }
 
     public void deleteAllReminders() {

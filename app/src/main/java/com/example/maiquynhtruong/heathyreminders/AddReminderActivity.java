@@ -106,7 +106,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
-        database = new ReminderDatabase(getBaseContext());
+        database = new ReminderDatabase(getApplicationContext());
         repeatType = Reminder.HOURLY;
 
         // recover states on device rotation

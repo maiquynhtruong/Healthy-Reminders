@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         mainRecyclerView.setLayoutManager(layoutManager);
         adapter = new ReminderAdapter(this);
         mainRecyclerView.setAdapter(adapter);
-        database = new ReminderDatabase(this);
+        database = new ReminderDatabase(getApplicationContext());
 
         List<Reminder> reminders = database.getAllReminders();
         if (reminders.isEmpty()) {
