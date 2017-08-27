@@ -37,7 +37,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     Spinner frequencySpinner;
     Calendar calendar;
     public static final String REMINDER_DETAILS_ID = "reminder-id";
-    public static final int EDIT_REMINDER_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             year = reminder.getYear();
             repeatType = reminder.getRepeatType();
             boolean isPM = (hourOfDay >= 12);
-            atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
+            atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
             onDate.setText(month + "/" + dayOfMonth + "/" + year);
         } else {
             Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
