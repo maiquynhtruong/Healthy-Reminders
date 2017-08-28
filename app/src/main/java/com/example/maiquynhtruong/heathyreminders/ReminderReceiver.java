@@ -153,7 +153,8 @@ public class ReminderReceiver extends BroadcastReceiver {
         Intent finishIntent = new Intent(context, ReminderDetailsActivity.class);
         finishIntent.putExtra(REMINDER_DETAILS_ID, reminderID);
         Log.i("finishedReminderAction", "Called with ID " + reminderID);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, FINISH_NOTIFICATION_PENDING_INTENT,
+                finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_done_black_24px, context.getText(R.string.reminder_finished),  pendingIntent);
         clearAllNotifications(context);
         return action;
@@ -162,8 +163,9 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static NotificationCompat.Action postponeReminder(Context context, int reminderID) {
         Intent postponeReminder  = new Intent(context, ReminderDetailsActivity.class);
         Log.i("postponeReminder", "Called with ID " + reminderID);
-//        postponeReminder.putExtra(REMINDER_DETAILS_ID, reminderID);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDING_INTENT, postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
+        postponeReminder.putExtra(REMINDER_DETAILS_ID, reminderID);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, POSTPONE_NOTIFICATION_PENDING_INTENT,
+                postponeReminder, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px, context.getString(R.string.reminder_postponed), pendingIntent);
         clearAllNotifications(context);
         return action;

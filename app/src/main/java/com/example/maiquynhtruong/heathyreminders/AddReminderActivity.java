@@ -112,7 +112,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         this.repeatNumber = 1;
         this.repeatType = Reminder.HOURLY;
         boolean isPM = (hourOfDay >= 12);
-        atTime.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
+        atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
 
         database = new ReminderDatabase(getApplicationContext());
@@ -144,7 +144,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {}
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        this.repeatType = Reminder.HOURLY; // get the first one
+    }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {

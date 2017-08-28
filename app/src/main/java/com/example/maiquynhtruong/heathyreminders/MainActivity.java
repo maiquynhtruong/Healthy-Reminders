@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     public ReminderAdapter adapter;
     public ReminderDatabase database;
-    public ReminderReceiver receiver;
-    public static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +46,6 @@ public class MainActivity extends AppCompatActivity
                 showAddReminder();
             }
         });
-
-        receiver = new ReminderReceiver();
 
         mainRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         noReminders = (TextView) findViewById(R.id.no_reminders_text);
@@ -105,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         List<Reminder> reminders = database.getAllReminders();
         for (Reminder reminder : reminders) {
-            Log.i(TAG,"onResume" + reminder.getTitle());
+            Log.i("MainActivity","onResume with " + reminder.getTitle());
         }
         if (reminders.isEmpty()) {
             noReminders.setVisibility(View.VISIBLE);
@@ -118,17 +114,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        if (adapter != null) {
-//            adapter.saveStates(outState);
-//        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-//        if (adapter != null) {
-//            adapter.restoreStates(savedInstanceState);
-//        }
     }
 
     @Override

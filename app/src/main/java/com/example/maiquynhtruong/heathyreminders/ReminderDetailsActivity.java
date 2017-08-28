@@ -37,6 +37,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     Spinner frequencySpinner;
     Calendar calendar;
     public static final String REMINDER_DETAILS_ID = "reminder-id";
+    public static final int EDIT_REMINDER_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
