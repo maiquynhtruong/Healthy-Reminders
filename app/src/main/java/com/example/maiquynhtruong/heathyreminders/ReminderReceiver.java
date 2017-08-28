@@ -28,12 +28,14 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final int POSTPONE_NOTIFICATION_PENDING_INTENT = 4;
     public static final String REMINDER_REPEAT_TYPE = "ReminderType";
     public static final String REMINDER_TIME_MILLIS = "ReminderMillis";
+    public static final String REMINDER_REPEAT_NUMBER = "ReminderRepeatNumber";
     public static final String TAG = "ReminderDetailsActivity";
     @Override
     public void onReceive(Context context, Intent intent) {
         String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);
         int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
         int reminderId = intent.getIntExtra(REMINDER_DETAILS_ID, 0);
+        int repeatNumber = intent.getIntExtra(REMINDER_REPEAT_NUMBER, 1);
 
         Log.i("Receiver-onReceived", "Received reminder with ID " + reminderId);
         // Get reminder from database
@@ -45,25 +47,26 @@ public class ReminderReceiver extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
         if (type.equals(Reminder.YEARLY)) {
-            calendar.add(Calendar.YEAR, 1); // add a year to the clock
-            Log.i("ReminderReceiver", "onReceive() Added one year. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
-                    calendar.get(Calendar.YEAR));
-            setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, Reminder.YEARLY);
+            calendar.add(Calendar.YEAR, repeatNumber); // add repeatNumber of years to the clock
+            Log.i("ReminderReceiver", "onReceive() Added " + repeatNumber + " year. Now calendar is " +
+                    calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + calendar.get(Calendar.YEAR));
+            setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, repeatNumber, Reminder.YEARLY);
         } else if (type.equals(Reminder.MONTHLY)) {
-            calendar.add(Calendar.MONTH, 1); // add a month to the clock
-            Log.i("ReminderReceiver", "onReceive() Added one month. Now calendar is " + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) +
-                    calendar.get(Calendar.YEAR));
-            setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, Reminder.MONTHLY);
+            calendar.add(Calendar.MONTH, 1); // add repeatNumbers of month to the clock
+            Log.i("ReminderReceiver", "onReceive() Added " + repeatNumber + " month. Now calendar is " +
+                    calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + calendar.get(Calendar.YEAR));
+            setReminderMonthOrYear(context, calendar.getTimeInMillis(), reminderId, repeatNumber, Reminder.MONTHLY);
         }
     }
 
-    public static void setReminderMonthOrYear(Context context, long timeInMillis, int reminderID, String repeatType) {
+    public static void setReminderMonthOrYear(Context context, long timeInMillis, int reminderID, int repeatNumber, String repeatType) {
         Log.i("ReminderReceiver", "setReminderMonthOrYear() Reminder set with id: " + reminderID);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(context, ReminderReceiver.class);
         intent.putExtra(REMINDER_REPEAT_TYPE, repeatType);
         intent.putExtra(REMINDER_TIME_MILLIS, timeInMillis);
+        intent.putExtra(REMINDER_REPEAT_NUMBER, repeatNumber);
         intent.putExtra(REMINDER_DETAILS_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         manager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);

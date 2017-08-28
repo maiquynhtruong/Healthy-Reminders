@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -133,6 +134,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         if (pendingRemovalReminders.contains(reminder)) {
             holder.mainLayout.setVisibility(View.GONE);
             holder.swipeLayout.setVisibility(View.VISIBLE);
+            Snackbar.make(holder.swipeLayout, "Deleted", Snackbar.LENGTH_INDEFINITE);
             holder.undo.setVisibility(View.VISIBLE);
             holder.undo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -140,7 +142,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                     undoDelete(reminder);
                 }
             });
-
         } else {
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.swipeLayout.setVisibility(GONE);

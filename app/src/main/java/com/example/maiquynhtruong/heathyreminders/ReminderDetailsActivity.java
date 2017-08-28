@@ -1,18 +1,22 @@
 package com.example.maiquynhtruong.heathyreminders;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -26,7 +30,7 @@ import mehdi.sakout.fancybuttons.FancyButton;
 public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
         AdapterView.OnItemSelectedListener{
     TextInputEditText reminderTitle;
-    TextView onDate, atTime;
+    TextView onDate, atTime, repeatNumberTv;
     int hourOfDay, minute, month, dayOfMonth, year, repeatNumber;
     int reminderID;
     boolean repeat;
@@ -49,6 +53,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
+        repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_no);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
         updateBtn = (FancyButton) findViewById(R.id.btn_save);
 
@@ -73,6 +78,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             month = reminder.getMonth();
             dayOfMonth = reminder.getDay();
             year = reminder.getYear();
+            repeatNumber = reminder.getRepeatNumber();
             repeatType = reminder.getRepeatType();
             boolean isPM = (hourOfDay >= 12);
             atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
@@ -92,6 +98,12 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+        repeatNumberTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRepeatNumberSet();
             }
         });
 
@@ -116,6 +128,35 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         this.minute = minute;
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+    }
+
+    public void onRepeatNumberSet() {
+        // Create EditText box to input repeat number
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this)
+                .setTitle("Enter Repeat Number")
+                .setView(input)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                if (input.getText().toString().length() == 0) {
+                                    repeatNumberTv.setText(repeatNumber);
+                                }
+                                else {
+                                    repeatNumber = Integer.parseInt(input.getText().toString().trim());
+                                    repeatNumberTv.setText(repeatNumber);
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // do nothing
+                    }
+                });
+        alert.show();
     }
 
     public void updateReminder(View view) {
@@ -143,14 +184,19 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         ReminderReceiver.cancelAlarm(getApplicationContext(), reminderID);
         // create new notification
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
-            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatType);
-        else if (repeatType.equals(Reminder.HOURLY))
-            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
+            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, repeatNumber, repeatType);
         else if (repeatType.equals(Reminder.DAILY))
-            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, repeatNumber * AlarmManager.INTERVAL_DAY);
         else if (repeatType.equals(Reminder.WEEKLY))
-            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
-
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, repeatNumber * AlarmManager.INTERVAL_DAY*7);
+        else //if (repeatType.equals(Reminder.HOURLY))
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, repeatNumber * AlarmManager.INTERVAL_HOUR);
+//        else
+//            Log.i("AddReminderActivity", "Setting reminder but none of the above type!");
         onBackPressed();
     }
 
