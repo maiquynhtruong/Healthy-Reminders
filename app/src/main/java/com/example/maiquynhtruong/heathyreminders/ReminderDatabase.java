@@ -165,17 +165,17 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         database.close();
     }
 
-    public static class ReminderEntry implements BaseColumns {
-        public static final String TABLE_NAME = "ReminderEntries";
-        public static final String REMINDER_ID = "id";
-        public static final String REMINDER_TITLE = "title";
-        public static final String REMINDER_HOUR = "hour";
-        public static final String REMINDER_MINUTE = "minute";
-        public static final String REMINDER_MONTH = "month";
-        public static final String REMINDER_DAY = "day";
-        public static final String REMINDER_YEAR = "year";
-        public static final String REMINDER_REPEAT = "repeat";
-        public static final String REMINDER_REPEAT_NUMBER = "repeat_number";
-        public static final String REMINDER_REPEAT_TYPE = "repeat_type";
+    static class ReminderEntry implements BaseColumns {
+        static final String TABLE_NAME = "ReminderEntries";
+        static final String REMINDER_ID = "id";
+        static final String REMINDER_TITLE = "title";
+        static final String REMINDER_HOUR = "hour";
+        static final String REMINDER_MINUTE = "minute";
+        static final String REMINDER_MONTH = "month";
+        static final String REMINDER_DAY = "day";
+        static final String REMINDER_YEAR = "year";
+        static final String REMINDER_REPEAT = "repeat";
+        static final String REMINDER_REPEAT_NUMBER = "repeat_number";
+        static final String REMINDER_REPEAT_TYPE = "repeat_type";
     }
 }

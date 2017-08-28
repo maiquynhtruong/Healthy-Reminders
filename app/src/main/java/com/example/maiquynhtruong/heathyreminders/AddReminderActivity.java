@@ -1,8 +1,10 @@
 package com.example.maiquynhtruong.heathyreminders;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -10,6 +12,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -36,7 +40,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     Spinner frequencySpinner;
     TextInputEditText title;
     TextInputLayout titleLayout;
-    TextView atTime, onDate;
+    TextView atTime, onDate, repeatNumberTv;
     Toolbar toolbar;
     int repeatNumber;
     boolean repeat;
@@ -57,6 +61,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         titleLayout = (TextInputLayout) findViewById(R.id.reminder_title_layout);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
+        repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_no);
         saveBtn = (FancyButton) findViewById(R.id.btn_save);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
 
@@ -165,6 +170,36 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
     }
 
+    public void onRepeatNumberSet(View view) {
+        // Create EditText box to input repeat number
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this)
+                .setTitle("Enter Repeat Number")
+                .setView(input)
+                .setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        if (input.getText().toString().length() == 0) {
+                            repeatNumber = 1;
+                            repeatNumberTv.setText(repeatNumber);
+                        }
+                        else {
+                            repeatNumber = Integer.parseInt(input.getText().toString().trim());
+                            repeatNumberTv.setText(repeatNumber);
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // do nothing
+                    }
+                });
+        alert.show();
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -187,13 +222,17 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         Log.i("AddReminderActivity", "Setting reminder " + title + " with id " + reminderID);
         if (repeatType.equals(Reminder.DAILY))
-            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
         else if (repeatType.equals(Reminder.WEEKLY))
-            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
-            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatType);
+            ReminderReceiver.setReminderMonthOrYear(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, repeatType);
         else //if (repeatType.equals(Reminder.HOURLY))
-            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
+            ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
+                    calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
 //        else
 //            Log.i("AddReminderActivity", "Setting reminder but none of the above type!");
         onBackPressed();

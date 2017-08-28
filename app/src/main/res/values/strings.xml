@@ -31,11 +31,11 @@
 
     <!--Frequency levels-->
     <string-array name="frequencies">
-        <item>Every hour</item>
-        <item>Every day</item> <!-- At some time every day -->
-        <item>Every week</item> <!-- On a particular day every week -->
-        <item>Every month</item> <!-- On a specific day every month -->
-        <item>Every year</item> <!-- On some day every year -->
+        <item>hour</item>
+        <item>day</item> <!-- At some time every day -->
+        <item>week</item> <!-- On a particular day every week -->
+        <item>month</item> <!-- On a specific day every month -->
+        <item>year</item> <!-- On some day every year -->
     </string-array>
 
     <string-array name="time_frequencies">

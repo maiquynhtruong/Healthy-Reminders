@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +10,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Repeat"/>
+        android:text="Repeat every"/>
+    <TextView
+        android:id="@+id/reminder_repeat_no"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="1"
+        android:textAlignment="center"
+        android:onClick="onRepeatNumberSet"/>
     <Spinner
         android:id="@+id/reminder_frequency_spinner"
         android:prompt="@string/how_often"
