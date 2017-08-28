@@ -1,24 +1,50 @@
 package com.example.maiquynhtruong.heathyreminders;
 
+import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Spinner;
 
-/**
- * Created by d4truom on 8/3/2017.
- */
+import java.util.Calendar;
+import java.util.List;
+
+import mehdi.sakout.fancybuttons.FancyButton;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
+    int hourOfDay, minute, month, dayOfMonth, year, repeatNumber;
+    int reminderID;
+    boolean repeat;
+    String repeatType;
+    Reminder reminder;
+    ReminderDatabase database;
+    Calendar calendar;
+    List<Reminder> reminderList;
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            ReminderDatabase database = new ReminderDatabase(context);
-
             Log.i("BootBroadcastReceiver", "BootBroadcastReceiver called ");
-            Intent setAlarmIntent = new Intent(context, ReminderReceiver.class);
-            // set action create alarm for the intent and send it
-            context.startService(setAlarmIntent);
+            database = new ReminderDatabase(context.getApplicationContext());
+            calendar = Calendar.getInstance();
+            reminderList = database.getAllReminders();
+
+            for (Reminder reminder : reminderList) {
+                repeatType = reminder.getRepeatType();
+                calendar.set(Calendar.HOUR_OF_DAY, reminder.getHour());
+                calendar.set(Calendar.MINUTE, reminder.getMinute());
+                calendar.set(Calendar.DAY_OF_MONTH, reminder.getDay());
+                calendar.set(Calendar.YEAR, reminder.getYear());
+                calendar.set(Calendar.MONTH, reminder.getMonth());
+                if (repeatType.equals(Reminder.DAILY))
+                    ReminderReceiver.setReminderHourOrDayOrWeek(context.getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY);
+                else if (repeatType.equals(Reminder.WEEKLY))
+                    ReminderReceiver.setReminderHourOrDayOrWeek(context.getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_DAY*7);
+                if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
+                    ReminderReceiver.setReminderMonthOrYear(context.getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatType);
+                else
+                    ReminderReceiver.setReminderHourOrDayOrWeek(context.getApplicationContext(), calendar.getTimeInMillis(), reminderID, AlarmManager.INTERVAL_HOUR);
+            }
         }
     }
 }
