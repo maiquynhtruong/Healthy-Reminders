@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.net.Inet4Address;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -38,18 +39,28 @@ import mehdi.sakout.fancybuttons.FancyButton;
 public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
     Spinner frequencySpinner;
-    TextInputEditText title;
+    TextInputEditText titleText;
     TextInputLayout titleLayout;
     TextView atTime, onDate, repeatNumberTv;
     Toolbar toolbar;
     int repeatNumber;
     boolean repeat;
-    String repeatType;
     ReminderDatabase database;
     Calendar calendar;
     FancyButton saveBtn, cancelBtn;
     int month, dayOfMonth, year, hourOfDay, minute;
-    public static final String TAG = "AddActivity";
+    String title, repeatType;
+
+    // Values for orientation change
+    private static final String KEY_TITLE = "title_key";
+    private static final String KEY_HOUR = "hour_key";
+    private static final String KEY_MINUTE = "minute_key";
+    private static final String KEY_YEAR = "year_key";
+    private static final String KEY_DATE = "date_key";
+    private static final String KEY_MONTH = "month_key";
+    private static final String KEY_REPEAT = "repeat_key";
+    private static final String KEY_REPEAT_NO = "repeat_no_key";
+    private static final String KEY_REPEAT_TYPE = "repeat_type_key";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,13 +68,15 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         setContentView(R.layout.activity_add_reminder);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
-        title = (TextInputEditText) findViewById(R.id.reminder_title);
+        titleText = (TextInputEditText) findViewById(R.id.reminder_title);
         titleLayout = (TextInputLayout) findViewById(R.id.reminder_title_layout);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
         repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_no);
         saveBtn = (FancyButton) findViewById(R.id.btn_save);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
+
+        database = new ReminderDatabase(getApplicationContext());
 
         getSupportActionBar().setTitle(getString(R.string.app_add_reminder));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,7 +102,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
             }
         });
         // error for empty title
-        title.addTextChangedListener(new TextWatcher() {
+        titleText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -99,7 +112,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (title.getText().toString().trim().isEmpty()) {
+                if (titleText.getText().toString().trim().isEmpty()) {
                     titleLayout.setError(getString(R.string.title_empty_error));
                 } else {
                     titleLayout.setErrorEnabled(false);
@@ -127,11 +140,35 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
 
-        database = new ReminderDatabase(getApplicationContext());
-
         // recover states on device rotation
         if (savedInstanceState != null) {
+            String savedTitle = savedInstanceState.getString(KEY_TITLE);
+            titleText.setText(savedTitle);
+            title = savedTitle;
 
+            String savedHour = savedInstanceState.getString(KEY_HOUR);
+            hourOfDay = Integer.parseInt(savedHour);
+            String savedMinute = savedInstanceState.getString(KEY_MINUTE);
+            minute = Integer.parseInt(savedMinute);
+            isPM = (hourOfDay >= 12);
+            atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
+
+            String savedYear = savedInstanceState.getString(KEY_YEAR);
+            year = Integer.parseInt(savedYear);
+            String savedMonth = savedInstanceState.getString(KEY_MONTH);
+            month = Integer.parseInt(savedMonth);
+            String savedDate = savedInstanceState.getString(KEY_DATE);
+            dayOfMonth = Integer.parseInt(savedDate);
+            onDate.setText(month + "/" + dayOfMonth + "/" + year);
+
+            String saveRepeat = savedInstanceState.getString(KEY_REPEAT);
+            repeat = Boolean.parseBoolean(saveRepeat);
+
+            String savedRepeatNo = savedInstanceState.getString(KEY_REPEAT_NO);
+            repeatNumber = Integer.parseInt(savedRepeatNo);
+
+            String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
+            repeatType = savedRepeatType;
         }
     }
 
@@ -212,11 +249,20 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        outState.putCharSequence(KEY_TITLE, titleText.getText());
+        outState.putCharSequence(KEY_HOUR, String.valueOf(hourOfDay));
+        outState.putCharSequence(KEY_MINUTE, String.valueOf(minute));
+        outState.putCharSequence(KEY_YEAR, String.valueOf(year));
+        outState.putCharSequence(KEY_DATE, String.valueOf(dayOfMonth));
+        outState.putCharSequence(KEY_MONTH, String.valueOf(month));
+        outState.putCharSequence(KEY_REPEAT_NO, String.valueOf(repeatNumber));
+        outState.putCharSequence(KEY_REPEAT_TYPE, String.valueOf(repeatType));
     }
 
     public void saveReminder(View view) {
 
-        String title = this.title.getText().toString();
+        title = this.titleText.getText().toString();
 
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);

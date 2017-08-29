@@ -29,17 +29,29 @@ import mehdi.sakout.fancybuttons.FancyButton;
 
 public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
         AdapterView.OnItemSelectedListener{
-    TextInputEditText reminderTitle;
+    TextInputEditText titleText;
     TextView onDate, atTime, repeatNumberTv;
     int hourOfDay, minute, month, dayOfMonth, year, repeatNumber;
     int reminderID;
     boolean repeat;
-    String repeatType;
     Reminder reminder;
     FancyButton cancelBtn, updateBtn;
     ReminderDatabase database;
     Spinner frequencySpinner;
     Calendar calendar;
+    String title, repeatType;
+
+    // Values for orientation change
+    private static final String KEY_TITLE = "title_key";
+    private static final String KEY_HOUR = "hour_key";
+    private static final String KEY_MINUTE = "minute_key";
+    private static final String KEY_YEAR = "year_key";
+    private static final String KEY_DATE = "date_key";
+    private static final String KEY_MONTH = "month_key";
+    private static final String KEY_REPEAT = "repeat_key";
+    private static final String KEY_REPEAT_NO = "repeat_no_key";
+    private static final String KEY_REPEAT_TYPE = "repeat_type_key";
+
     public static final String REMINDER_DETAILS_ID = "reminder-id";
     public static final int EDIT_REMINDER_REQUEST_CODE = 1;
 
@@ -49,7 +61,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         setContentView(R.layout.activity_add_reminder);
         onDate = (TextView) findViewById(R.id.datePicker);
         atTime = (TextView) findViewById(R.id.timePicker);
-        reminderTitle = (TextInputEditText) findViewById(R.id.reminder_title);
+        titleText = (TextInputEditText) findViewById(R.id.reminder_title);
         frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
@@ -63,29 +75,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        calendar = Calendar.getInstance();
-
-        // get stuff from intent calling this activity
-        int reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID,0);
-
-        Log.i("ReminderDetailsActivity", "onCreate() The reminder passed has id " + reminderID);
-        reminder = database.getReminder(reminderID);
-
-        if (reminder != null) {
-            reminderTitle.setText(reminder.getTitle());
-            hourOfDay = reminder.getHour();
-            minute = reminder.getMinute();
-            month = reminder.getMonth();
-            dayOfMonth = reminder.getDay();
-            year = reminder.getYear();
-            repeatNumber = reminder.getRepeatNumber();
-            repeatType = reminder.getRepeatType();
-            boolean isPM = (hourOfDay >= 12);
-            atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
-            onDate.setText(month + "/" + dayOfMonth + "/" + year);
-        } else {
-            Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
-        }
 
         updateBtn.setText("UPDATE");
         updateBtn.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +102,74 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
 
         frequencySpinner.setAdapter(adapter);
         frequencySpinner.setOnItemSelectedListener(this);
+
+        // get stuff from intent calling this activity
+        int reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID,0);
+
+        Log.i("ReminderDetailsActivity", "onCreate() The reminder passed has id " + reminderID);
+        reminder = database.getReminder(reminderID);
+        calendar = Calendar.getInstance();
+        if (reminder != null) {
+            titleText.setText(reminder.getTitle());
+            hourOfDay = reminder.getHour();
+            minute = reminder.getMinute();
+            month = reminder.getMonth();
+            dayOfMonth = reminder.getDay();
+            year = reminder.getYear();
+            repeatNumber = reminder.getRepeatNumber();
+            repeatType = reminder.getRepeatType();
+            boolean isPM = (hourOfDay >= 12);
+            atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
+            onDate.setText(month + "/" + dayOfMonth + "/" + year);
+        } else {
+            Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
+        }
+
+
+        // recover states on device rotation
+        if (savedInstanceState != null) {
+            String savedTitle = savedInstanceState.getString(KEY_TITLE);
+            titleText.setText(savedTitle);
+            title = savedTitle;
+
+            String savedHour = savedInstanceState.getString(KEY_HOUR);
+            hourOfDay = Integer.parseInt(savedHour);
+            String savedMinute = savedInstanceState.getString(KEY_MINUTE);
+            minute = Integer.parseInt(savedMinute);
+            boolean isPM = (hourOfDay >= 12);
+            atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
+
+            String savedYear = savedInstanceState.getString(KEY_YEAR);
+            year = Integer.parseInt(savedYear);
+            String savedMonth = savedInstanceState.getString(KEY_MONTH);
+            month = Integer.parseInt(savedMonth);
+            String savedDate = savedInstanceState.getString(KEY_DATE);
+            dayOfMonth = Integer.parseInt(savedDate);
+            onDate.setText(month + "/" + dayOfMonth + "/" + year);
+
+            String saveRepeat = savedInstanceState.getString(KEY_REPEAT);
+            repeat = Boolean.parseBoolean(saveRepeat);
+
+            String savedRepeatNo = savedInstanceState.getString(KEY_REPEAT_NO);
+            repeatNumber = Integer.parseInt(savedRepeatNo);
+
+            String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
+            repeatType = savedRepeatType;
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putCharSequence(KEY_TITLE, titleText.getText());
+        outState.putCharSequence(KEY_HOUR, String.valueOf(hourOfDay));
+        outState.putCharSequence(KEY_MINUTE, String.valueOf(minute));
+        outState.putCharSequence(KEY_YEAR, String.valueOf(year));
+        outState.putCharSequence(KEY_DATE, String.valueOf(dayOfMonth));
+        outState.putCharSequence(KEY_MONTH, String.valueOf(month));
+        outState.putCharSequence(KEY_REPEAT_NO, String.valueOf(repeatNumber));
+        outState.putCharSequence(KEY_REPEAT_TYPE, String.valueOf(repeatType));
     }
 
     @Override
@@ -161,7 +218,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     }
 
     public void updateReminder(View view) {
-        reminder.setTitle(reminderTitle.getText().toString());
+        reminder.setTitle(titleText.getText().toString());
         reminder.setHour(hourOfDay);
         reminder.setMinute(minute);
         reminder.setDay(dayOfMonth);

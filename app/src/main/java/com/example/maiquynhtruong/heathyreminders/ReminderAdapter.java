@@ -41,7 +41,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     boolean undoOn;
     int mExpandedPosition = -1;
     private Handler handler = new Handler(); // hanlder for running delayed runnables
-    private static final int PENDING_REMOVAL_TIMEOUT = 5000; // 3sec
+    private static final int PENDING_REMOVAL_TIMEOUT = 2000; // 3sec
     HashMap<Reminder, Runnable> pendingRunnables = new HashMap<>(); // map of reminders to pending runnables, so we can cancel a removal if need be
 
     public ReminderAdapter(Context context) {
@@ -49,7 +49,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         this.context = context;
         this.pendingRemovalReminders = new ArrayList<>();
         activity = (MainActivity) context;
-//        createFakeReminders();
     }
 
     @Override
@@ -103,17 +102,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         }
     }
 
-    public void undoDelete(int position) {
-
-    }
-
-    public List<Reminder> createFakeReminders() {
-        reminderList.add(new Reminder("Pay Internet bill", 12, 0, 9, 10, 2017, true, 1, Reminder.MONTHLY));
-        reminderList.add(new Reminder("Pay Insurance", 12, 0, 9, 5, 2017, true, 1, Reminder.MONTHLY));
-        reminderList.add(new Reminder("Change tooth brush", 12, 0, 9, 8, 2017, true, 3, Reminder.MONTHLY));
-        return reminderList;
-    }
-
     @Override
     public ReminderView onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_reminder, parent, false);
@@ -124,11 +112,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
         if (pendingRemovalReminders.contains(reminder)) {
-            holder.mainLayout.setVisibility(View.GONE);
+            holder.constraintLayout.setVisibility(View.GONE);
         } else {
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.title.setText(reminder.getTitle());
-            Log.i("ReminderAdapter", "setting reminder titlte as " + reminder.getTitle());
+            Log.i("ReminderAdapter", "setting reminder title as " + reminder.getTitle());
 
             final boolean isExpanded = position == mExpandedPosition;
             holder.editBtn.setVisibility(isExpanded?View.VISIBLE:GONE);
