@@ -88,6 +88,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public void pendingRemove(final int position) {
         Log.i("ReminderAdapter", "pendingRemove() pending removes reminder with position " + position);
         final Reminder reminder = reminderList.get(position);
+        Log.i("ReminderAdapter", "pendingRemove() reminder from the reminderList is " + reminder.getTitle());
         if (!pendingRemovalReminders.contains(reminder)) {
             pendingRemovalReminders.add(reminder);
             // this will redraw row in "undo" state
@@ -118,14 +119,13 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         } else {
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.title.setText(reminder.getTitle());
-            Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle());
 
             final boolean isExpanded = position == mExpandedPosition;
             holder.editBtn.setVisibility(isExpanded?View.VISIBLE:GONE);
             boolean isPM = (reminder.getHour() >= 12);
             holder.timeTextView.setText(String.format(Locale.US, "%02d:%02d %s", (reminder.getHour() == 12 || reminder.getHour() == 0) ? 12 :
                     reminder.getHour() % 12, reminder.getMinute(), isPM ? "PM" : "AM"));
-            Log.i("ReminderAdapter", "onBindViewHolder() sets date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+            Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + "and date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
             holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
             holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
             holder.itemView.setActivated(isExpanded);
@@ -203,7 +203,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             if (!initiated) initiate(viewHolder);
             reminder = reminderList.get(viewHolder.getAdapterPosition());
             Log.i("ReminderAdapter", "onChildDraw() current reminder: " + reminder.getTitle() + " with position " + viewHolder.getAdapterPosition());
-            if (!pendingRemovalReminders.contains(reminder)) {
+//            if (!pendingRemovalReminders.contains(reminder)) {
                 if (dX < 0) { // swipe to the left
                     // draw the background
                     background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
@@ -229,7 +229,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                     deleteIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
                     deleteIcon.draw(c);
                 }
-            }
+//            }
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
 
@@ -274,15 +274,17 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                     .setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Log.i("ReminderAdapter", "onSwiped() trying to undo delete reminder " + reminder.getTitle() + " with position " + swipePosition);
                             Runnable pendingRemovalRunnable = pendingRunnables.get(reminder);
                             pendingRunnables.remove(reminder);
                             if (pendingRemovalRunnable != null) {
                                 handler.removeCallbacks(pendingRemovalRunnable);
                             }
                             pendingRemovalReminders.remove(reminder);
-                            recyclerView.scrollToPosition(swipePosition);
-                            notifyItemInserted(swipePosition);
-                            notifyDataSetChanged();
+                            if (reminderList.contains(reminder)) {
+                                notifyItemInserted(swipePosition);
+                                notifyDataSetChanged();
+                            }
                         }
                     }).show();
         }

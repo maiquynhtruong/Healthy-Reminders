@@ -32,7 +32,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);
-        int millis = intent.getIntExtra(REMINDER_TIME_MILLIS, 0);
+        long millis = intent.getLongExtra(REMINDER_TIME_MILLIS, 0);
         int reminderId = intent.getIntExtra(REMINDER_DETAILS_ID, 0);
         int repeatNumber = intent.getIntExtra(REMINDER_REPEAT_NUMBER, 1);
 
