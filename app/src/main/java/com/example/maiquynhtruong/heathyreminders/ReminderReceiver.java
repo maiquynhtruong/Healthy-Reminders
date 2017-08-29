@@ -29,7 +29,6 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final String REMINDER_REPEAT_TYPE = "ReminderType";
     public static final String REMINDER_TIME_MILLIS = "ReminderMillis";
     public static final String REMINDER_REPEAT_NUMBER = "ReminderRepeatNumber";
-    public static final String TAG = "ReminderDetailsActivity";
     @Override
     public void onReceive(Context context, Intent intent) {
         String type = intent.getStringExtra(REMINDER_REPEAT_TYPE);

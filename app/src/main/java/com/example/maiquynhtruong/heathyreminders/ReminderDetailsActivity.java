@@ -237,6 +237,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
 
         // cancel old notification
         ReminderReceiver.cancelAlarm(getApplicationContext(), reminderID);

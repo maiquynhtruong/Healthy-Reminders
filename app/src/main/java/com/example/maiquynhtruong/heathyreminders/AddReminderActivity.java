@@ -269,6 +269,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
 
         int reminderID = (int) database.setReminder(new Reminder(title, hourOfDay, minute, month,
                 dayOfMonth, year, repeat, repeatNumber, repeatType));

@@ -133,7 +133,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 reminderList.add(reminder);
                 Log.i("ReminderDatabase", "getAllReminders() add reminder " + reminder.getId() + ", " + reminder.getTitle() + ", " +
                 reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
-                ", and " + reminder.getRepeatType());
+                ", and every " + reminder.getRepeatType());
             } while (cursor.moveToNext());
         }
         return reminderList;

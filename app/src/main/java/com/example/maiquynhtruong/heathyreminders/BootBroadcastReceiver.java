@@ -36,6 +36,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
                 calendar.set(Calendar.DAY_OF_MONTH, reminder.getDay());
                 calendar.set(Calendar.YEAR, reminder.getYear());
                 calendar.set(Calendar.MONTH, reminder.getMonth());
+                calendar.set(Calendar.SECOND, 0);
                 if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
                     ReminderReceiver.setReminderMonthOrYear(context.getApplicationContext(), calendar.getTimeInMillis(), reminderID, repeatNumber, repeatType);
                 else if (repeatType.equals(Reminder.DAILY))

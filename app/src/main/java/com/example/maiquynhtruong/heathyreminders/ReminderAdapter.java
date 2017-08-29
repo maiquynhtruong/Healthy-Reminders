@@ -65,6 +65,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
     public void removeReminder(int position) {
+        Log.i("ReminderAdapter", "removeReminder() removes reminder with position " + position);
         if (position < 0) return;
         Reminder reminder = reminderList.get(position);
         // remove the reminder from both pending and original list
@@ -85,6 +86,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         return pendingRemovalReminders.contains(reminder);
     }
     public void pendingRemove(final int position) {
+        Log.i("ReminderAdapter", "pendingRemove() pending removes reminder with position " + position);
         final Reminder reminder = reminderList.get(position);
         if (!pendingRemovalReminders.contains(reminder)) {
             pendingRemovalReminders.add(reminder);
@@ -116,7 +118,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         } else {
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.title.setText(reminder.getTitle());
-            Log.i("ReminderAdapter", "setting reminder title as " + reminder.getTitle());
+            Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle());
 
             final boolean isExpanded = position == mExpandedPosition;
             holder.editBtn.setVisibility(isExpanded?View.VISIBLE:GONE);
@@ -184,7 +186,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
 
-        public void initiate(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        public void initiate(RecyclerView.ViewHolder viewHolder) {
             backgroundPaint = new Paint();
             backgroundPaint.setColor(Color.parseColor("#D32F2F"));
             deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24px);
@@ -198,10 +200,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         @Override
         public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             View itemView = viewHolder.itemView;
-            if (!initiated) initiate(recyclerView, viewHolder);
+            if (!initiated) initiate(viewHolder);
             reminder = reminderList.get(viewHolder.getAdapterPosition());
-            Log.i("ReminderAdapter", "current reminder: " + reminder.getTitle() + " with position " + viewHolder.getAdapterPosition());
-            if (!pendingRemovalReminders.contains(reminder) && reminderList.contains(reminder)) {
+            Log.i("ReminderAdapter", "onChildDraw() current reminder: " + reminder.getTitle() + " with position " + viewHolder.getAdapterPosition());
+            if (!pendingRemovalReminders.contains(reminder)) {
                 if (dX < 0) { // swipe to the left
                     // draw the background
                     background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
