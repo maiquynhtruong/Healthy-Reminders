@@ -100,6 +100,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                 onBackPressed();
             }
         });
+        repeatNumberTv.setText(repeatNumber);
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

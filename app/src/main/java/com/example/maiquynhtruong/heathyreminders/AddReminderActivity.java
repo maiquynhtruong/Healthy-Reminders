@@ -81,6 +81,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
                 onBackPressed();
             }
         });
+        repeatNumberTv.setText("1");
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
