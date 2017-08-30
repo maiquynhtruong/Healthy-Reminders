@@ -10,11 +10,6 @@
     <string name="action_reminder_edit">Edit</string>
     <string name="action_reminder_delete">Delete</string>
 
-    <!-- General instruction strings -->
-    <string name="no_reminders">No reminders yet. Click the plus icon to start creating one!</string>
-    <string name="title_hint">Remind me to...</string>
-    <string name="title_empty_error">Title must not be empty</string>
-
     <string-array name="example_reminders">
         <item>Meditation</item>
         <item>Eating fruits</item>
@@ -31,25 +26,24 @@
 
     <!--Frequency levels-->
     <string-array name="frequencies">
-        <item>hour</item>
-        <item>day</item> <!-- At some time every day -->
-        <item>week</item> <!-- On a particular day every week -->
-        <item>month</item> <!-- On a specific day every month -->
-        <item>year</item> <!-- On some day every year -->
-    </string-array>
-
-    <string-array name="time_frequencies">
-        <item>Today</item>
-        <item>Tomorrow</item>
-        <item>Custom...</item>
+        <item>hour(s)</item>
+        <item>day(s)</item> <!-- At some time every day -->
+        <item>week(s)</item> <!-- On a particular day every week -->
+        <item>month(s)</item> <!-- On a specific day every month -->
+        <item>year(s)</item> <!-- On some day every year -->
     </string-array>
     
     <!-- General instructions -->
-    <string name="instructions">Press the image to show you have completed the reminder</string>
-    <string name="default_count">0</string>
+    <string name="no_reminders">No reminders yet. Click the plus icon to start creating one!</string>
+    <string name="title_hint">Remind me to...</string>
+    <string name="title_empty_error">Title must not be empty</string>
     <string name="reminder_notification_title">Reminder: </string>
     <string name="reminder_notification_body">There\'s never a better to do it</string>
     <string name="reminder_finished">OK, I\'m done</string>
     <string name="reminder_postponed">Delay for now</string>
     <string name="how_often">How often?</string>
+    <string name="reminder_repeat_number_set">Set</string>
+    <string name="reminder_repeat_number_cancel">Cancel</string>
+    <string name="reminder_repeat_number_dialog_title">Reminder Repeat Interval</string>
+    <string name="reminder_frequency">Repeat every</string>
 </resources>

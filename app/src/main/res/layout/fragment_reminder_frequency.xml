@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:text="Repeat every"/>
+        android:text="@string/reminder_frequency"/>
     <TextView
         android:id="@+id/reminder_repeat_number_text_view"
         style="@android:style/Widget.Material.ActionMode"
@@ -26,5 +26,6 @@
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:entries="@array/frequencies" />
 </LinearLayout>

@@ -183,13 +183,13 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
 
     public void showNumberPicker() {
         final Dialog d = new Dialog(this);
-        d.setTitle("Reminder Repeat Number");
+        d.setTitle(getString(R.string.reminder_repeat_number_dialog_title));
         d.setContentView(R.layout.dialog_number_picker);
         Button setBtn = (Button) d.findViewById(R.id.reminder_repeat_number_set);
         Button cancelBtn = (Button) d.findViewById(R.id.reminder_repeat_number_cancel);
         final NumberPicker np = (NumberPicker) d.findViewById(R.id.reminder_repeat_number_picker);
         np.setMaxValue(100);
-        np.setMinValue(0);
+        np.setMinValue(1);
         np.setWrapSelectorWheel(true);
         np.setValue(repeatNumber);
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {

@@ -164,13 +164,13 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
     public void showNumberPicker() {
         final Dialog d = new Dialog(this);
-        d.setTitle("Reminder Repeat Number");
+        d.setTitle(getString(R.string.reminder_repeat_number_dialog_title));
         d.setContentView(R.layout.dialog_number_picker);
         Button setBtn = d.findViewById(R.id.reminder_repeat_number_set);
         Button cancelBtn = d.findViewById(R.id.reminder_repeat_number_cancel);
         final NumberPicker np = d.findViewById(R.id.reminder_repeat_number_picker);
         np.setMaxValue(100);
-        np.setMinValue(0);
+        np.setMinValue(1);
         np.setWrapSelectorWheel(true);
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
