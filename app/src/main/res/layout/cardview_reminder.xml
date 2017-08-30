@@ -32,7 +32,7 @@
 
             <RelativeLayout
                 android:id="@+id/title"
-                android:layout_width="368dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true">
@@ -84,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/timeTextView"
-                    style="@style/Base.TextAppearance.AppCompat.Body2"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -92,7 +92,7 @@
                     android:layout_marginLeft="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/timeImageView"
                     app:layout_constraintTop_toTopOf="@+id/timeImageView"
-                    app:layout_constraintVertical_bias="0.555"
+                    app:layout_constraintVertical_bias="0.39999998"
                     app:layout_constraintLeft_toRightOf="@+id/timeImageView"
                     tools:text="12:00:00 PM"
                     />
@@ -111,7 +111,7 @@
 
                 <TextView
                     android:id="@+id/dateTextView"
-                    style="@style/Base.TextAppearance.AppCompat.Body2"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
