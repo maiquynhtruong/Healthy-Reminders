@@ -4,13 +4,9 @@ import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Spinner;
 
 import java.util.Calendar;
 import java.util.List;
-
-import mehdi.sakout.fancybuttons.FancyButton;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
     int repeatNumber;
