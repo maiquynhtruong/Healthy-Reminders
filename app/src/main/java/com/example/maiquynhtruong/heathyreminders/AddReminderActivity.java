@@ -94,13 +94,8 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
                 onBackPressed();
             }
         });
-        repeatNumberTv.setText("1");
-        repeatNumberTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onRepeatNumberSet();
-            }
-        });
+        repeatNumber = 1;
+
         // error for empty title
         titleText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -139,6 +134,14 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+
+        repeatNumberTv.setText(String.valueOf(repeatNumber));
+        repeatNumberTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRepeatNumberSet();
+            }
+        });
 
         // recover states on device rotation
         if (savedInstanceState != null) {

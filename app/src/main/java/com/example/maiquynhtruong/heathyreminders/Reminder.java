@@ -18,9 +18,6 @@ public class Reminder {
     private int repeatNumber;
     private String repeatType;
 
-    public Reminder() {
-
-    }
     public Reminder(String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber, String repeatType) {
         this.title = title;
         this.hour = hour;

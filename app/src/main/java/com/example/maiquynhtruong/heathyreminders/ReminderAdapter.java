@@ -66,16 +66,16 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     public void removeReminder(int position) {
         Log.i("ReminderAdapter", "removeReminder() removes reminder with position " + position);
-        if (position < 0) return;
+//        if (position < 0) return;
         Reminder reminder = reminderList.get(position);
-        // remove the reminder from both pending and original list
-        if (pendingRemovalReminders.contains(reminder)) {
-            pendingRemovalReminders.remove(reminderList.get(position));
-        }
-        if (reminderList.contains(reminder)) {
+//         remove the reminder from both pending and original list
+//        if (pendingRemovalReminders.contains(reminder)) {
+//            pendingRemovalReminders.remove(reminderList.get(position));
+//        }
+//        if (reminderList.contains(reminder)) {
             reminderList.remove(position);
             notifyItemRemoved(position);
-        }
+//        }
         if (reminderList.isEmpty()) {activity.noReminders.setVisibility(View.VISIBLE);}
         activity.database.deleteReminder(reminder.getId());
         ReminderReceiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
@@ -97,7 +97,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             Runnable pendingRemovalRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    removeReminder(position);
+//                    removeReminder(position);
                 }
             };
             handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT); // delay the thread
@@ -114,9 +114,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     @Override
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
-        if (pendingRemovalReminders.contains(reminder)) {
-            holder.constraintLayout.setVisibility(View.GONE);
-        } else {
+//        if (pendingRemovalReminders.contains(reminder)) {
+//            holder.constraintLayout.setVisibility(View.GONE);
+//        } else {
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.title.setText(reminder.getTitle());
 
@@ -143,7 +143,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                     activity.showEditReminder(reminderList.get(position).getId());
                 }
             });
-        }
+//        }
     }
 
     @Override
@@ -180,7 +180,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         Drawable deleteIcon;
         boolean initiated;
         Paint backgroundPaint;
-        Reminder reminder;
+//        Reminder reminder;
         int itemHeight;
         public ItemTouchCallBack() {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -201,8 +201,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             View itemView = viewHolder.itemView;
             if (!initiated) initiate(viewHolder);
-            reminder = reminderList.get(viewHolder.getAdapterPosition());
-            Log.i("ReminderAdapter", "onChildDraw() current reminder: " + reminder.getTitle() + " with position " + viewHolder.getAdapterPosition());
+            Log.i("ReminderAdapter", "onChildDraw() current reminder with position " + viewHolder.getAdapterPosition());
+//            reminder = reminderList.get(viewHolder.getAdapterPosition());
+//            Log.i("ReminderAdapter", "onChildDraw() current reminder: " + reminder.getTitle() + " with position " + viewHolder.getAdapterPosition());
 //            if (!pendingRemovalReminders.contains(reminder)) {
                 if (dX < 0) { // swipe to the left
                     // draw the background
@@ -266,25 +267,29 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         }
 
         @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
             final int swipePosition = viewHolder.getAdapterPosition();
-            String name = reminder.getTitle();
-            pendingRemove(swipePosition);
-            Snackbar.make(viewHolder.itemView, name + " deleted!", Snackbar.LENGTH_INDEFINITE)
+//            String name = reminder.getTitle();
+//            pendingRemove(swipePosition);
+            final Reminder reminder = reminderList.get(swipePosition);
+            notifyItemRemoved(swipePosition);
+            removeReminder(swipePosition);
+            Snackbar.make(viewHolder.itemView, "Deleted!", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Log.i("ReminderAdapter", "onSwiped() trying to undo delete reminder " + reminder.getTitle() + " with position " + swipePosition);
-                            Runnable pendingRemovalRunnable = pendingRunnables.get(reminder);
-                            pendingRunnables.remove(reminder);
-                            if (pendingRemovalRunnable != null) {
-                                handler.removeCallbacks(pendingRemovalRunnable);
-                            }
-                            pendingRemovalReminders.remove(reminder);
-                            if (reminderList.contains(reminder)) {
-                                notifyItemInserted(swipePosition);
-                                notifyDataSetChanged();
-                            }
+//                            Runnable pendingRemovalRunnable = pendingRunnables.get(reminder);
+//                            pendingRunnables.remove(reminder);
+//                            if (pendingRemovalRunnable != null) {
+//                                handler.removeCallbacks(pendingRemovalRunnable);
+//                            }
+//                            pendingRemovalReminders.remove(reminder);
+//                            if (reminderList.contains(reminder)) {
+                            reminderList.add(swipePosition, reminder);
+                            notifyItemInserted(swipePosition);
+                            notifyDataSetChanged();
+//                            }
                         }
                     }).show();
         }

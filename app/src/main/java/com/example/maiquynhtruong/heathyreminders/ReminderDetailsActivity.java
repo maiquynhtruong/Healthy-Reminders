@@ -89,13 +89,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                 onBackPressed();
             }
         });
-        repeatNumberTv.setText(repeatNumber);
-        repeatNumberTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onRepeatNumberSet();
-            }
-        });
+        repeatNumber = 1;
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.frequencies, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -125,6 +119,13 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
         }
 
+        repeatNumberTv.setText(String.valueOf(repeatNumber));
+        repeatNumberTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRepeatNumberSet();
+            }
+        });
 
         // recover states on device rotation
         if (savedInstanceState != null) {
