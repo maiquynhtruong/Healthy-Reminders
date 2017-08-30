@@ -11,10 +11,6 @@
             android:id="@+id/nav_finished"
             android:icon="@drawable/ic_timeline_black_24px"
             android:title="Progress" />
-        <item
-            android:id="@+id/nav_recommendations"
-            android:icon="@drawable/ic_favorite_48px"
-            android:title="Recommendations" />
     </group>
     <item android:title="Preferences">
         <menu>
