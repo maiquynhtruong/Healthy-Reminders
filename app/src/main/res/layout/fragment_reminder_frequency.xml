@@ -4,6 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
     android:padding="10dp">
     <TextView
         android:id="@+id/reminder_frequency_text"
@@ -12,9 +13,10 @@
         android:layout_weight="2"
         android:text="Repeat every"/>
     <TextView
-        android:id="@+id/reminder_repeat_no"
+        android:id="@+id/reminder_repeat_number_text_view"
+        style="@android:style/Widget.Material.ActionMode"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         tools:text="1"
         android:textAlignment="center" />

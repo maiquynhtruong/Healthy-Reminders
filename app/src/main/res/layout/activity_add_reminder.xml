@@ -9,7 +9,6 @@
     android:theme="@style/AppTheme.NoActionBar"
     tools:context=".AddReminderActivity">
 
-
     <include layout="@layout/fragment_reminder_description" />
     <include layout="@layout/fragment_reminder_frequency" />
     <include layout="@layout/fragment_reminder_date_picker"/>

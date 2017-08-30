@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <NumberPicker
+        android:id="@+id/reminder_repeat_number_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+
+    <Button
+        android:id="@+id/reminder_repeat_number_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reminder_repeat_number_picker"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_toRightOf="@+id/reminder_repeat_number_picker"
+        android:text="Cancel" />
+
+    <Button
+        android:id="@+id/reminder_repeat_number_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/reminder_repeat_number_cancel"
+        android:layout_alignBottom="@+id/reminder_repeat_number_cancel"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@+id/reminder_repeat_number_picker"
+        android:text="Set" />
+
+</RelativeLayout>

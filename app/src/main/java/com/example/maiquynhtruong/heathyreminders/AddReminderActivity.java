@@ -3,6 +3,7 @@ package com.example.maiquynhtruong.heathyreminders;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,8 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -72,7 +75,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         titleLayout = (TextInputLayout) findViewById(R.id.reminder_title_layout);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
-        repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_no);
+        repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_number_text_view);
         saveBtn = (FancyButton) findViewById(R.id.btn_save);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
 
@@ -85,7 +88,10 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveReminder(view);
+                if (titleText.getText().toString().trim().isEmpty())
+                    titleLayout.setError(getString(R.string.title_empty_error));
+                else
+                    saveReminder(view);
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +100,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
                 onBackPressed();
             }
         });
-        repeatNumber = 1;
 
         // error for empty title
         titleText.addTextChangedListener(new TextWatcher() {
@@ -104,7 +109,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
                 if (titleText.getText().toString().trim().isEmpty()) {
@@ -123,26 +127,25 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
         // set the current time as the default time when first showed
         calendar = Calendar.getInstance();
-        this.hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        this.minute = calendar.get(Calendar.MINUTE);
-        this.dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        this.month = calendar.get(Calendar.MONTH);
-        this.year = calendar.get(Calendar.YEAR);
-        this.repeat = true;
-        this.repeatNumber = 1;
-        this.repeatType = Reminder.HOURLY;
+        hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        month = calendar.get(Calendar.MONTH);
+        year = calendar.get(Calendar.YEAR);
+        repeat = true;
+        repeatNumber = 1;
+        repeatType = Reminder.HOURLY;
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
 
-        repeatNumberTv.setText(String.valueOf(repeatNumber));
+        repeatNumberTv.setText("1");
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onRepeatNumberSet();
+                showNumberPicker();
             }
         });
-
         // recover states on device rotation
         if (savedInstanceState != null) {
             String savedTitle = savedInstanceState.getString(KEY_TITLE);
@@ -173,6 +176,38 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
             String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
             repeatType = savedRepeatType;
         }
+    }
+
+    public void showNumberPicker() {
+        final Dialog d = new Dialog(this);
+        d.setTitle("Reminder Repeat Number");
+        d.setContentView(R.layout.dialog_number_picker);
+        Button setBtn = (Button) d.findViewById(R.id.reminder_repeat_number_set);
+        Button cancelBtn = (Button) d.findViewById(R.id.reminder_repeat_number_cancel);
+        final NumberPicker np = (NumberPicker) d.findViewById(R.id.reminder_repeat_number_picker);
+        np.setMaxValue(100);
+        np.setMinValue(0);
+        np.setWrapSelectorWheel(true);
+        np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                repeatNumber = i1;
+            }
+        });
+        setBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                repeatNumberTv.setText(String.valueOf(repeatNumber));
+                d.dismiss();
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                d.dismiss();
+            }
+        });
+        d.show();
     }
 
     public void showDatePicker(View view) {
@@ -215,38 +250,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         this.minute = minute;
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
-    }
-
-    public void onRepeatNumberSet() {
-        // Create EditText box to input repeat number
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this)
-                .setTitle("Enter Repeat Number")
-                .setView(input)
-                .setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        if (input.getText().toString().length() == 0) {
-                            Log.i("AddReminderActivity", "onRepeatNumberSet() for the first time");
-                            repeatNumber = 1;
-                            repeatNumberTv.setText(repeatNumber);
-                        }
-                        else {
-                            Log.i("AddReminderActivity", "onRepeatNumberSet() with repeat number " + repeatNumber);
-                            repeatNumber = Integer.parseInt(input.getText().toString().trim());
-                            repeatNumberTv.setText(repeatNumber);
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // do nothing
-                    }
-                });
-        alert.show();
     }
 
     @Override

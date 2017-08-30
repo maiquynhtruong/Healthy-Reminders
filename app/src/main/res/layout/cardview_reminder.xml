@@ -39,7 +39,7 @@
 
                 <TextView
                     android:id="@+id/reminder_title_view_holder"
-                    style="Base.TextAppearance.AppCompat.Title"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -84,6 +84,7 @@
 
                 <TextView
                     android:id="@+id/timeTextView"
+                    style="@style/Base.TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -94,7 +95,6 @@
                     app:layout_constraintVertical_bias="0.555"
                     app:layout_constraintLeft_toRightOf="@+id/timeImageView"
                     tools:text="12:00:00 PM"
-                    android:textSize="16sp"
                     />
 
                 <ImageView
@@ -111,6 +111,7 @@
 
                 <TextView
                     android:id="@+id/dateTextView"
+                    style="@style/Base.TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
