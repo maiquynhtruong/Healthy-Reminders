@@ -40,9 +40,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     MainActivity activity;
     boolean undoOn;
     int mExpandedPosition = -1;
-    private Handler handler = new Handler(); // hanlder for running delayed runnables
-    private static final int PENDING_REMOVAL_TIMEOUT = 2000; // 3sec
-    HashMap<Reminder, Runnable> pendingRunnables = new HashMap<>(); // map of reminders to pending runnables, so we can cancel a removal if need be
 
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
@@ -66,16 +63,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     public void removeReminder(int position) {
         Log.i("ReminderAdapter", "removeReminder() removes reminder with position " + position);
-//        if (position < 0) return;
         Reminder reminder = reminderList.get(position);
-//         remove the reminder from both pending and original list
-//        if (pendingRemovalReminders.contains(reminder)) {
-//            pendingRemovalReminders.remove(reminderList.get(position));
-//        }
-//        if (reminderList.contains(reminder)) {
-            reminderList.remove(position);
-            notifyItemRemoved(position);
-//        }
+        reminderList.remove(position);
+        notifyItemRemoved(position);
         if (reminderList.isEmpty()) {activity.noReminders.setVisibility(View.VISIBLE);}
         activity.database.deleteReminder(reminder.getId());
         ReminderReceiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
@@ -84,25 +74,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public boolean isPendingRemoval(int position) {
         Reminder reminder = reminderList.get(position);
         return pendingRemovalReminders.contains(reminder);
-    }
-    public void pendingRemove(final int position) {
-        Log.i("ReminderAdapter", "pendingRemove() pending removes reminder with position " + position);
-        final Reminder reminder = reminderList.get(position);
-        Log.i("ReminderAdapter", "pendingRemove() reminder from the reminderList is " + reminder.getTitle());
-        if (!pendingRemovalReminders.contains(reminder)) {
-            pendingRemovalReminders.add(reminder);
-            // this will redraw row in "undo" state
-            notifyItemChanged(position);
-            // let's create, store and post a runnable to remove the item
-            Runnable pendingRemovalRunnable = new Runnable() {
-                @Override
-                public void run() {
-//                    removeReminder(position);
-                }
-            };
-            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT); // delay the thread
-            pendingRunnables.put(reminder, pendingRemovalRunnable);
-        }
     }
 
     @Override
@@ -114,9 +85,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     @Override
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
-//        if (pendingRemovalReminders.contains(reminder)) {
-//            holder.constraintLayout.setVisibility(View.GONE);
-//        } else {
             holder.mainLayout.setVisibility(View.VISIBLE);
             holder.title.setText(reminder.getTitle());
 
@@ -143,7 +111,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                     activity.showEditReminder(reminderList.get(position).getId());
                 }
             });
-//        }
     }
 
     @Override
@@ -188,7 +155,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
         public void initiate(RecyclerView.ViewHolder viewHolder) {
             backgroundPaint = new Paint();
-            backgroundPaint.setColor(Color.parseColor("#D32F2F"));
+            backgroundPaint.setColor(Color.parseColor("#D32F2F")); // it's a red color
             deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24px);
             // mark the boundaries of the trash bin
             itemHeight = viewHolder.itemView.getBottom() - viewHolder.itemView.getTop(); // height of itemView
@@ -202,8 +169,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             View itemView = viewHolder.itemView;
             if (!initiated) initiate(viewHolder);
             Log.i("ReminderAdapter", "onChildDraw() current reminder with position " + viewHolder.getAdapterPosition());
-//            reminder = reminderList.get(viewHolder.getAdapterPosition());
-//            Log.i("ReminderAdapter", "onChildDraw() current reminder: " + reminder.getTitle() + " with position " + viewHolder.getAdapterPosition());
 //            if (!pendingRemovalReminders.contains(reminder)) {
                 if (dX < 0) { // swipe to the left
                     // draw the background
@@ -269,27 +234,18 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         @Override
         public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
             final int swipePosition = viewHolder.getAdapterPosition();
-//            String name = reminder.getTitle();
-//            pendingRemove(swipePosition);
             final Reminder reminder = reminderList.get(swipePosition);
+            String name = reminder.getTitle();
             notifyItemRemoved(swipePosition);
             removeReminder(swipePosition);
-            Snackbar.make(viewHolder.itemView, "Deleted!", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(viewHolder.itemView, name + " deleted!", Snackbar.LENGTH_LONG)
                     .setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Log.i("ReminderAdapter", "onSwiped() trying to undo delete reminder " + reminder.getTitle() + " with position " + swipePosition);
-//                            Runnable pendingRemovalRunnable = pendingRunnables.get(reminder);
-//                            pendingRunnables.remove(reminder);
-//                            if (pendingRemovalRunnable != null) {
-//                                handler.removeCallbacks(pendingRemovalRunnable);
-//                            }
-//                            pendingRemovalReminders.remove(reminder);
-//                            if (reminderList.contains(reminder)) {
                             reminderList.add(swipePosition, reminder);
                             notifyItemInserted(swipePosition);
                             notifyDataSetChanged();
-//                            }
                         }
                     }).show();
         }

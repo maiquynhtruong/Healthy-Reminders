@@ -47,7 +47,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     TextView atTime, onDate, repeatNumberTv;
     Toolbar toolbar;
     int repeatNumber;
-    boolean repeat;
     ReminderDatabase database;
     Calendar calendar;
     FancyButton saveBtn, cancelBtn;
@@ -61,7 +60,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     private static final String KEY_YEAR = "year_key";
     private static final String KEY_DATE = "date_key";
     private static final String KEY_MONTH = "month_key";
-    private static final String KEY_REPEAT = "repeat_key";
     private static final String KEY_REPEAT_NO = "repeat_no_key";
     private static final String KEY_REPEAT_TYPE = "repeat_type_key";
 
@@ -132,7 +130,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
-        repeat = true;
         repeatNumber = 1;
         repeatType = Reminder.HOURLY;
         boolean isPM = (hourOfDay >= 12);
@@ -167,9 +164,6 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
             dayOfMonth = Integer.parseInt(savedDate);
             onDate.setText(month + "/" + dayOfMonth + "/" + year);
 
-            String saveRepeat = savedInstanceState.getString(KEY_REPEAT);
-            repeat = Boolean.parseBoolean(saveRepeat);
-
             String savedRepeatNo = savedInstanceState.getString(KEY_REPEAT_NO);
             repeatNumber = Integer.parseInt(savedRepeatNo);
 
@@ -182,9 +176,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         final Dialog d = new Dialog(this);
         d.setTitle("Reminder Repeat Number");
         d.setContentView(R.layout.dialog_number_picker);
-        Button setBtn = (Button) d.findViewById(R.id.reminder_repeat_number_set);
-        Button cancelBtn = (Button) d.findViewById(R.id.reminder_repeat_number_cancel);
-        final NumberPicker np = (NumberPicker) d.findViewById(R.id.reminder_repeat_number_picker);
+        Button setBtn = d.findViewById(R.id.reminder_repeat_number_set);
+        Button cancelBtn = d.findViewById(R.id.reminder_repeat_number_cancel);
+        final NumberPicker np = d.findViewById(R.id.reminder_repeat_number_picker);
         np.setMaxValue(100);
         np.setMinValue(0);
         np.setWrapSelectorWheel(true);
@@ -278,7 +272,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         calendar.set(Calendar.SECOND, 0);
 
         int reminderID = (int) database.setReminder(new Reminder(title, hourOfDay, minute, month,
-                dayOfMonth, year, repeat, repeatNumber, repeatType));
+                dayOfMonth, year, repeatNumber, repeatType));
 
         // Need to set calendar in case user doesn't choose date and time, aka current time
 

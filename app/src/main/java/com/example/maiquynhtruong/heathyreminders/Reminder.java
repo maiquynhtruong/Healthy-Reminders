@@ -14,23 +14,21 @@ public class Reminder {
     private int month;
     private int day;
     private int year;
-    private boolean repeat;
     private int repeatNumber;
     private String repeatType;
 
-    public Reminder(String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber, String repeatType) {
+    public Reminder(String title, int hour, int minute, int month, int day, int year, int repeatNumber, String repeatType) {
         this.title = title;
         this.hour = hour;
         this.minute = minute;
         this.month = month;
         this.day = day;
         this.year = year;
-        this.repeat = repeat;
         this.repeatNumber = repeatNumber;
         this.repeatType = repeatType;
     }
 
-    public Reminder(int id, String title, int hour, int minute, int month, int day, int year, boolean repeat, int repeatNumber, String repeatType) {
+    public Reminder(int id, String title, int hour, int minute, int month, int day, int year, int repeatNumber, String repeatType) {
         this.id = id;
         this.title = title;
         this.hour = hour;
@@ -38,7 +36,6 @@ public class Reminder {
         this.month = month;
         this.day = day;
         this.year = year;
-        this.repeat = repeat;
         this.repeatNumber = repeatNumber;
         this.repeatType = repeatType;
     }
@@ -73,14 +70,6 @@ public class Reminder {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public boolean isRepeat() {
-        return repeat;
-    }
-
-    public void setRepeat(boolean repeat) {
-        this.repeat = repeat;
     }
 
     public int getRepeatNumber() {

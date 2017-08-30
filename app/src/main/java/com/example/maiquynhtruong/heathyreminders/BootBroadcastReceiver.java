@@ -13,18 +13,15 @@ import java.util.List;
 import mehdi.sakout.fancybuttons.FancyButton;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
-    int hourOfDay, minute, month, dayOfMonth, year, repeatNumber;
+    int repeatNumber;
     int reminderID;
-    boolean repeat;
     String repeatType;
-    Reminder reminder;
     ReminderDatabase database;
     Calendar calendar;
     List<Reminder> reminderList;
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            Log.i("BootBroadcastReceiver", "BootBroadcastReceiver called ");
             database = new ReminderDatabase(context.getApplicationContext());
             calendar = Calendar.getInstance();
             reminderList = database.getAllReminders();

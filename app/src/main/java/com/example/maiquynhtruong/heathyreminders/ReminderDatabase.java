@@ -11,16 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_DAY;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_HOUR;
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_ID;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_MINUTE;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_MONTH;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_REPEAT;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_REPEAT_NUMBER;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_REPEAT_TYPE;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_TITLE;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_YEAR;
 import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.TABLE_NAME;
 
 public class ReminderDatabase extends SQLiteOpenHelper {
@@ -42,7 +33,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 ReminderEntry.REMINDER_MONTH + " INTEGER," +
                 ReminderEntry.REMINDER_DAY + " INTEGER," +
                 ReminderEntry.REMINDER_YEAR + " INTEGER," +
-                ReminderEntry.REMINDER_REPEAT + " BOOLEAN," +
                 ReminderEntry.REMINDER_REPEAT_NUMBER + " INTEGER," +
                 ReminderEntry.REMINDER_REPEAT_TYPE + " TEXT" +
         ")");
@@ -65,7 +55,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_MONTH, reminder.getMonth());
         values.put(ReminderEntry.REMINDER_DAY, reminder.getDay());
         values.put(ReminderEntry.REMINDER_YEAR, reminder.getYear());
-        values.put(ReminderEntry.REMINDER_REPEAT, reminder.isRepeat());
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
         long reminderID = database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
@@ -73,7 +62,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     }
 
     public Reminder getReminder(int id) {
-        Log.i("ReminderDatabase", "getReminder() called with id " + id);
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.query(ReminderDatabase.ReminderEntry.TABLE_NAME,
                 new String[]{
@@ -84,7 +72,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                         ReminderEntry.REMINDER_MONTH,
                         ReminderEntry.REMINDER_DAY,
                         ReminderEntry.REMINDER_YEAR,
-                        ReminderEntry.REMINDER_REPEAT,
                         ReminderEntry.REMINDER_REPEAT_NUMBER,
                         ReminderEntry.REMINDER_REPEAT_TYPE
                 }, ReminderDatabase.ReminderEntry.REMINDER_ID + " = ?",
@@ -98,10 +85,9 @@ public class ReminderDatabase extends SQLiteOpenHelper {
             int month = Integer.parseInt(cursor.getString(4));
             int day = Integer.parseInt(cursor.getString(5));
             int year = Integer.parseInt(cursor.getString(6));
-            boolean repeat = Boolean.parseBoolean(cursor.getString(7));
-            int repeatNumber = Integer.parseInt(cursor.getString(8));
-            String repeatType = cursor.getString(9);
-            reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
+            int repeatNumber = Integer.parseInt(cursor.getString(7));
+            String repeatType = cursor.getString(8);
+            reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType);
             Log.i("ReminderDatabase", "getReminder() successful with " + reminder.getTitle() + ", " +
                     reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
                             ", and " + reminder.getRepeatType());
@@ -126,10 +112,9 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 int month = Integer.parseInt(cursor.getString(4));
                 int day = Integer.parseInt(cursor.getString(5));
                 int year = Integer.parseInt(cursor.getString(6));
-                boolean repeat = Boolean.parseBoolean(cursor.getString(7));
-                int repeatNumber = Integer.parseInt(cursor.getString(8));
-                String repeatType = cursor.getString(9);
-                Reminder reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeat, repeatNumber, repeatType);
+                int repeatNumber = Integer.parseInt(cursor.getString(7));
+                String repeatType = cursor.getString(8);
+                Reminder reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType);
                 reminderList.add(reminder);
                 Log.i("ReminderDatabase", "getAllReminders() add reminder " + reminder.getId() + ", " + reminder.getTitle() + ", " +
                 reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
@@ -148,7 +133,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_MONTH, reminder.getMonth());
         values.put(ReminderEntry.REMINDER_DAY, reminder.getDay());
         values.put(ReminderEntry.REMINDER_YEAR, reminder.getYear());
-        values.put(ReminderEntry.REMINDER_REPEAT, reminder.isRepeat());
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
         database.update(ReminderDatabase.ReminderEntry.TABLE_NAME, values, REMINDER_ID + " = ?", new String[] {"" + reminder.getId()});
@@ -174,7 +158,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         static final String REMINDER_MONTH = "month";
         static final String REMINDER_DAY = "day";
         static final String REMINDER_YEAR = "year";
-        static final String REMINDER_REPEAT = "repeat";
         static final String REMINDER_REPEAT_NUMBER = "repeat_number";
         static final String REMINDER_REPEAT_TYPE = "repeat_type";
     }

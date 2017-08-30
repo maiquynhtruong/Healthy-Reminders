@@ -40,7 +40,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     TextView onDate, atTime, repeatNumberTv;
     int hourOfDay, minute, month, dayOfMonth, year, repeatNumber;
     int reminderID;
-    boolean repeat;
     Reminder reminder;
     FancyButton cancelBtn, updateBtn;
     ReminderDatabase database;
@@ -55,7 +54,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     private static final String KEY_YEAR = "year_key";
     private static final String KEY_DATE = "date_key";
     private static final String KEY_MONTH = "month_key";
-    private static final String KEY_REPEAT = "repeat_key";
     private static final String KEY_REPEAT_NO = "repeat_no_key";
     private static final String KEY_REPEAT_TYPE = "repeat_type_key";
 
@@ -132,7 +130,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         // get stuff from intent calling this activity
         int reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID,0);
 
-        Log.i("ReminderDetailsActivity", "onCreate() The reminder passed has id " + reminderID);
         reminder = database.getReminder(reminderID);
         calendar = Calendar.getInstance();
         if (reminder != null) {
@@ -179,9 +176,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             String savedDate = savedInstanceState.getString(KEY_DATE);
             dayOfMonth = Integer.parseInt(savedDate);
             onDate.setText(month + "/" + dayOfMonth + "/" + year);
-
-            String saveRepeat = savedInstanceState.getString(KEY_REPEAT);
-            repeat = Boolean.parseBoolean(saveRepeat);
 
             String savedRepeatNo = savedInstanceState.getString(KEY_REPEAT_NO);
             repeatNumber = Integer.parseInt(savedRepeatNo);
@@ -262,7 +256,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         reminder.setDay(dayOfMonth);
         reminder.setMonth(month);
         reminder.setYear(year);
-        reminder.setRepeat(repeat);
         reminder.setRepeatNumber(repeatNumber);
         reminder.setRepeatType(repeatType);
 
@@ -292,8 +285,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         else //if (repeatType.equals(Reminder.HOURLY))
             ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
                     calendar.getTimeInMillis(), reminderID, repeatNumber * AlarmManager.INTERVAL_HOUR);
-//        else
-//            Log.i("AddReminderActivity", "Setting reminder but none of the above type!");
         onBackPressed();
     }
 
