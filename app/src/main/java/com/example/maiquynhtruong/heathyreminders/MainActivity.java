@@ -170,8 +170,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_finished) {
 
-        } else if (id == R.id.nav_recommendations){
-
         } else if (id == R.id.nav_reminders) {
 
         } else if (id == R.id.nav_settings) {

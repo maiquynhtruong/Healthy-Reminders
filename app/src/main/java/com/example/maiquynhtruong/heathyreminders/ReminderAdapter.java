@@ -42,7 +42,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
         this.context = context;
-        this.pendingRemovalReminders = new ArrayList<>();
         activity = (MainActivity) context;
     }
 
@@ -63,10 +62,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         Log.i("ReminderAdapter", "removeReminder() removes reminder with position " + position);
         Reminder reminder = reminderList.get(position);
         reminderList.remove(position);
-        notifyItemRemoved(position);
+//        notifyItemRemoved(position); // there is one below though
         if (reminderList.isEmpty()) {activity.noReminders.setVisibility(View.VISIBLE);}
-        activity.database.deleteReminder(reminder.getId());
-        ReminderReceiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
+//        activity.database.deleteReminder(reminder.getId());
+//        ReminderReceiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
     }
 
     public boolean isPendingRemoval(int position) {
@@ -91,7 +90,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             boolean isPM = (reminder.getHour() >= 12);
             holder.timeTextView.setText(String.format(Locale.US, "%02d:%02d %s", (reminder.getHour() == 12 || reminder.getHour() == 0) ? 12 :
                     reminder.getHour() % 12, reminder.getMinute(), isPM ? "PM" : "AM"));
-            Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + "and date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+            Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + " and date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
             holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
             holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
             holder.itemView.setActivated(isExpanded);
@@ -242,6 +241,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                         public void onClick(View view) {
                             Log.i("ReminderAdapter", "onSwiped() trying to undo delete reminder " + reminder.getTitle() + " with position " + swipePosition);
                             reminderList.add(swipePosition, reminder);
+                            for (int i = 0; i < reminderList.size(); i++) {
+                                Log.i("ReminderAdapter", "onSwiped() reminderList has current reminder " + reminderList.get(i).getTitle() + " with position " + i);
+                            }
                             notifyItemInserted(swipePosition);
                             notifyDataSetChanged();
                         }
