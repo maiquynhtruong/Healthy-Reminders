@@ -1,6 +1,7 @@
 package com.example.maiquynhtruong.heathyreminders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,15 +24,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import static android.view.View.GONE;
+import static com.example.maiquynhtruong.heathyreminders.ReminderDetailsActivity.REMINDER_DETAILS_ID;
+import static com.example.maiquynhtruong.heathyreminders.ReminderReceiver.REMINDER_REPEAT_NUMBER;
+import static com.example.maiquynhtruong.heathyreminders.ReminderReceiver.REMINDER_REPEAT_TYPE;
+import static com.example.maiquynhtruong.heathyreminders.ReminderReceiver.REMINDER_TIME_MILLIS;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderView> {
     public List<Reminder> reminderList;
-    public List<Reminder> pendingRemovalReminders;
     RecyclerView recyclerView;
     ItemTouchHelper itemTouchHelper;
     Context context;
@@ -62,15 +67,30 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         Log.i("ReminderAdapter", "removeReminder() removes reminder with position " + position);
         Reminder reminder = reminderList.get(position);
         reminderList.remove(position);
-//        notifyItemRemoved(position); // there is one below though
+        notifyItemRemoved(position);
         if (reminderList.isEmpty()) {activity.noReminders.setVisibility(View.VISIBLE);}
-//        activity.database.deleteReminder(reminder.getId());
-//        ReminderReceiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
+        activity.database.deleteReminder(reminder.getId());
+        ReminderReceiver.cancelAlarm(context.getApplicationContext(), reminder.getId());
     }
 
-    public boolean isPendingRemoval(int position) {
-        Reminder reminder = reminderList.get(position);
-        return pendingRemovalReminders.contains(reminder);
+    public void undoDelete(int position, Reminder reminder) {
+        reminderList.add(position, reminder);
+        reminder.setId((int) activity.database.setReminder(reminder)); // need to have a new id
+        Intent intent = new Intent(context.getApplicationContext(), ReminderReceiver.class);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, reminder.getYear());
+        calendar.set(Calendar.MONTH, reminder.getMonth());
+        calendar.set(Calendar.DAY_OF_MONTH, reminder.getDay());
+        calendar.set(Calendar.HOUR_OF_DAY, reminder.getHour());
+        calendar.set(Calendar.MINUTE, reminder.getMinute());
+        calendar.set(Calendar.SECOND, 0);
+        intent.putExtra(REMINDER_REPEAT_TYPE, reminder.getRepeatType());
+        intent.putExtra(REMINDER_TIME_MILLIS, calendar.getTimeInMillis());
+        intent.putExtra(REMINDER_DETAILS_ID, reminder.getId());
+        intent.putExtra(REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
+        context.startService(intent);
+        notifyItemInserted(position);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -158,7 +178,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             itemHeight = viewHolder.itemView.getBottom() - viewHolder.itemView.getTop(); // height of itemView
             intrinsicWidth  = deleteIcon.getIntrinsicWidth();
             intrinsicHeight = deleteIcon.getIntrinsicWidth();
-            xMarkMargin = itemHeight / 3;
+            xMarkMargin = 75;
             initiated = true;
         }
         @Override
@@ -221,10 +241,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            int position = viewHolder.getAdapterPosition();
-            if (isPendingRemoval(position)) {
-                return 0;
-            }
             return super.getSwipeDirs(recyclerView, viewHolder);
         }
 
@@ -233,19 +249,13 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             final int swipePosition = viewHolder.getAdapterPosition();
             final Reminder reminder = reminderList.get(swipePosition);
             String name = reminder.getTitle();
-            notifyItemRemoved(swipePosition);
             removeReminder(swipePosition);
             Snackbar.make(viewHolder.itemView, name + " deleted!", Snackbar.LENGTH_LONG)
                     .setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Log.i("ReminderAdapter", "onSwiped() trying to undo delete reminder " + reminder.getTitle() + " with position " + swipePosition);
-                            reminderList.add(swipePosition, reminder);
-                            for (int i = 0; i < reminderList.size(); i++) {
-                                Log.i("ReminderAdapter", "onSwiped() reminderList has current reminder " + reminderList.get(i).getTitle() + " with position " + i);
-                            }
-                            notifyItemInserted(swipePosition);
-                            notifyDataSetChanged();
+                            undoDelete(swipePosition, reminder);
                         }
                     }).show();
         }
