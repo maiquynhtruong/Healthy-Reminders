@@ -2,11 +2,13 @@ package com.example.maiquynhtruong.heathyreminders;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.transition.TransitionManager;
@@ -43,11 +45,13 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     MainActivity activity;
     boolean undoOn;
     int mExpandedPosition = -1;
+    SharedPreferences sharedPref;
 
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
         this.context = context;
         activity = (MainActivity) context;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -102,32 +106,33 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     @Override
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
-            holder.mainLayout.setVisibility(View.VISIBLE);
-            holder.title.setText(reminder.getTitle());
+        holder.mainLayout.setBackgroundColor(Color.parseColor(sharedPref.getString(SettingsFragment.PREF_KEY_COLOR_PICKER, "#FFFFFF")));
+        holder.mainLayout.setVisibility(View.VISIBLE);
+        holder.title.setText(reminder.getTitle());
 
-            final boolean isExpanded = position == mExpandedPosition;
-            holder.editBtn.setVisibility(isExpanded?View.VISIBLE:GONE);
-            boolean isPM = (reminder.getHour() >= 12);
-            holder.timeTextView.setText(String.format(Locale.US, "%02d:%02d %s", (reminder.getHour() == 12 || reminder.getHour() == 0) ? 12 :
-                    reminder.getHour() % 12, reminder.getMinute(), isPM ? "PM" : "AM"));
-            Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + " and date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
-            holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
-            holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-            holder.itemView.setActivated(isExpanded);
-            holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mExpandedPosition = isExpanded ? -1 : position;
-                    TransitionManager.beginDelayedTransition(recyclerView);
-                    notifyDataSetChanged();
-                }
-            });
-            holder.editBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.showEditReminder(reminderList.get(position).getId());
-                }
-            });
+        final boolean isExpanded = position == mExpandedPosition;
+        holder.editBtn.setVisibility(isExpanded?View.VISIBLE:GONE);
+        boolean isPM = (reminder.getHour() >= 12);
+        holder.timeTextView.setText(String.format(Locale.US, "%02d:%02d %s", (reminder.getHour() == 12 || reminder.getHour() == 0) ? 12 :
+                reminder.getHour() % 12, reminder.getMinute(), isPM ? "PM" : "AM"));
+        Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + " and date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+        holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+        holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.itemView.setActivated(isExpanded);
+        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mExpandedPosition = isExpanded ? -1 : position;
+                TransitionManager.beginDelayedTransition(recyclerView);
+                notifyDataSetChanged();
+            }
+        });
+        holder.editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.showEditReminder(reminderList.get(position).getId());
+            }
+        });
     }
 
     @Override

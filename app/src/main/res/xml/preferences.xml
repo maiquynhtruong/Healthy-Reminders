@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/PreferencesTheme">
+    <Preference
+        android:key="pref_key_color_picker"
+        android:title="@string/preference_pick_color_title"
+        android:summary="@string/preference_pick_color_summary"
+        android:defaultValue="#E1BEE7"
+        />
+</PreferenceScreen>

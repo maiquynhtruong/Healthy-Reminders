@@ -2,6 +2,7 @@ package com.example.maiquynhtruong.heathyreminders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity
             noReminders.setVisibility(View.GONE);
             adapter.setUpReminders(reminders);
         }
+
+        // ensures that your application is properly initialized with default settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
     public void showAddReminder() {
         Intent addReminderIntent = new Intent(this, AddReminderActivity.class);
@@ -151,6 +155,10 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
+                // Display the fragment as the main content.
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new SettingsFragment())
+                        .commit();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -172,10 +180,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_reminders) {
 
-        } else if (id == R.id.nav_settings) {
-
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
