@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".AddReminderActivity"/>
         <activity android:name=".ReminderDetailsActivity"/>
-        <activity android:name=".SettingsFragment"/>
+        <activity android:name=".Settings"/>
         <receiver android:name=".ReminderReceiver"></receiver>
         <receiver android:name=".BootBroadcastReceiver">
             <intent-filter>

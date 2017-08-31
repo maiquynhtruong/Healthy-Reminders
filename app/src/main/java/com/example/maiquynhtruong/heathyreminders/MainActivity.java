@@ -159,9 +159,9 @@ public class MainActivity extends AppCompatActivity
                 // Display the fragment as the main content.
 //                getFragmentManager().beginTransaction()
 //                        .addToBackStack(null)
-//                        .replace(android.R.id.content, new SettingsFragment())
+//                        .replace(android.R.id.content, new Settings())
 //                        .commit();
-                startActivity(new Intent(MainActivity.this, SettingsFragment.class));
+                startActivity(new Intent(MainActivity.this, Settings.class));
                 return true;
             case android.R.id.home:
                 onBackPressed();
