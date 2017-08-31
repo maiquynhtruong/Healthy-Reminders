@@ -75,11 +75,12 @@ public class MainActivity extends AppCompatActivity
     public void showEditReminder(int clickID) {
         Intent intent = new Intent(this, ReminderDetailsActivity.class);
         intent.putExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, clickID);
-        Log.i("showEditReminder", "reminder passed iwth id " + clickID);
+        Log.i("MainActivity", "showEditReminder() reminder passed iwth id " + clickID);
         startActivityForResult(intent, ReminderDetailsActivity.EDIT_REMINDER_REQUEST_CODE);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("MainActivity", "onActivityResult() returned with request code " + requestCode);
         adapter.setUpReminders(database.getAllReminders());
     }
 
@@ -156,9 +157,11 @@ public class MainActivity extends AppCompatActivity
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
                 // Display the fragment as the main content.
-                getFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, new SettingsFragment())
-                        .commit();
+//                getFragmentManager().beginTransaction()
+//                        .addToBackStack(null)
+//                        .replace(android.R.id.content, new SettingsFragment())
+//                        .commit();
+                startActivity(new Intent(MainActivity.this, SettingsFragment.class));
                 return true;
             case android.R.id.home:
                 onBackPressed();

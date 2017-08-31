@@ -27,7 +27,7 @@
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/reminder_background"
+            android:background="@color/cardview_background"
             android:stateListAnimator="@animator/cardview_selection">
 
             <RelativeLayout

@@ -22,9 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".AddReminderActivity"/>
         <activity android:name=".ReminderDetailsActivity"/>
+        <activity android:name=".SettingsFragment"/>
         <receiver android:name=".ReminderReceiver"></receiver>
         <receiver android:name=".BootBroadcastReceiver">
             <intent-filter>
