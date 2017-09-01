@@ -30,35 +30,34 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             public boolean onPreferenceChange(Preference pref, Object o) {
                 Toast.makeText(getApplicationContext(), "color picked is " + Integer.toHexString((Integer) o), Toast.LENGTH_SHORT).show();
 //                sharedPreferences.edit().putString(Settings.PREF_KEY_COLOR_PICKER, Integer.toHexString((Integer) o)).apply();
-//                pref.setDefaultValue(o);
-//                Log.i("Settings", "onCreate() current background color: " + Integer.toHexString(sharedPreferences.getInt(Settings.PREF_KEY_COLOR_PICKER, 0xC5CAE9)));
-                return false;
-            }
-        };
-        clickListener = new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                return false;
+                sharedPreferences.edit().putInt(Settings.PREF_KEY_COLOR_PICKER, (Integer) o).apply();
+                return true;
             }
         };
         preference.setOnPreferenceChangeListener(changeListener);
-        preference.setOnPreferenceClickListener(clickListener);
+//        clickListener = new Preference.OnPreferenceClickListener() {
+//            @Override
+//            public boolean onPreferenceClick(Preference preference) {
+//                return true;
+//            }
+//        };
+//        preference.setOnPreferenceClickListener(clickListener);
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-    }
-
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+////        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+////        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+//    }
+//
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 //        Log.i("Settings", "onSharedPreferenceChanged() with key " + sharedPreferences.getString(s, "null"));
