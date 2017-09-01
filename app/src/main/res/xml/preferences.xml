@@ -6,12 +6,12 @@
         android:title="Color"
         app:alphaSlider="true"
         app:density="12"
-        app:initialColor="0xffff0010"
+        app:initialColor="0xffff0000"
         app:lightnessSlider="true"
         />
-    <Preference
-        android:key="random_preference"
-        android:title="Random"
-        android:summary="So random"
+    <RingtonePreference
+        android:key="ringtone_preference"
+        android:title="Sound"
+        android:summary="Pick a notification ringtone"
         />
 </PreferenceScreen>

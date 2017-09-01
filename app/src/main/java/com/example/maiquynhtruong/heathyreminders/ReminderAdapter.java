@@ -109,6 +109,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
 //        Log.i("ReminderAdapter", "onBindViewHolder() current background color: " + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "#C5CAE9"));
+        Log.i("ReminderAdapter", "onBindViewHolder() current background color: #" + Integer.toHexString(sharedPreferences.getInt(Settings.PREF_KEY_COLOR_PICKER, 0xC5CAE9)));
+        holder.itemView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(sharedPreferences.getInt(Settings.PREF_KEY_COLOR_PICKER, 0xC5CAE9))));
         holder.mainLayout.setVisibility(View.VISIBLE);
         holder.title.setText(reminder.getTitle());
 
