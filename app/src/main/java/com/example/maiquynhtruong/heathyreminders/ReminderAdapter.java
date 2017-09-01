@@ -25,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.flask.colorpicker.ColorPickerPreference;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -45,13 +47,13 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     MainActivity activity;
     boolean undoOn;
     int mExpandedPosition = -1;
-    SharedPreferences sharedPref;
+    SharedPreferences sharedPreferences;
 
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
         this.context = context;
         activity = (MainActivity) context;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
     }
 
     @Override
@@ -106,7 +108,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     @Override
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
-        holder.mainLayout.setBackgroundColor(Color.parseColor( "#C5CAE9"));
+//        Log.i("ReminderAdapter", "onBindViewHolder() current background color: " + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "#C5CAE9"));
         holder.mainLayout.setVisibility(View.VISIBLE);
         holder.title.setText(reminder.getTitle());
 

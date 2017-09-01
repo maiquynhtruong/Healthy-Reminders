@@ -6,7 +6,12 @@
         android:title="Color"
         app:alphaSlider="true"
         app:density="12"
-        app:initialColor="0xffff0000"
+        app:initialColor="0xffff0010"
         app:lightnessSlider="true"
+        />
+    <Preference
+        android:key="random_preference"
+        android:title="Random"
+        android:summary="So random"
         />
 </PreferenceScreen>

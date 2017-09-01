@@ -156,11 +156,6 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
-                // Display the fragment as the main content.
-//                getFragmentManager().beginTransaction()
-//                        .addToBackStack(null)
-//                        .replace(android.R.id.content, new Settings())
-//                        .commit();
                 startActivity(new Intent(MainActivity.this, Settings.class));
                 return true;
             case android.R.id.home:
