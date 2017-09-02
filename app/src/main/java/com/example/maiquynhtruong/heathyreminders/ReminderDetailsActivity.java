@@ -230,20 +230,6 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         changeBackgroundColor(selectedColor);
-                        if (allColors != null) {
-                            StringBuilder sb = null;
-
-                            for (Integer color : allColors) {
-                                if (color == null)
-                                    continue;
-                                if (sb == null)
-                                    sb = new StringBuilder("Color List:");
-                                sb.append("\r\n#" + Integer.toHexString(color).toUpperCase());
-                            }
-
-                            if (sb != null)
-                                Toast.makeText(getApplicationContext(), sb.toString(), Toast.LENGTH_SHORT).show();
-                        }
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -251,8 +237,9 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 })
+                .showColorPreview(true)
                 .showColorEdit(true)
-                .setColorEditTextColor(ContextCompat.getColor(ReminderDetailsActivity.this, android.R.color.holo_blue_bright))
+                .setColorEditTextColor(ContextCompat.getColor(context, android.R.color.background_dark))
                 .build()
                 .show();
     }

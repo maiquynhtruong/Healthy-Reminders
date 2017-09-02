@@ -108,11 +108,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     @Override
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
-//        Log.i("ReminderAdapter", "onBindViewHolder() current background color: " + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "#C5CAE9"));
-//        Log.i("ReminderAdapter", "onBindViewHolder() current background color: #" + Integer.toHexString(sharedPreferences.getInt(Settings.PREF_KEY_COLOR_PICKER, 0xC5CAE9)));
-//        holder.itemView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(sharedPreferences.getInt(Settings.PREF_KEY_COLOR_PICKER, 0xC5CAE9))));
-//        holder.itemView.setBackgroundColor(Color.parseColor("#" + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "C5CAE9")));
-        holder.itemView.setBackgroundColor(Color.parseColor(reminder.getColor()));
+        Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + " and date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() + " and color " + reminder.getColor());
+        holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+        holder.mainLayout.setBackgroundColor(Color.parseColor(reminder.getColor()));
         holder.mainLayout.setVisibility(View.VISIBLE);
         holder.title.setText(reminder.getTitle());
 
@@ -121,8 +119,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         boolean isPM = (reminder.getHour() >= 12);
         holder.timeTextView.setText(String.format(Locale.US, "%02d:%02d %s", (reminder.getHour() == 12 || reminder.getHour() == 0) ? 12 :
                 reminder.getHour() % 12, reminder.getMinute(), isPM ? "PM" : "AM"));
-        Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + " and date as " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
-        holder.dateTextView.setText(reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear());
+
         holder.timeAndDate.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.itemView.setActivated(isExpanded);
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {

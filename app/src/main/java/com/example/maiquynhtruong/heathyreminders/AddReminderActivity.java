@@ -48,7 +48,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     TextView atTime, onDate, repeatNumberTv;
     Button colorBtn;
     Toolbar toolbar;
-    int repeatNumber, currentBackgroundColor = 0xffffff;
+    int repeatNumber, currentColor = android.R.color.holo_blue_dark;
     ReminderDatabase database;
     Calendar calendar;
     FancyButton saveBtn, cancelBtn;
@@ -145,7 +145,8 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
-        colorBtn.setBackgroundColor(Color.parseColor("#C5CAE9"));
+        colorBtn.setBackgroundColor(getResources().getColor(currentColor));
+        color = "#0041FF";
 
         repeatNumberTv.setText("1");
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +190,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         ColorPickerDialogBuilder
                 .with(context)
                 .setTitle(R.string.color_dialog_title)
-                .initialColor(currentBackgroundColor)
+                .initialColor(currentColor)
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
                 .setOnColorChangedListener(new OnColorChangedListener() {
@@ -209,34 +210,23 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         changeBackgroundColor(selectedColor);
-                        if (allColors != null) {
-                            StringBuilder sb = null;
-
-                            for (Integer color : allColors) {
-                                if (color == null)
-                                    continue;
-                                if (sb == null)
-                                    sb = new StringBuilder("Color List:");
-                                sb.append("\r\n#" + Integer.toHexString(color).toUpperCase());
-                            }
-
-                            if (sb != null)
-                                Toast.makeText(getApplicationContext(), sb.toString(), Toast.LENGTH_SHORT).show();
-                        }
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
                 })
+                .showColorPreview(true)
                 .showColorEdit(true)
-                .setColorEditTextColor(ContextCompat.getColor(AddReminderActivity.this, android.R.color.holo_blue_bright))
+                .setColorEditTextColor(ContextCompat.getColor(context, android.R.color.background_dark))
                 .build()
                 .show();
     }
 
     public void changeBackgroundColor(int selectedColor) {
+        Log.i("AddReminderActivity", "changeBackgroundColor(): #" + Integer.toHexString(selectedColor));
         color = "#" + Integer.toHexString(selectedColor);
     }
 
