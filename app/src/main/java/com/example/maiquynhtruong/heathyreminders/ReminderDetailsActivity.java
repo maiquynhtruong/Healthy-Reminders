@@ -4,10 +4,15 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +27,13 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorChangedListener;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -38,10 +50,11 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     int reminderID;
     Reminder reminder;
     FancyButton cancelBtn, updateBtn;
+    Button colorBtn;
     ReminderDatabase database;
     Spinner frequencySpinner;
     Calendar calendar;
-    String title, repeatType;
+    String title, repeatType, color;
 
     // Values for orientation change
     private static final String KEY_TITLE = "title_key";
@@ -52,6 +65,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     private static final String KEY_MONTH = "month_key";
     private static final String KEY_REPEAT_NO = "repeat_no_key";
     private static final String KEY_REPEAT_TYPE = "repeat_type_key";
+    private static final String KEY_COLOR = "color_key";
 
     public static final String REMINDER_DETAILS_ID = "reminder-id";
     public static final int EDIT_REMINDER_REQUEST_CODE = 1;
@@ -70,6 +84,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_number_text_view);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
         updateBtn = (FancyButton) findViewById(R.id.btn_save);
+        colorBtn = (Button) findViewById(R.id.reminder_color_btn);
 
         database = new ReminderDatabase(getApplicationContext());
 
@@ -92,6 +107,12 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+        colorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showColorPicker();
             }
         });
 
@@ -140,6 +161,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             boolean isPM = (hourOfDay >= 12);
             atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
             onDate.setText(month + "/" + dayOfMonth + "/" + year);
+            colorBtn.setBackgroundColor(Color.parseColor(reminder.getColor()));
         } else {
             Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
         }
@@ -179,6 +201,64 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
             repeatType = savedRepeatType;
         }
+    }
+
+
+    public void showColorPicker() {
+        final Context context = ReminderDetailsActivity.this;
+
+        ColorPickerDialogBuilder
+                .with(context)
+                .setTitle(R.string.color_dialog_title)
+                .initialColor(Integer.parseInt(reminder.getColor()))
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorChangedListener(new OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int selectedColor) {
+                        // Handle on color change
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorChangedListener: 0x" + Integer.toHexString(selectedColor));
+                    }
+                })
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorSelectedListener: 0x" + Integer.toHexString(selectedColor));
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        changeBackgroundColor(selectedColor);
+                        if (allColors != null) {
+                            StringBuilder sb = null;
+
+                            for (Integer color : allColors) {
+                                if (color == null)
+                                    continue;
+                                if (sb == null)
+                                    sb = new StringBuilder("Color List:");
+                                sb.append("\r\n#" + Integer.toHexString(color).toUpperCase());
+                            }
+
+                            if (sb != null)
+                                Toast.makeText(getApplicationContext(), sb.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .showColorEdit(true)
+                .setColorEditTextColor(ContextCompat.getColor(ReminderDetailsActivity.this, android.R.color.holo_blue_bright))
+                .build()
+                .show();
+    }
+
+    public void changeBackgroundColor(int selectedColor) {
+        color = Integer.toHexString(selectedColor);
     }
 
     public void showNumberPicker() {
@@ -254,6 +334,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         reminder.setYear(year);
         reminder.setRepeatNumber(repeatNumber);
         reminder.setRepeatType(repeatType);
+        reminder.setColor(color);
 
         // update reminder in database
         database.updateReminder(reminder);

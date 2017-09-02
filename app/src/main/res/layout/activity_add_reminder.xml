@@ -16,6 +16,7 @@
         <include layout="@layout/fragment_reminder_frequency" />
         <include layout="@layout/fragment_reminder_date_picker"/>
         <include layout="@layout/fragment_reminder_time_picker"/>
+        <include layout="@layout/fragment_reminder_color"/>
         <include layout="@layout/fragment_save_cancel_buttons" />
     </LinearLayout>
 </ScrollView>

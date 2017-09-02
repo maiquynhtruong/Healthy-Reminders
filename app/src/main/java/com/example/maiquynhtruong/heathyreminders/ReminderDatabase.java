@@ -34,7 +34,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 ReminderEntry.REMINDER_DAY + " INTEGER," +
                 ReminderEntry.REMINDER_YEAR + " INTEGER," +
                 ReminderEntry.REMINDER_REPEAT_NUMBER + " INTEGER," +
-                ReminderEntry.REMINDER_REPEAT_TYPE + " TEXT" +
+                ReminderEntry.REMINDER_REPEAT_TYPE + " TEXT," +
+                ReminderEntry.REMINDER_COLOR + " TEXT " +
         ")");
     }
 
@@ -48,7 +49,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         Log.i("ReminderDatabase", "setReminder() add reminder " + reminder.getTitle() + ", " +
                 reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
-                ", and " + reminder.getRepeatType());
+                ", " + reminder.getRepeatType() + ", and color " + reminder.getColor());
         values.put(ReminderEntry.REMINDER_TITLE, reminder.getTitle());
         values.put(ReminderEntry.REMINDER_HOUR, reminder.getHour());
         values.put(ReminderEntry.REMINDER_MINUTE, reminder.getMinute());
@@ -57,6 +58,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_YEAR, reminder.getYear());
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
+        values.put(ReminderEntry.REMINDER_COLOR, reminder.getColor());
         long reminderID = database.insert(ReminderDatabase.ReminderEntry.TABLE_NAME, null, values);
         return reminderID;
     }
@@ -73,7 +75,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                         ReminderEntry.REMINDER_DAY,
                         ReminderEntry.REMINDER_YEAR,
                         ReminderEntry.REMINDER_REPEAT_NUMBER,
-                        ReminderEntry.REMINDER_REPEAT_TYPE
+                        ReminderEntry.REMINDER_REPEAT_TYPE,
+                        ReminderEntry.REMINDER_COLOR
                 }, ReminderDatabase.ReminderEntry.REMINDER_ID + " = ?",
                 new String[]{"" + id}, null, null, null);
         Reminder reminder = null;
@@ -87,10 +90,11 @@ public class ReminderDatabase extends SQLiteOpenHelper {
             int year = Integer.parseInt(cursor.getString(6));
             int repeatNumber = Integer.parseInt(cursor.getString(7));
             String repeatType = cursor.getString(8);
-            reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType);
+            String color = cursor.getString(9);
+            reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType, color);
             Log.i("ReminderDatabase", "getReminder() successful with " + reminder.getTitle() + ", " +
                     reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
-                            ", and " + reminder.getRepeatType());
+                            ", " + reminder.getRepeatType() + ", and " + reminder.getColor());
             cursor.close();
         } else {
             Log.i("ReminderDatabase", "getReminder() failed from id " + id + " since cursor is null!!");
@@ -114,11 +118,12 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 int year = Integer.parseInt(cursor.getString(6));
                 int repeatNumber = Integer.parseInt(cursor.getString(7));
                 String repeatType = cursor.getString(8);
-                Reminder reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType);
+                String color = cursor.getString(9);
+                Reminder reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType, color);
                 reminderList.add(reminder);
                 Log.i("ReminderDatabase", "getAllReminders() add reminder " + reminder.getId() + ", " + reminder.getTitle() + ", " +
                 reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
-                ", and every " + reminder.getRepeatType());
+                ", every " + reminder.getRepeatType() + ", and " + reminder.getColor());
             } while (cursor.moveToNext());
         }
         return reminderList;
@@ -135,6 +140,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(ReminderEntry.REMINDER_YEAR, reminder.getYear());
         values.put(ReminderEntry.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         values.put(ReminderEntry.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
+        values.put(ReminderEntry.REMINDER_COLOR, reminder.getColor());
         database.update(ReminderDatabase.ReminderEntry.TABLE_NAME, values, REMINDER_ID + " = ?", new String[] {"" + reminder.getId()});
         Log.i("ReminderDatabase", "updateReminder() with reminder title " + reminder.getTitle() + " and id " + reminder.getId());
     }
@@ -150,7 +156,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     }
 
     static class ReminderEntry implements BaseColumns {
-        static final String TABLE_NAME = "ReminderEntries";
+        static final String TABLE_NAME = "ReminderTable";
         static final String REMINDER_ID = "id";
         static final String REMINDER_TITLE = "title";
         static final String REMINDER_HOUR = "hour";
@@ -160,5 +166,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         static final String REMINDER_YEAR = "year";
         static final String REMINDER_REPEAT_NUMBER = "repeat_number";
         static final String REMINDER_REPEAT_TYPE = "repeat_type";
+        static final String REMINDER_COLOR = "color";
     }
 }

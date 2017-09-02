@@ -46,6 +46,6 @@
     <string name="reminder_repeat_number_cancel">Cancel</string>
     <string name="reminder_repeat_number_dialog_title">Reminder Repeat Interval</string>
     <string name="reminder_frequency">Repeat every</string>
-    <string name="preference_pick_color_title">Card View Color</string>
+    <string name="color_dialog_title">Card View Color</string>
     <string name="preference_pick_color_summary">Choose a card view color</string>
 </resources>

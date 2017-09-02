@@ -4,10 +4,14 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -23,6 +27,13 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorChangedListener;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -35,13 +46,14 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     TextInputEditText titleText;
     TextInputLayout titleLayout;
     TextView atTime, onDate, repeatNumberTv;
+    Button colorBtn;
     Toolbar toolbar;
-    int repeatNumber;
+    int repeatNumber, currentBackgroundColor = 0xffffff;
     ReminderDatabase database;
     Calendar calendar;
     FancyButton saveBtn, cancelBtn;
     int month, dayOfMonth, year, hourOfDay, minute;
-    String title, repeatType;
+    String title, repeatType, color;
 
     // Values for orientation change
     private static final String KEY_TITLE = "title_key";
@@ -52,6 +64,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     private static final String KEY_MONTH = "month_key";
     private static final String KEY_REPEAT_NO = "repeat_no_key";
     private static final String KEY_REPEAT_TYPE = "repeat_type_key";
+    private static final String KEY_COLOR = "color_key";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +79,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_number_text_view);
         saveBtn = (FancyButton) findViewById(R.id.btn_save);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
+        colorBtn = (Button) findViewById(R.id.reminder_color_btn);
 
         database = new ReminderDatabase(getApplicationContext());
 
@@ -86,6 +100,12 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+        colorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showColorPicker();
             }
         });
 
@@ -125,6 +145,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+        colorBtn.setBackgroundColor(Color.parseColor("#C5CAE9"));
 
         repeatNumberTv.setText("1");
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +181,63 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
             String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
             repeatType = savedRepeatType;
         }
+    }
+
+    public void showColorPicker() {
+        final Context context = AddReminderActivity.this;
+
+        ColorPickerDialogBuilder
+                .with(context)
+                .setTitle(R.string.color_dialog_title)
+                .initialColor(currentBackgroundColor)
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorChangedListener(new OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int selectedColor) {
+                        // Handle on color change
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorChangedListener: 0x" + Integer.toHexString(selectedColor));
+                    }
+                })
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorSelectedListener: 0x" + Integer.toHexString(selectedColor));
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        changeBackgroundColor(selectedColor);
+                        if (allColors != null) {
+                            StringBuilder sb = null;
+
+                            for (Integer color : allColors) {
+                                if (color == null)
+                                    continue;
+                                if (sb == null)
+                                    sb = new StringBuilder("Color List:");
+                                sb.append("\r\n#" + Integer.toHexString(color).toUpperCase());
+                            }
+
+                            if (sb != null)
+                                Toast.makeText(getApplicationContext(), sb.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .showColorEdit(true)
+                .setColorEditTextColor(ContextCompat.getColor(AddReminderActivity.this, android.R.color.holo_blue_bright))
+                .build()
+                .show();
+    }
+
+    public void changeBackgroundColor(int selectedColor) {
+        color = "#" + Integer.toHexString(selectedColor);
     }
 
     public void showNumberPicker() {
@@ -262,7 +340,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         calendar.set(Calendar.SECOND, 0);
 
         int reminderID = (int) database.setReminder(new Reminder(title, hourOfDay, minute, month,
-                dayOfMonth, year, repeatNumber, repeatType));
+                dayOfMonth, year, repeatNumber, repeatType, color));
 
         // Need to set calendar in case user doesn't choose date and time, aka current time
 

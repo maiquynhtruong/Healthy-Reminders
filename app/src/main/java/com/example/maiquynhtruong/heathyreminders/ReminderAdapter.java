@@ -47,13 +47,13 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     MainActivity activity;
     boolean undoOn;
     int mExpandedPosition = -1;
-    SharedPreferences sharedPreferences;
+//    SharedPreferences sharedPreferences;
 
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
         this.context = context;
         activity = (MainActivity) context;
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
     }
 
     @Override
@@ -108,10 +108,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     @Override
     public void onBindViewHolder(final ReminderView holder, final int position) {
         final Reminder reminder = reminderList.get(position);
-        Log.i("ReminderAdapter", "onBindViewHolder() current background color: " + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "#C5CAE9"));
+//        Log.i("ReminderAdapter", "onBindViewHolder() current background color: " + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "#C5CAE9"));
 //        Log.i("ReminderAdapter", "onBindViewHolder() current background color: #" + Integer.toHexString(sharedPreferences.getInt(Settings.PREF_KEY_COLOR_PICKER, 0xC5CAE9)));
 //        holder.itemView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(sharedPreferences.getInt(Settings.PREF_KEY_COLOR_PICKER, 0xC5CAE9))));
-        holder.itemView.setBackgroundColor(Color.parseColor("#" + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "C5CAE9")));
+//        holder.itemView.setBackgroundColor(Color.parseColor("#" + sharedPreferences.getString(Settings.PREF_KEY_COLOR_PICKER, "C5CAE9")));
+        holder.itemView.setBackgroundColor(Color.parseColor(reminder.getColor()));
         holder.mainLayout.setVisibility(View.VISIBLE);
         holder.title.setText(reminder.getTitle());
 

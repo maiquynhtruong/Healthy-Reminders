@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, Settings.class));
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case android.R.id.home:
                 onBackPressed();
