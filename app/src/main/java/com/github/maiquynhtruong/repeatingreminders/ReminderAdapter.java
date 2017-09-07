@@ -1,14 +1,12 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.github.maiquynhtruong.repeatingreminders;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.transition.TransitionManager;
@@ -25,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flask.colorpicker.ColorPickerPreference;
+import com.example.maiquynhtruong.repeatingreminders.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,10 +31,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.view.View.GONE;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDetailsActivity.REMINDER_DETAILS_ID;
-import static com.example.maiquynhtruong.heathyreminders.ReminderReceiver.REMINDER_REPEAT_NUMBER;
-import static com.example.maiquynhtruong.heathyreminders.ReminderReceiver.REMINDER_REPEAT_TYPE;
-import static com.example.maiquynhtruong.heathyreminders.ReminderReceiver.REMINDER_TIME_MILLIS;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderView> {
@@ -88,10 +82,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         calendar.set(Calendar.HOUR_OF_DAY, reminder.getHour());
         calendar.set(Calendar.MINUTE, reminder.getMinute());
         calendar.set(Calendar.SECOND, 0);
-        intent.putExtra(REMINDER_REPEAT_TYPE, reminder.getRepeatType());
-        intent.putExtra(REMINDER_TIME_MILLIS, calendar.getTimeInMillis());
-        intent.putExtra(REMINDER_DETAILS_ID, reminder.getId());
-        intent.putExtra(REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
+        intent.putExtra(ReminderReceiver.REMINDER_REPEAT_TYPE, reminder.getRepeatType());
+        intent.putExtra(ReminderReceiver.REMINDER_TIME_MILLIS, calendar.getTimeInMillis());
+        intent.putExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID, reminder.getId());
+        intent.putExtra(ReminderReceiver.REMINDER_REPEAT_NUMBER, reminder.getRepeatNumber());
         context.startService(intent);
         notifyItemInserted(position);
         notifyDataSetChanged();

@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.example.maiquynhtruong.repeatingreminders;
 
 import org.junit.Test;
 

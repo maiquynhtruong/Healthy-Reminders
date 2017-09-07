@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.github.maiquynhtruong.repeatingreminders;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -6,14 +6,13 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,8 +26,8 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.example.maiquynhtruong.repeatingreminders.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
@@ -40,19 +39,18 @@ import java.util.Locale;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 
-
-public class ReminderDetailsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
-        AdapterView.OnItemSelectedListener{
+public class AddReminderActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
+        TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
+    Spinner frequencySpinner;
     TextInputEditText titleText;
     TextInputLayout titleLayout;
-    TextView onDate, atTime, repeatNumberTv;
-    int reminderID, hourOfDay, minute, month, dayOfMonth, year, repeatNumber, color;
-    Reminder reminder;
-    FancyButton cancelBtn, updateBtn;
+    TextView atTime, onDate, repeatNumberTv;
     Button colorBtn;
+    Toolbar toolbar;
     ReminderDatabase database;
-    Spinner frequencySpinner;
     Calendar calendar;
+    FancyButton saveBtn, cancelBtn;
+    int month, dayOfMonth, year, hourOfDay, minute, repeatNumber, color = android.R.color.holo_blue_dark;;
     String title, repeatType;
 
     // Values for orientation change
@@ -66,40 +64,34 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     private static final String KEY_REPEAT_TYPE = "repeat_type_key";
     private static final String KEY_COLOR = "color_key";
 
-    public static final String REMINDER_DETAILS_ID = "reminder-id";
-    public static final int EDIT_REMINDER_REQUEST_CODE = 1;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder);
-        onDate = (TextView) findViewById(R.id.datePicker);
-        atTime = (TextView) findViewById(R.id.timePicker);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
         titleText = (TextInputEditText) findViewById(R.id.reminder_title);
         titleLayout = (TextInputLayout) findViewById(R.id.reminder_title_layout);
-        frequencySpinner = (Spinner) findViewById(R.id.reminder_frequency_spinner);
         atTime = (TextView) findViewById(R.id.timePicker);
         onDate = (TextView) findViewById(R.id.datePicker);
         repeatNumberTv = (TextView) findViewById(R.id.reminder_repeat_number_text_view);
+        saveBtn = (FancyButton) findViewById(R.id.btn_save);
         cancelBtn = (FancyButton) findViewById(R.id.btn_cancel);
-        updateBtn = (FancyButton) findViewById(R.id.btn_save);
         colorBtn = (Button) findViewById(R.id.reminder_color_btn);
 
         database = new ReminderDatabase(getApplicationContext());
 
-        getSupportActionBar().setTitle(getString(R.string.app_edit_reminder));
+        getSupportActionBar().setTitle(getString(R.string.app_add_reminder));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
-        updateBtn.setText("UPDATE");
-        updateBtn.setOnClickListener(new View.OnClickListener() {
+        saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (titleText.getText().toString().trim().isEmpty())
                     titleLayout.setError(getString(R.string.title_empty_error));
                 else
-                    updateReminder(view);
+                    saveReminder(view);
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -115,12 +107,10 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             }
         });
 
+        // error for empty title
         titleText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (titleText.getText().toString().trim().isEmpty()) {
-                    titleLayout.setError(getString(R.string.title_empty_error));
-                }
             }
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -135,44 +125,35 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             }
         });
 
-        repeatNumber = 1;
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.frequencies, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         frequencySpinner.setAdapter(adapter);
         frequencySpinner.setOnItemSelectedListener(this);
 
-        // get stuff from intent calling this activity
-        int reminderID = getIntent().getIntExtra(ReminderDetailsActivity.REMINDER_DETAILS_ID,0);
-
-        reminder = database.getReminder(reminderID);
+        // set the current time as the default time when first showed
         calendar = Calendar.getInstance();
-        if (reminder != null) {
-            titleText.setText(reminder.getTitle());
-            hourOfDay = reminder.getHour();
-            minute = reminder.getMinute();
-            month = reminder.getMonth();
-            dayOfMonth = reminder.getDay();
-            year = reminder.getYear();
-            repeatNumber = reminder.getRepeatNumber();
-            repeatType = reminder.getRepeatType();
-            boolean isPM = (hourOfDay >= 12);
-            atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
-            onDate.setText(month + "/" + dayOfMonth + "/" + year);
-            colorBtn.setBackgroundColor(reminder.getColor());
-        } else {
-            Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
-        }
+        hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        month = calendar.get(Calendar.MONTH);
+        year = calendar.get(Calendar.YEAR);
+        repeatNumber = 1;
+        repeatType = Reminder.HOURLY;
+        boolean isPM = (hourOfDay >= 12);
+        atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
+        onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
+        colorBtn.setBackgroundColor(getResources().getColor(color));
+        Log.i("AddReminderActivity", "colorBtn.setBackgroundColor() " + getResources().getColor(color) + " or " + Integer.toHexString(getResources().getColor(color)));
+        color = getResources().getColor(color);
 
-        repeatNumberTv.setText(String.valueOf(repeatNumber));
+        repeatNumberTv.setText("1");
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showNumberPicker();
             }
         });
-
         // recover states on device rotation
         if (savedInstanceState != null) {
             String savedTitle = savedInstanceState.getString(KEY_TITLE);
@@ -183,7 +164,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             hourOfDay = Integer.parseInt(savedHour);
             String savedMinute = savedInstanceState.getString(KEY_MINUTE);
             minute = Integer.parseInt(savedMinute);
-            boolean isPM = (hourOfDay >= 12);
+            isPM = (hourOfDay >= 12);
             atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
 
             String savedYear = savedInstanceState.getString(KEY_YEAR);
@@ -205,27 +186,26 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         }
     }
 
-
     public void showColorPicker() {
-        final Context context = ReminderDetailsActivity.this;
+        final Context context = AddReminderActivity.this;
 
         ColorPickerDialogBuilder
                 .with(context)
                 .setTitle(R.string.color_dialog_title)
-                .initialColor(reminder.getColor())
+                .initialColor(color)
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
                 .setOnColorChangedListener(new OnColorChangedListener() {
                     @Override
                     public void onColorChanged(int selectedColor) {
                         // Handle on color change
-                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorChangedListener: #" + Integer.toHexString(selectedColor));
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorChangedListener: 0x" + Integer.toHexString(selectedColor));
                     }
                 })
                 .setOnColorSelectedListener(new OnColorSelectedListener() {
                     @Override
                     public void onColorSelected(int selectedColor) {
-                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorSelectedListener: #" + Integer.toHexString(selectedColor));
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorSelectedListener: 0x" + Integer.toHexString(selectedColor));
                     }
                 })
                 .setPositiveButton("ok", new ColorPickerClickListener() {
@@ -237,6 +217,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
                 })
                 .showColorPreview(true)
@@ -256,13 +237,12 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         final Dialog d = new Dialog(this);
         d.setTitle(getString(R.string.reminder_repeat_number_dialog_title));
         d.setContentView(R.layout.dialog_number_picker);
-        Button setBtn = (Button) d.findViewById(R.id.reminder_repeat_number_set);
-        Button cancelBtn = (Button) d.findViewById(R.id.reminder_repeat_number_cancel);
-        final NumberPicker np = (NumberPicker) d.findViewById(R.id.reminder_repeat_number_picker);
+        Button setBtn = d.findViewById(R.id.reminder_repeat_number_set);
+        Button cancelBtn = d.findViewById(R.id.reminder_repeat_number_cancel);
+        final NumberPicker np = d.findViewById(R.id.reminder_repeat_number_picker);
         np.setMaxValue(100);
         np.setMinValue(1);
         np.setWrapSelectorWheel(true);
-        np.setValue(repeatNumber);
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
@@ -285,6 +265,47 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         d.show();
     }
 
+    public void showDatePicker(View view) {
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(this, this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+        dialog.show();
+    }
+
+    public void showTimePicker(View view) {
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog dialog = new TimePickerDialog(this, this, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),
+                android.text.format.DateFormat.is24HourFormat(this));
+        dialog.show();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        CharSequence frequency = (CharSequence) adapterView.getItemAtPosition(i);
+        repeatType = frequency.toString();
+        Log.i("ReminderAddActivity", "repeatType set as: " + repeatType);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        this.repeatType = Reminder.HOURLY; // get the first one
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        this.year = year;
+        this.month = month;
+        this.dayOfMonth = dayOfMonth;
+        onDate.setText(++month + "/" + dayOfMonth + "/" + year);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        this.hourOfDay = hourOfDay;
+        this.minute = minute;
+        boolean isPM = (hourOfDay >= 12);
+        atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -301,37 +322,10 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         outState.putCharSequence(KEY_COLOR, String.valueOf(color));
     }
 
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        this.year = year;
-        this.month = month;
-        this.dayOfMonth = dayOfMonth;
-        onDate.setText(++month + "/" + dayOfMonth + "/" + year);
-    }
+    public void saveReminder(View view) {
 
-    @Override
-    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
-        this.hourOfDay = hourOfDay;
-        this.minute = minute;
-        boolean isPM = (hourOfDay >= 12);
-        atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
-    }
+        title = this.titleText.getText().toString();
 
-    public void updateReminder(View view) {
-        reminder.setTitle(titleText.getText().toString());
-        reminder.setHour(hourOfDay);
-        reminder.setMinute(minute);
-        reminder.setDay(dayOfMonth);
-        reminder.setMonth(month);
-        reminder.setYear(year);
-        reminder.setRepeatNumber(repeatNumber);
-        reminder.setRepeatType(repeatType);
-        reminder.setColor(color);
-
-        // update reminder in database
-        database.updateReminder(reminder);
-
-        // update calendar with new time
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -339,9 +333,12 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
 
-        // cancel old notification
-        ReminderReceiver.cancelAlarm(getApplicationContext(), reminderID);
-        // create new notification
+        int reminderID = (int) database.setReminder(new Reminder(title, hourOfDay, minute, month,
+                dayOfMonth, year, repeatNumber, repeatType, color));
+
+        // Need to set calendar in case user doesn't choose date and time, aka current time
+
+        Log.i("AddReminderActivity", "Setting reminder " + title + " with id " + reminderID);
         if (repeatType.equals(Reminder.MONTHLY) || repeatType.equals(Reminder.YEARLY))
             ReminderReceiver.setReminderMonthOrYear(getApplicationContext(),
                     calendar.getTimeInMillis(), reminderID, repeatNumber, repeatType);
@@ -354,20 +351,13 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         else //if (repeatType.equals(Reminder.HOURLY))
             ReminderReceiver.setReminderHourOrDayOrWeek(getApplicationContext(),
                     calendar.getTimeInMillis(), reminderID, repeatNumber * AlarmManager.INTERVAL_HOUR);
+//        else
+//            Log.i("AddReminderActivity", "Setting reminder but none of the above type!");
         onBackPressed();
     }
 
-    public void showDatePicker(View view) {
-        Calendar now = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(this, this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
-    }
-
-    public void showTimePicker(View view) {
-        Calendar now = Calendar.getInstance();
-        TimePickerDialog dialog = new TimePickerDialog(this, this, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),
-                android.text.format.DateFormat.is24HourFormat(this));
-        dialog.show();
+    public void cancelReminder(View view) {
+        onBackPressed();
     }
 
     @Override
@@ -378,15 +368,5 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 }

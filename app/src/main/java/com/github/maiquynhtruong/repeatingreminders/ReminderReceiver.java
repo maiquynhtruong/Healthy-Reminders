@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.github.maiquynhtruong.repeatingreminders;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -17,9 +17,11 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.maiquynhtruong.repeatingreminders.R;
+
 import java.util.Calendar;
 
-import static com.example.maiquynhtruong.heathyreminders.ReminderDetailsActivity.REMINDER_DETAILS_ID;
+import static com.github.maiquynhtruong.repeatingreminders.ReminderDetailsActivity.REMINDER_DETAILS_ID;
 
 public class ReminderReceiver extends BroadcastReceiver {
     public static final int REMINDER_PENDING_INTENT_ID = 2;

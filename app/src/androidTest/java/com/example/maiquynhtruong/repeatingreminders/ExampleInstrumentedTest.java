@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.example.maiquynhtruong.repeatingreminders;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

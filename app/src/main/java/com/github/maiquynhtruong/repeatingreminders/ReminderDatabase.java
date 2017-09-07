@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.github.maiquynhtruong.repeatingreminders;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.REMINDER_ID;
-import static com.example.maiquynhtruong.heathyreminders.ReminderDatabase.ReminderEntry.TABLE_NAME;
+import static com.github.maiquynhtruong.repeatingreminders.ReminderDatabase.ReminderEntry.REMINDER_ID;
+import static com.github.maiquynhtruong.repeatingreminders.ReminderDatabase.ReminderEntry.TABLE_NAME;
 
 public class ReminderDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ReminderDatabase";

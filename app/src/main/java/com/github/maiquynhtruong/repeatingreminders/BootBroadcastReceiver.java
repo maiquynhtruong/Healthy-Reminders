@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.github.maiquynhtruong.repeatingreminders;
 
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;

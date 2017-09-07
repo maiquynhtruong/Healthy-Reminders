@@ -10,7 +10,7 @@
         android:layout_margin="16dp"
         android:orientation="vertical"
         android:theme="@style/AppTheme.NoActionBar"
-        tools:context=".AddReminderActivity">
+        tools:context="com.github.maiquynhtruong.repeatingreminders.AddReminderActivity">
 
         <include layout="@layout/fragment_reminder_description" />
         <include layout="@layout/fragment_reminder_frequency" />

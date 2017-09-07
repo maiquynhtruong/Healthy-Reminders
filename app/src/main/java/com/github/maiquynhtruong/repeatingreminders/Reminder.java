@@ -1,4 +1,4 @@
-package com.example.maiquynhtruong.heathyreminders;
+package com.github.maiquynhtruong.repeatingreminders;
 
 public class Reminder {
     public static final String HOURLY = "everyhour";
