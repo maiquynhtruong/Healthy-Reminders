@@ -219,13 +219,13 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
                     @Override
                     public void onColorChanged(int selectedColor) {
                         // Handle on color change
-                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorChangedListener: 0x" + Integer.toHexString(selectedColor));
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorChangedListener: #" + Integer.toHexString(selectedColor));
                     }
                 })
                 .setOnColorSelectedListener(new OnColorSelectedListener() {
                     @Override
                     public void onColorSelected(int selectedColor) {
-                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorSelectedListener: 0x" + Integer.toHexString(selectedColor));
+                        Log.i("AddReminderActivity", "showColorPicker() at setOnColorSelectedListener: #" + Integer.toHexString(selectedColor));
                     }
                 })
                 .setPositiveButton("ok", new ColorPickerClickListener() {
@@ -298,6 +298,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         outState.putCharSequence(KEY_MONTH, String.valueOf(month));
         outState.putCharSequence(KEY_REPEAT_NO, String.valueOf(repeatNumber));
         outState.putCharSequence(KEY_REPEAT_TYPE, String.valueOf(repeatType));
+        outState.putCharSequence(KEY_COLOR, String.valueOf(color));
     }
 
     @Override

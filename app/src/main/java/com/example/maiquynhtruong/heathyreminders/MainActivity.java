@@ -63,9 +63,6 @@ public class MainActivity extends AppCompatActivity
             noReminders.setVisibility(View.GONE);
             adapter.setUpReminders(reminders);
         }
-
-        // ensures that your application is properly initialized with default settings
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
     public void showAddReminder() {
         Intent addReminderIntent = new Intent(this, AddReminderActivity.class);
@@ -156,8 +153,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                return true;
+                return false;
             case android.R.id.home:
                 onBackPressed();
         }

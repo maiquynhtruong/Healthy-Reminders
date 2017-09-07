@@ -194,7 +194,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         ColorPickerDialogBuilder
                 .with(context)
                 .setTitle(R.string.color_dialog_title)
-                .initialColor(getResources().getColor(color))
+                .initialColor(color)
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
                 .setOnColorChangedListener(new OnColorChangedListener() {
@@ -321,6 +321,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         outState.putCharSequence(KEY_MONTH, String.valueOf(month));
         outState.putCharSequence(KEY_REPEAT_NO, String.valueOf(repeatNumber));
         outState.putCharSequence(KEY_REPEAT_TYPE, String.valueOf(repeatType));
+        outState.putCharSequence(KEY_COLOR, String.valueOf(color));
     }
 
     public void saveReminder(View view) {
