@@ -200,6 +200,9 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
 
             String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
             repeatType = savedRepeatType;
+
+            String savedColor = savedInstanceState.getString(KEY_COLOR);
+            color = savedColor;
         }
     }
 
@@ -245,7 +248,9 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     }
 
     public void changeBackgroundColor(int selectedColor) {
-        color = Integer.toHexString(selectedColor);
+        Log.i("AddReminderActivity", "changeBackgroundColor(): #" + Integer.toHexString(selectedColor));
+        color = "#" + Integer.toHexString(selectedColor);
+        colorBtn.setBackgroundColor(selectedColor);
     }
 
     public void showNumberPicker() {

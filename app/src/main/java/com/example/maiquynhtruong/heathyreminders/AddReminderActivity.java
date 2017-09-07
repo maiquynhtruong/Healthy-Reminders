@@ -147,8 +147,8 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
         colorBtn.setBackgroundColor(getResources().getColor(currentColor));
-        Log.i("AddReminderActivity", "colorBtn.setBackgroundColor() " + currentColor + " or " + Integer.toHexString(currentColor));
-        color = "#0041FF";
+        Log.i("AddReminderActivity", "colorBtn.setBackgroundColor() " + getResources().getColor(currentColor) + " or " + Integer.toHexString(getResources().getColor(currentColor)));
+        color = "#" + Integer.toHexString(getResources().getColor(currentColor));
 
         repeatNumberTv.setText("1");
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
@@ -183,6 +183,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
             String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
             repeatType = savedRepeatType;
+
+            String savedColor = savedInstanceState.getString(KEY_COLOR);
+            color = savedColor;
         }
     }
 
@@ -228,7 +231,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     }
 
     public void changeBackgroundColor(int selectedColor) {
-        Log.i("AddReminderActivity", "changeBackgroundColor(): #" + Integer.toHexString(selectedColor) + " or " + selectedColor);
+        Log.i("AddReminderActivity", "changeBackgroundColor(): #" + Integer.toHexString(selectedColor));
         color = "#" + Integer.toHexString(selectedColor);
         colorBtn.setBackgroundColor(selectedColor);
     }

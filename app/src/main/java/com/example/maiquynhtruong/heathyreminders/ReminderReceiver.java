@@ -35,10 +35,11 @@ public class ReminderReceiver extends BroadcastReceiver {
         int reminderId = intent.getIntExtra(REMINDER_DETAILS_ID, 0);
         int repeatNumber = intent.getIntExtra(REMINDER_REPEAT_NUMBER, 1);
 
-        Log.i("Receiver-onReceived", "Received reminder with ID " + reminderId);
+        Log.i("ReminderReceiver", "onReceived - Received reminder with ID " + reminderId);
         // Get reminder from database
-        ReminderDatabase database = new ReminderDatabase(context);
+        ReminderDatabase database = new ReminderDatabase(context.getApplicationContext());
         Reminder reminder = database.getReminder(reminderId);
+        Log.i("ReminderReceiver", "onReceived - got reminder with " + reminder.getTitle());
         createNotification(context, reminder); // start notification
 
         // if the reminder is repeating yearly or monthly we have to set a new one
@@ -86,7 +87,8 @@ public class ReminderReceiver extends BroadcastReceiver {
         intent.putExtra(REMINDER_TIME_MILLIS, timeInMillis);
         intent.putExtra(REMINDER_DETAILS_ID, reminderID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
+//        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, interval, pendingIntent);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
         // Restart alarm if device is rebooted
         ComponentName receiver = new ComponentName(context, BootBroadcastReceiver.class);
         PackageManager pm = context.getPackageManager();
