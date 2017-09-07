@@ -46,15 +46,14 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
     TextInputEditText titleText;
     TextInputLayout titleLayout;
     TextView onDate, atTime, repeatNumberTv;
-    int hourOfDay, minute, month, dayOfMonth, year, repeatNumber;
-    int reminderID;
+    int reminderID, hourOfDay, minute, month, dayOfMonth, year, repeatNumber, color;
     Reminder reminder;
     FancyButton cancelBtn, updateBtn;
     Button colorBtn;
     ReminderDatabase database;
     Spinner frequencySpinner;
     Calendar calendar;
-    String title, repeatType, color;
+    String title, repeatType;
 
     // Values for orientation change
     private static final String KEY_TITLE = "title_key";
@@ -161,7 +160,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             boolean isPM = (hourOfDay >= 12);
             atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
             onDate.setText(month + "/" + dayOfMonth + "/" + year);
-            colorBtn.setBackgroundColor(Color.parseColor(reminder.getColor()));
+            colorBtn.setBackgroundColor(reminder.getColor());
         } else {
             Log.i("ReminderDetailsActivity", "The reminder passed with id " + reminderID + " is null !");
         }
@@ -201,7 +200,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
             repeatType = savedRepeatType;
 
-            String savedColor = savedInstanceState.getString(KEY_COLOR);
+            int savedColor = Integer.parseInt(savedInstanceState.getString(KEY_COLOR));
             color = savedColor;
         }
     }
@@ -213,7 +212,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
         ColorPickerDialogBuilder
                 .with(context)
                 .setTitle(R.string.color_dialog_title)
-                .initialColor(Integer.parseInt(reminder.getColor()))
+                .initialColor(reminder.getColor())
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
                 .setOnColorChangedListener(new OnColorChangedListener() {
@@ -249,7 +248,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
 
     public void changeBackgroundColor(int selectedColor) {
         Log.i("AddReminderActivity", "changeBackgroundColor(): #" + Integer.toHexString(selectedColor));
-        color = "#" + Integer.toHexString(selectedColor);
+        color = selectedColor;
         colorBtn.setBackgroundColor(selectedColor);
     }
 

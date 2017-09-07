@@ -49,12 +49,11 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
     TextView atTime, onDate, repeatNumberTv;
     Button colorBtn;
     Toolbar toolbar;
-    int repeatNumber, currentColor = android.R.color.holo_blue_dark;
     ReminderDatabase database;
     Calendar calendar;
     FancyButton saveBtn, cancelBtn;
-    int month, dayOfMonth, year, hourOfDay, minute;
-    String title, repeatType, color;
+    int month, dayOfMonth, year, hourOfDay, minute, repeatNumber, color = android.R.color.holo_blue_dark;;
+    String title, repeatType;
 
     // Values for orientation change
     private static final String KEY_TITLE = "title_key";
@@ -146,9 +145,9 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         boolean isPM = (hourOfDay >= 12);
         atTime.setText(String.format(Locale.US, "%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, calendar.get(Calendar.MINUTE), isPM ? "PM" : "AM"));
         onDate.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR));
-        colorBtn.setBackgroundColor(getResources().getColor(currentColor));
-        Log.i("AddReminderActivity", "colorBtn.setBackgroundColor() " + getResources().getColor(currentColor) + " or " + Integer.toHexString(getResources().getColor(currentColor)));
-        color = "#" + Integer.toHexString(getResources().getColor(currentColor));
+        colorBtn.setBackgroundColor(getResources().getColor(color));
+        Log.i("AddReminderActivity", "colorBtn.setBackgroundColor() " + getResources().getColor(color) + " or " + Integer.toHexString(getResources().getColor(color)));
+        color = getResources().getColor(color);
 
         repeatNumberTv.setText("1");
         repeatNumberTv.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +183,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
             String savedRepeatType = savedInstanceState.getString(KEY_REPEAT_TYPE);
             repeatType = savedRepeatType;
 
-            String savedColor = savedInstanceState.getString(KEY_COLOR);
+            int savedColor = Integer.parseInt(savedInstanceState.getString(KEY_COLOR));
             color = savedColor;
         }
     }
@@ -195,7 +194,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
         ColorPickerDialogBuilder
                 .with(context)
                 .setTitle(R.string.color_dialog_title)
-                .initialColor(currentColor)
+                .initialColor(getResources().getColor(color))
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
                 .setOnColorChangedListener(new OnColorChangedListener() {
@@ -232,7 +231,7 @@ public class AddReminderActivity extends AppCompatActivity implements AdapterVie
 
     public void changeBackgroundColor(int selectedColor) {
         Log.i("AddReminderActivity", "changeBackgroundColor(): #" + Integer.toHexString(selectedColor));
-        color = "#" + Integer.toHexString(selectedColor);
+        color = selectedColor;
         colorBtn.setBackgroundColor(selectedColor);
     }
 

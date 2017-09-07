@@ -47,13 +47,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     MainActivity activity;
     boolean undoOn;
     int mExpandedPosition = -1;
-//    SharedPreferences sharedPreferences;
 
     public ReminderAdapter(Context context) {
         this.reminderList = new ArrayList<>();
         this.context = context;
         activity = (MainActivity) context;
-//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
     }
 
     @Override
@@ -111,7 +109,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         Log.i("ReminderAdapter", "onBindViewHolder() setting reminder title as " + reminder.getTitle() + " and date as " + reminder.getMonth() + "/" +
                 reminder.getDay() + "/" + reminder.getYear() + " and color " + reminder.getColor());
         holder.dateTextView.setText((reminder.getMonth() + 1) + "/" + reminder.getDay() + "/" + reminder.getYear());
-        holder.mainLayout.setBackgroundColor(Color.parseColor(reminder.getColor()));
+        holder.mainLayout.setBackgroundColor(reminder.getColor());
         holder.mainLayout.setVisibility(View.VISIBLE);
         holder.title.setText(reminder.getTitle());
 

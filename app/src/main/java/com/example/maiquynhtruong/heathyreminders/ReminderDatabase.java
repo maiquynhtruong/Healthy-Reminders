@@ -90,7 +90,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
             int year = Integer.parseInt(cursor.getString(6));
             int repeatNumber = Integer.parseInt(cursor.getString(7));
             String repeatType = cursor.getString(8);
-            String color = cursor.getString(9);
+            int color = Integer.parseInt(cursor.getString(9));
             reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType, color);
             Log.i("ReminderDatabase", "getReminder() successful with " + reminder.getTitle() + ", " +
                     reminder.getHour() + ":" + reminder.getMinute() + ", " + reminder.getMonth() + "/" + reminder.getDay() + "/" + reminder.getYear() +
@@ -118,7 +118,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 int year = Integer.parseInt(cursor.getString(6));
                 int repeatNumber = Integer.parseInt(cursor.getString(7));
                 String repeatType = cursor.getString(8);
-                String color = cursor.getString(9);
+                int color = Integer.parseInt(cursor.getString(9));
                 Reminder reminder = new Reminder(reminder_id, title, hour, minute, month, day, year, repeatNumber, repeatType, color);
                 reminderList.add(reminder);
                 Log.i("ReminderDatabase", "getAllReminders() add reminder " + reminder.getId() + ", " + reminder.getTitle() + ", " +

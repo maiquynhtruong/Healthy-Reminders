@@ -16,9 +16,9 @@ public class Reminder {
     private int year;
     private int repeatNumber;
     private String repeatType;
-    private String color;
+    private int color;
 
-    public Reminder(String title, int hour, int minute, int month, int day, int year, int repeatNumber, String repeatType, String color) {
+    public Reminder(String title, int hour, int minute, int month, int day, int year, int repeatNumber, String repeatType, int color) {
         this.title = title;
         this.hour = hour;
         this.minute = minute;
@@ -30,7 +30,7 @@ public class Reminder {
         this.color = color;
     }
 
-    public Reminder(int id, String title, int hour, int minute, int month, int day, int year, int repeatNumber, String repeatType, String color) {
+    public Reminder(int id, String title, int hour, int minute, int month, int day, int year, int repeatNumber, String repeatType, int color) {
         this.id = id;
         this.title = title;
         this.hour = hour;
@@ -115,11 +115,11 @@ public class Reminder {
         this.repeatType = repeatType;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 
