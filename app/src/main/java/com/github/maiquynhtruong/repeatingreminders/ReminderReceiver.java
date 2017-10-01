@@ -17,8 +17,6 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.maiquynhtruong.repeatingreminders.R;
-
 import java.util.Calendar;
 
 import static com.github.maiquynhtruong.repeatingreminders.ReminderDetailsActivity.REMINDER_DETAILS_ID;

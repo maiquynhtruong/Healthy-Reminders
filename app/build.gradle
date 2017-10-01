@@ -7,7 +7,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId 'com.github.maiquynhtruong.healthyreminders'
+        applicationId 'com.github.maiquynhtruong.repeatingreminders'
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1

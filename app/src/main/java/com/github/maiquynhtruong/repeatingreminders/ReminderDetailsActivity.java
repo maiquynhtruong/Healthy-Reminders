@@ -26,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.maiquynhtruong.repeatingreminders.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
@@ -117,7 +116,7 @@ public class ReminderDetailsActivity extends AppCompatActivity implements DatePi
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (titleText.getText().toString().trim().isEmpty()) {
-                    titleLayout.setError(getString(R.string.title_empty_error));
+                    titleLayout.setError(getResources().getString(R.string.title_empty_error));
                 }
             }
             @Override

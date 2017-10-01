@@ -23,8 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.maiquynhtruong.repeatingreminders.R;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;

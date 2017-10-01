@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Healthy Reminders</string>
+    <string name="app_name">Repeating Reminders</string>
     <string name="app_edit_reminder">Edit Reminder</string>
     <string name="app_add_reminder">Add Reminder</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
